@@ -1,0 +1,23 @@
+{
+  "name": "webserver-admin",
+  "version": "1.0.0",
+  "description": "This is initial webserver for dev using to create database to test",
+  "main": "app.js",
+  "scripts": {
+    "devStart": "nodemon app.js"
+  },
+  "keywords": [
+    "admin"
+  ],
+  "author": "It's was me",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.2",
+    "ejs": "^3.1.6",
+    "express": "^4.17.3",
+    "mongoose": "^6.2.4"
+  }
+}
