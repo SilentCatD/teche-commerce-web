@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { createBrand , fetchAllBranch} from "../../controller/brand.js";
+import {createBrand, fetchAllBranch} from '../../../../controller/brand.js';
 const router = express.Router();
 const upload = multer();
 // /api/v1/brand
@@ -23,7 +23,6 @@ router.post('/', upload.single('brandImg'), async (req, res)=> {
         res.status(402).end(`Can't create brand, something went wrong: ${e}`);
         throw e;
     }
-   
 });
 
 

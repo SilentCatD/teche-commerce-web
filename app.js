@@ -1,8 +1,8 @@
 import express from "express";
 import 'dotenv/config';
 import { router as webPage } from "./router/web_page.js"; 
-import { router as brand } from "./router/api/brand.js";
-import { router as img } from "./router/api/image.js";
+import { router as api } from "./router/api/api.js";
+
 import database from "./database/database.js";
 const app = express();
 
@@ -11,8 +11,8 @@ app.use(express.static('./public'));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
-app.use('/api/v1/brand', brand);
-app.use('/api/v1/image', img);
+app.use('/api', api);
+
 app.use('/', webPage);
 
 app.listen(process.env.PORT || 3000, function() {
