@@ -3,6 +3,7 @@ import {Readable} from 'stream';
 import mongoose from "mongoose";
 import Brand from "../../model/brand.js";
 import {randomBytes} from 'crypto';
+import {createWriteStream} from 'fs';
 
  class MongoDBDatabase {
     #gridFSBucket
@@ -55,7 +56,22 @@ import {randomBytes} from 'crypto';
             throw e;
         }
     }
+
+
+    async fetchImageFileStream(imgId){
+        return this.#gridFSBucket.openDownloadStream(mongoose.Types.ObjectId(imgId));
+    }
+
+    async fetchAllBrand(){
+        const results = await Brand.find();
+        return results.map((brand)=> {return {
+            id: brand.id,
+            name: brand.name,
+            imageUrl: `${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${brand.imageObjectId}`
+        }});
+    }
 }
+
 
 export {MongoDBDatabase};
 

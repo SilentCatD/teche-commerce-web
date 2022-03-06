@@ -1,12 +1,13 @@
 import express from "express";
 import multer from "multer";
-import { createBrand } from "../../controller/brand.js";
+import { createBrand , fetchAllBranch} from "../../controller/brand.js";
 const router = express.Router();
 const upload = multer();
 // /api/v1/brand
 
 router.get('/', async (req, res)=>{
-    res.send("this is all of the brand");
+    const result = await fetchAllBranch();
+    res.send(result);
 });
 
 router.post('/', upload.single('brandImg'), async (req, res)=> {
