@@ -1,5 +1,5 @@
 # teche-commerce-web
-- Project Don't have properly structure yet. 
+- Beautiful website make by Tarnished from the Land Between, them who seek to elden ring to become Elden Lord
 # How to use
 - Get route "/branch" to get all branch in mongdb atlas
 - Get route "/" is admin page (only have add branch)
