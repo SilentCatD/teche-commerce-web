@@ -23,8 +23,8 @@ import {randomBytes} from 'crypto';
 
         }
         catch (e){
-            console.log(`Failed to connect to database: ${e}`);
-            throw e;
+            console.log(e);
+            throw Error("Failed to connect to database");
         }
     }
 
@@ -57,7 +57,7 @@ import {randomBytes} from 'crypto';
              return brand.id;
         } catch (e){
             console.log(e);
-            throw e;
+            throw Error("Failed to create brand");
         }
     }
 
@@ -74,7 +74,7 @@ import {randomBytes} from 'crypto';
         }
         catch (e) {
             console.log(e);
-            throw e;
+            throw Error("Failed to delete image");
         }
     }
 
@@ -106,13 +106,13 @@ import {randomBytes} from 'crypto';
         }
         catch (e){
             console.log(e);
-            throw e;
+            throw Error("Failed to delete all brands");
         }
     }
 
     async fetchBrand(id){
         try{
-            const brand = await Brand.findById(id);
+            const brand = await Brand.findById(mongoose.mongo.ObjectId(id));
             if(!brand){
                 throw Error("Brand not exist");
             }
@@ -128,13 +128,13 @@ import {randomBytes} from 'crypto';
             }
         }catch (e){
             console.log(e);
-            throw e;
+            throw Error("Failed to fetch brand");
         }
     }
 
     async deleteBrand(id){
         try{
-            const brand = await Brand.findById(id);
+            const brand = await Brand.findById(mongoose.Types.ObjectId(id));
             if(!brand){
                 throw Error("Brand not exist");
             }
@@ -146,7 +146,7 @@ import {randomBytes} from 'crypto';
 
         } catch (e){
             console.log(e);
-            throw e;
+            throw Error("Failed to delete brand");
         }        
     }
 }
