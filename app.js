@@ -12,11 +12,10 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
 app.use('/api', api);
-
 app.use('/', webPage);
 
-app.listen(process.env.PORT || 3000, function() {
-  database.instance.connect();
+app.listen(process.env.PORT || 3000, async ()=> {
+  await database.instance.connect();
   console.log(`Server is running at: ${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}`);
 });
 
