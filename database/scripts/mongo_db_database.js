@@ -3,7 +3,6 @@ import {Readable} from 'stream';
 import mongoose from "mongoose";
 import Brand from "../../model/brand.js";
 import {randomBytes} from 'crypto';
-import {createWriteStream} from 'fs';
 
  class MongoDBDatabase {
     #gridFSBucket
