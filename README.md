@@ -2,14 +2,13 @@
 - Beautiful website make by Tarnished from the Land Between, them who seek to elden ring to become Elden Lord
 # How to use
 
-GET /api/v1/brand => all brand available
-GET /api/v1/brand/:id => brand with id
-POST  /api/v1/brand => createBrand
-DELETE /api/v1/brand => delete all brands
-DELETE /api/v1/brand/:id => delete  brand with id
+- GET /api/v1/brand => all brand available
+- GET /api/v1/brand/:id => brand with id
+- POST  /api/v1/brand => createBrand
+- DELETE /api/v1/brand => delete all brands
+- DELETE /api/v1/brand/:id => delete  brand with id
 
-
-GET /api/v1/image/:id => get image with id
+- GET /api/v1/image/:id => get image with id
 
 
 # Upcomming Features (will be update after i become Elden Lord)
