@@ -11,7 +11,35 @@ export async function createBrand(name, img) {
  }
 
 
-export async function fetchAllBranch(){
+export async function fetchAllBrand(){
     const result = await database.instance.fetchAllBrand();
     return result;
  }
+
+ export async function deleteAllBrand(){
+     try{
+         await database.instance.deleteAllBrand();
+     }
+     catch (e){
+         throw e;
+     }
+ }
+
+ export async function deleteBrand(id){
+     try{
+        await database.instance.deleteBrand(id);
+     }
+     catch (e){
+         throw e;
+     }
+ }
+
+
+ export async function fetchBrand(id){
+    try{
+        const result = await database.instance.fetchBrand(id);
+        return result;
+    }catch (e){
+        throw e;
+    }
+}

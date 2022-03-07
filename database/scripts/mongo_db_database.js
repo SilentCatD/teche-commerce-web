@@ -37,8 +37,9 @@ import {randomBytes} from 'crypto';
             return token;
         }
         try{
+            let fileName = generateFileNames();
             let writeStream = this.#gridFSBucket.openUploadStream(
-                generateFileNames,
+                fileName, 
                 {
                  metadata: {field: 'mime-type', value: img.mimetype}
                 }
@@ -58,7 +59,19 @@ import {randomBytes} from 'crypto';
 
 
     async fetchImageFileStream(imgId){
-        return this.#gridFSBucket.openDownloadStream(mongoose.Types.ObjectId(imgId));
+        try{
+            const imgFile = await this.#gridFSBucket.find({_id: mongoose.Types.ObjectId(imgId)}).count();
+            if (imgFile){
+                const imgStream = this.#gridFSBucket.openDownloadStream(mongoose.Types.ObjectId(imgId));
+                return imgStream;
+            }
+            throw Error("Image not found");
+            // return imgStream;
+        }
+        catch (e) {
+            console.log(e);
+            throw e;
+        }
     }
 
     async fetchAllBrand(){
@@ -68,6 +81,63 @@ import {randomBytes} from 'crypto';
             name: brand.name,
             imageUrl: `${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${brand.imageObjectId}`
         }});
+    }
+
+    async deleteAllBrand(){
+        const brands = await Brand.find();
+        try{
+            brands.map(async (brand)=>{
+                let brandImg = brand.imageObjectId;
+                if (brandImg){
+                    await this.#gridFSBucket.delete(brandImg);
+                }
+                await Brand.findByIdAndDelete(brand.id);
+            });
+        }
+        catch (e){
+            console.log(e);
+            throw e;
+        }
+    }
+
+    async fetchBrand(id){
+        try{
+            const brand = await Brand.findById(id);
+            if(!brand){
+                throw Error("Brand not exist");
+            }
+            let brandImg = brand.imageObjectId;
+            let imgLink;
+            if (brandImg){
+                imgLink = `${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${brand.imageObjectId}`;
+            }
+            return {
+                id: brand.id,
+                name: brand.name,
+                imageUrl: imgLink
+            }
+        }catch (e){
+            console.log(e);
+            throw e;
+        }
+    }
+
+    async deleteBrand(id){
+        try{
+            const brand = await Brand.findById(id);
+            if(!brand){
+                throw Error("Brand not exist");
+            }
+            let brandImg = brand.imageObjectId;
+            if (brandImg){
+                await this.#gridFSBucket.delete(brandImg);
+            }
+            await Brand.deleteOne({_id: brand.id});
+
+        } catch (e){
+            console.log(e);
+            throw e;
+        }        
     }
 }
 

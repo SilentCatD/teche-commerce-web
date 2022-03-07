@@ -6,7 +6,7 @@ async function getImgStream(imgId){
         return imgStream;
     }
     catch (e){
-        throw Error("Can't find image");
+        throw e;
     }
   
 }
