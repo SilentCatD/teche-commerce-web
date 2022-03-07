@@ -1,22 +1,20 @@
 import express from "express";
 import multer from "multer";
 import {
-    createBrand,
-    fetchAllBrand,
-    deleteAllBrand,
-    deleteBrand,
-    fetchBrand,
+  BranchController
 } from "../../../../controller/brand.js";
 const router = express.Router();
 const upload = multer();
 // /api/v1/brand
 
 router
-    .route("/")
-    .get(fetchAllBrand)
-    .post(upload.single("brandImg"), createBrand)
-    .delete(deleteAllBrand);
+  .route("/")
+  .get(BranchController.fetchAllBrand)
+  .post(upload.single("brandImg"), BranchController.createBrand)
+  .delete(BranchController.deleteAllBrand);
 
-router.route("/:id").get(fetchBrand).delete(deleteBrand);
+router.route("/:id").get(BranchController.fetchBrand).delete(BranchController.deleteBrand);
 
-export { router };
+export {
+  router
+};
