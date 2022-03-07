@@ -1,6 +1,6 @@
   import database from "../database/database.js";
 
-  const ImageController {
+  const ImageController = {
     getImgStream: async (req, res) => {
       try {
         const {

@@ -1,7 +1,7 @@
 import database from "../database/database.js";
 
 const BranchController = {
-  async createBrand(req, res) => {
+  createBrand: async (req, res) => {
     try {
       const {
         brandName
@@ -17,7 +17,7 @@ const BranchController = {
       res.status(402).end(`Can't create brand, something went wrong: ${e}`);
     }
   },
-  async fetchAllBrand(req, res) => {
+  fetchAllBrand: async (req, res) => {
     try {
       const result = await database.instance.fetchAllBrand();
       res.writeHead(200, {
@@ -29,7 +29,7 @@ const BranchController = {
       res.status(404).end("Not Found");
     }
   },
-  async fetchBrand(req, res) => {
+  fetchBrand: async (req, res) => {
     try {
       const {
         id
@@ -45,7 +45,7 @@ const BranchController = {
     }
   },
 
-  async deleteAllBrand(req, res) => {
+  deleteAllBrand: async (req, res) => {
     try {
       await database.instance.deleteAllBrand();
       res.status(200).end("All brands deleted");
@@ -54,7 +54,7 @@ const BranchController = {
       res.status(404).end("Failed to delete some brands, try again");
     }
   },
-  async deleteBrand(req, res) => {
+  deleteBrand: async (req, res) => {
     try {
       const {
         id
@@ -68,6 +68,8 @@ const BranchController = {
         .end("Can't delete brand, it's not exist or something went wrong");
     }
   },
-}
+};
 
-export {BranchController}
+export {
+  BranchController
+};
