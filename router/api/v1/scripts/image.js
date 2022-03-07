@@ -1,7 +1,5 @@
 import express from "express";
-import {
-  ImageController
-} from "../../../../controller/images.js";
+import ImageController from "../../../../controller/images.js";
 
 const router = express.Router();
 
