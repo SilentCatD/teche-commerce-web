@@ -1,6 +1,6 @@
 import express from "express";
 import 'dotenv/config';
-import { router as webPage } from "./router/web_page.js"; 
+import { router as webPage } from "./router/frontend/web_page.js"; 
 import { router as api } from "./router/api/api.js";
 
 import database from "./database/database.js";
