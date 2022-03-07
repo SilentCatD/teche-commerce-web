@@ -37,20 +37,24 @@ import {randomBytes} from 'crypto';
             return token;
         }
         try{
-            let fileName = generateFileNames();
-            let writeStream = this.#gridFSBucket.openUploadStream(
-                fileName, 
-                {
-                 metadata: {field: 'mime-type', value: img.mimetype}
-                }
-             );
-             let readStream = Readable.from(img.buffer);
-             readStream.pipe(writeStream);
+            let imgId=null;
+            if (img){
+                let fileName = generateFileNames();
+                let writeStream = this.#gridFSBucket.openUploadStream(
+                    fileName, 
+                    {
+                     metadata: {field: 'mime-type', value: img.mimetype}
+                    }
+                 );
+                 imgId = writeStream.id;
+                 let readStream = Readable.from(img.buffer);
+                 readStream.pipe(writeStream);
+            }
              
-             let brand = new Brand({name: name, imageObjectId: writeStream.id});
+             let brand = new Brand({name: name, imageObjectId: imgId});
              await brand.save();
              console.log("Brand created");
-             return writeStream.id;
+             return brand.id;
         } catch (e){
             console.log(e);
             throw e;
@@ -76,10 +80,16 @@ import {randomBytes} from 'crypto';
 
     async fetchAllBrand(){
         const results = await Brand.find();
-        return results.map((brand)=> {return {
+        return results.map((brand)=> {
+            let imgId = brand.imageObjectId;
+            let imgUrl = null
+            if (imgId){
+                imgUrl = `${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${imgId}`
+            }
+            return {
             id: brand.id,
             name: brand.name,
-            imageUrl: `${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${brand.imageObjectId}`
+            imageUrl: imgUrl
         }});
     }
 
@@ -107,7 +117,7 @@ import {randomBytes} from 'crypto';
                 throw Error("Brand not exist");
             }
             let brandImg = brand.imageObjectId;
-            let imgLink;
+            let imgLink=null;
             if (brandImg){
                 imgLink = `${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${brand.imageObjectId}`;
             }
