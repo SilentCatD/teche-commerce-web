@@ -1,71 +1,81 @@
 
-import {Readable} from 'stream'; 
+import { Readable } from 'stream';
 import mongoose from "mongoose";
 import Brand from "../../model/brand.js";
-import {randomBytes} from 'crypto';
+import { randomBytes } from 'crypto';
 
- class MongoDBDatabase {
+class MongoDBDatabase {
     #gridFSBucket
     #connectStatus = false;
 
-    async connect(){
+    async connect() {
         if (this.#connectStatus) {
             return;
         }
-        try{
-            await mongoose.connect(`mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@thisisfortestpurpose.3mdrb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, { useNewUrlParser: true,});
+        try {
+            await mongoose.connect(`mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@thisisfortestpurpose.3mdrb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, { useNewUrlParser: true, });
             console.log("Database connected");
-            
+
             this.#connectStatus = true;
             this.#gridFSBucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
                 bucketName: 'images'
             });
 
         }
-        catch (e){
+        catch (e) {
             console.log(e);
             throw Error("Failed to connect to database");
         }
     }
 
-    async createBrand(name, img){
-        function generateFileNames(){
+    async #upLoadImg(img) {
+        function generateFileNames() {
+            return randomBytes(48).toString();
+        }
+        let fileName = generateFileNames();
+        let writeStream = this.#gridFSBucket.openUploadStream(
+            fileName,
+            {
+                metadata: { field: 'mime-type', value: img.mimetype }
+            }
+        );
+        let readStream = Readable.from(img.buffer);
+        readStream.pipe(writeStream);
+        return writeStream.id;
+    }
+
+    async #deleteImg(id){
+        await this.#gridFSBucket.delete(id); 
+    }
+
+    async createBrand(name, img) {
+        function generateFileNames() {
             let token;
-            randomBytes(48, (err, buffer)=>{
-                token= buffer.toString();
+            randomBytes(48, (err, buffer) => {
+                token = buffer.toString('hex');
             });
             return token;
         }
-        try{
-            let imgId=null;
-            if (img){
-                let fileName = generateFileNames();
-                let writeStream = this.#gridFSBucket.openUploadStream(
-                    fileName, 
-                    {
-                     metadata: {field: 'mime-type', value: img.mimetype}
-                    }
-                 );
-                 imgId = writeStream.id;
-                 let readStream = Readable.from(img.buffer);
-                 readStream.pipe(writeStream);
+        try {
+            let imgId = null;
+            if (img) {
+                imgId = await this.#upLoadImg(img);
             }
-             
-             let brand = new Brand({name: name, imageObjectId: imgId});
-             await brand.save();
-             console.log("Brand created");
-             return brand.id;
-        } catch (e){
+            let brand = new Brand({ name: name, imageObjectId: imgId });
+            await brand.save();
+            console.log("Brand created");
+            return brand.id;
+        } catch (e) {
             console.log(e);
             throw Error("Failed to create brand");
         }
     }
 
 
-    async fetchImageFileStream(imgId){
-        try{
-            const imgFile = await this.#gridFSBucket.find({_id: mongoose.Types.ObjectId(imgId)}).count();
-            if (imgFile){
+    async fetchImageFileStream(imgId) {
+        try {
+            const imgFile = await this.#gridFSBucket.find({ _id: mongoose.Types.ObjectId(imgId) }).count();
+            if (imgFile) {
                 const imgStream = this.#gridFSBucket.openDownloadStream(mongoose.Types.ObjectId(imgId));
                 return imgStream;
             }
@@ -78,47 +88,48 @@ import {randomBytes} from 'crypto';
         }
     }
 
-    async fetchAllBrand(){
+    async fetchAllBrand() {
         const results = await Brand.find();
-        return results.map((brand)=> {
+        return results.map((brand) => {
             let imgId = brand.imageObjectId;
             let imgUrl = null
-            if (imgId){
+            if (imgId) {
                 imgUrl = `${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${imgId}`
             }
             return {
-            id: brand.id,
-            name: brand.name,
-            imageUrl: imgUrl
-        }});
+                id: brand.id,
+                name: brand.name,
+                imageUrl: imgUrl
+            }
+        });
     }
 
-    async deleteAllBrand(){
+    async deleteAllBrand() {
         const brands = await Brand.find();
-        try{
-            brands.map(async (brand)=>{
+        try {
+            brands.map(async (brand) => {
                 let brandImg = brand.imageObjectId;
-                if (brandImg){
-                    await this.#gridFSBucket.delete(brandImg);
+                if (brandImg) {
+                    await this.#deleteImg(brandImg);
                 }
                 await Brand.findByIdAndDelete(brand.id);
             });
         }
-        catch (e){
+        catch (e) {
             console.log(e);
             throw Error("Failed to delete all brands");
         }
     }
 
-    async fetchBrand(id){
-        try{
+    async fetchBrand(id) {
+        try {
             const brand = await Brand.findById(mongoose.mongo.ObjectId(id));
-            if(!brand){
+            if (!brand) {
                 throw Error("Brand not exist");
             }
             let brandImg = brand.imageObjectId;
-            let imgLink=null;
-            if (brandImg){
+            let imgLink = null;
+            if (brandImg) {
                 imgLink = `${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${brand.imageObjectId}`;
             }
             return {
@@ -126,31 +137,31 @@ import {randomBytes} from 'crypto';
                 name: brand.name,
                 imageUrl: imgLink
             }
-        }catch (e){
+        } catch (e) {
             console.log(e);
             throw Error("Failed to fetch brand");
         }
     }
 
-    async deleteBrand(id){
-        try{
+    async deleteBrand(id) {
+        try {
             const brand = await Brand.findById(mongoose.Types.ObjectId(id));
-            if(!brand){
+            if (!brand) {
                 throw Error("Brand not exist");
             }
             let brandImg = brand.imageObjectId;
-            if (brandImg){
-                await this.#gridFSBucket.delete(brandImg);
+            if (brandImg) {
+                await this.#deleteImg(brandImg);
             }
-            await Brand.deleteOne({_id: brand.id});
+            await Brand.deleteOne({ _id: brand.id });
 
-        } catch (e){
+        } catch (e) {
             console.log(e);
             throw Error("Failed to delete brand");
-        }        
+        }
     }
 }
 
 
-export {MongoDBDatabase};
+export { MongoDBDatabase };
 
