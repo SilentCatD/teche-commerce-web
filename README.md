@@ -4,7 +4,7 @@
 
 - GET /api/v1/brand => all brand available
 - GET /api/v1/brand/:id => brand with id
-- POST  /api/v1/brand => createBrand
+- POST  /api/v1/brand => createBrand, use the web UI
 - DELETE /api/v1/brand => delete all brands
 - DELETE /api/v1/brand/:id => delete  brand with id
 - GET /api/v1/image/:id => get image with id
