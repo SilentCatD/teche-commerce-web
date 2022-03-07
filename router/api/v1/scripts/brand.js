@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 import {
-  BranchController
+  BrandController
 } from "../../../../controller/brand.js";
 const router = express.Router();
 const upload = multer();
@@ -9,11 +9,11 @@ const upload = multer();
 
 router
   .route("/")
-  .get(BranchController.fetchAllBrand)
-  .post(upload.single("brandImg"), BranchController.createBrand)
-  .delete(BranchController.deleteAllBrand);
+  .get(BrandController.fetchAllBrand)
+  .post(upload.single("brandImg"), BrandController.createBrand)
+  .delete(BrandController.deleteAllBrand);
 
-router.route("/:id").get(BranchController.fetchBrand).delete(BranchController.deleteBrand);
+router.route("/:id").get(BrandController.fetchBrand).delete(BrandController.deleteBrand);
 
 export {
   router
