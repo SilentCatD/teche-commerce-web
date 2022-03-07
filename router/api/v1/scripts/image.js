@@ -1,8 +1,12 @@
 import express from "express";
-import { getImgStream } from "../../../../controller/images.js";
+import {
+  ImageController
+} from "../../../../controller/images.js";
 
 const router = express.Router();
 
-router.route("/:id").get(getImgStream);
+router.route("/:id").get(ImageController.getImgStream);
 
-export { router };
+export {
+  router
+};
