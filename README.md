@@ -7,9 +7,10 @@
 - POST  /api/v1/brand => createBrand
 - DELETE /api/v1/brand => delete all brands
 - DELETE /api/v1/brand/:id => delete  brand with id
-
 - GET /api/v1/image/:id => get image with id
 
+
+# IM SO FUCKING TIRED
 
 # Upcomming Features (will be update after i become Elden Lord)
  - Management all database
