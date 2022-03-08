@@ -33,6 +33,37 @@ async function deleteBrandById(id) {
     $('#brand-id-input').val("");
 }
 
+async function addCategory(name) {
+    let data = {};
+    data.categoryName = name;
+    try {
+        let res = await axios({
+            method: "post",
+            url: "/api/v1/category",
+            data: data
+          });
+        $('#db-res').text(res.data);
+    } catch (e) {
+        $('#db-res').text(e);
+    }
+    $('#add-cate-name').val("");
+}
+
+async function deleteCategoryById(id) {
+    try {
+        let response = await axios({
+            method: "delete",
+            url: `/api/v1/category/${id}`,
+        });
+        console.log(response);
+        $('#db-res').text(response.data);
+    }
+    catch (e) {
+        $('#db-res').text("Failed to delete category");
+    }
+    $('#cate-id-input').val("");
+}
+
 $('#delete-brand-btn').click(function (e) {
     e.preventDefault();
     const brandIdVal = $('#brand-id-input').val();
@@ -67,4 +98,30 @@ $('#add-brand-btn').click(function (e) {
         $('#add-brand-img-error').text("");
     }
     addBrand(brandNameVal, imgFile);
+});
+
+
+$('#add-cate-btn').click(function (e) {
+    e.preventDefault();
+
+    const categoryNameVal = $('#add-cate-name').val();
+
+    if (!categoryNameVal) {
+        $('#add-cate-name-error').text("Must provide a valid category name");
+        console.log(categoryNameVal);
+        return;
+    }
+    $('#add-cate-name-error').text("");
+    addCategory(categoryNameVal);
+});
+
+$('#delete-cate-btn').click(function (e) {
+    e.preventDefault();
+    const categoryIdVal = $('#cate-id-input').val();
+    if (!categoryIdVal) {
+        $('#cate-id-input-error').text("category id cant be empty");
+        return;
+    }
+    $('#cate-id-input-error').text("");
+    deleteCategoryById(categoryIdVal);
 });

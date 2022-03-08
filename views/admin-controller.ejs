@@ -25,33 +25,64 @@
 </head>
 
 <body class="text-center">
-  <main class="form">
-    <img class="mb-4 my-icon" src="https://pbs.twimg.com/media/FE_Ln6AUYAAEBai.jpg" alt="" width="200" height="200">
-    <h1 class="h3 mb-3 fw-normal">Adding Company!</h1>
-    <p class="text-warning">You shouldn't worry about ID</p>
-    <input type="text" class="form-control" name="cName" placeholder="Brand Name" autofocus autocomplete="off" id="add-brand-name">
-    <p class="text-danger" id="add-brand-name-error"></p>
-    <input type="file" class="form-control" id="add-brand-img">
-    <p class="text-danger" id="add-brand-img-error"></p>
-    <button class="w-100 btn btn-lg btn-primary" id="add-brand-btn">Add</button>
-  </main>
+  <h1 class="text-start font-weight-bold">Add Branch</h1>
+  <div class="row">
+    <div class="col-lg-4">
+      <main class="form">
+        <img class="mb-4 my-icon" src="https://pbs.twimg.com/media/FE_Ln6AUYAAEBai.jpg" alt="" width="200" height="200">
+        <h1 class="h3 mb-3 fw-normal">Adding Company!</h1>
+        <p class="text-warning">You shouldn't worry about ID</p>
+        <input type="text" class="form-control" name="cName" placeholder="Brand Name" autofocus autocomplete="off" id="add-brand-name">
+        <p class="text-danger" id="add-brand-name-error"></p>
+        <input type="file" class="form-control" id="add-brand-img">
+        <p class="text-danger" id="add-brand-img-error"></p>
+        <button class="w-100 btn btn-lg btn-primary" id="add-brand-btn">Add</button>
+      </main>
+    </div>
+    <div class="col-lg-4">
+      <main class="form">
+        <img class="mb-4 my-icon" src="https://i.imgflip.com/2sxkqu.png" alt="" width="200" height="200">
+        <h1 class="h3 mb-3 fw-normal">Delete Company</h1>
+        <p class="text-warning">You should worry about ID</p>
+        <input type="text" class="form-control" name="cName" placeholder="Brand Id" autocomplete="off" id="brand-id-input">
+        <p class="text-danger" id="brand-id-input-error"></p>
+        <button class="w-100 btn btn-lg btn-primary" id="delete-brand-btn">Kick</button>
+      </main>
+    </div>
 
-  <main class="form">
-    <img class="mb-4 my-icon" src="https://i.imgflip.com/2sxkqu.png" alt="" width="200" height="200">
-    <h1 class="h3 mb-3 fw-normal">Delete Company</h1>
-    <p class="text-warning">You should worry about ID</p>
-    <input type="text" class="form-control" name="cName" placeholder="Brand Id" autocomplete="off" id="brand-id-input">
-    <p class="text-danger" id="brand-id-input-error"></p>
-    <button class="w-100 btn btn-lg btn-primary" id="delete-brand-btn">Kick</button>
-  </main>
+    <div class="col-lg-4">
+      <main class="form">
+        <img class="mb-4 my-icon" src="https://i.ytimg.com/vi/s-998kFFsLA/maxresdefault.jpg" alt="" width="200"
+          height="200">
+        <h1 class="h3 mb-3 fw-normal" id="db-res">Database response:</h1>
+        <h3 id="dbs-response-msg">
+        </h3>
+      </main>
+    </div>
+  </div>
 
-  <main class="form">
-    <img class="mb-4 my-icon" src="https://i.ytimg.com/vi/s-998kFFsLA/maxresdefault.jpg" alt="" width="200"
-      height="200">
-    <h1 class="h3 mb-3 fw-normal" id="db-res">Database response:</h1>
-    <h3 id="dbs-response-msg">
-    </h3>
-  </main>
+  <h1 class="text-start font-weight-bold">Add Category</h1>
+  <div class="row">
+    <div class="col-lg-6">
+      <main class="form">
+        <img class="mb-4 my-icon" src="https://i.pinimg.com/originals/c7/67/c0/c767c01df6f9036a8e8ea256b41267bc.png" alt="" width="200" height="200">
+        <h1 class="h3 mb-3 fw-normal">Adding Category!</h1>
+        <p class="text-warning">You shouldn't worry about ID</p>
+        <input type="text" class="form-control" name="cName" placeholder="Category Name" autofocus autocomplete="off" id="add-cate-name">
+        <p class="text-danger" id="add-cate-name-error"></p>
+        <button class="w-100 btn btn-lg btn-primary" id="add-cate-btn">Add</button>
+      </main>
+    </div>
+    <div class="col-lg-6">
+      <main class="form">
+        <img class="mb-4 my-icon" src="https://i.pinimg.com/originals/c7/67/c0/c767c01df6f9036a8e8ea256b41267bc.png" alt="" width="200" height="200">
+        <h1 class="h3 mb-3 fw-normal">Delete Company</h1>
+        <p class="text-warning">You should worry about ID</p>
+        <input type="text" class="form-control" name="cName" placeholder="Category Id" autocomplete="off" id="cate-id-input">
+        <p class="text-danger" id="cate-id-input-error"></p>
+        <button class="w-100 btn btn-lg btn-primary" id="delete-cate-btn">Kick</button>
+      </main>
+    </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>

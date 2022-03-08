@@ -1,5 +1,5 @@
 // TODO: Review this
-
+//
 // import mongoose from "mongoose";
 //
 // const productScheme = new mongoose.Schema({
@@ -7,8 +7,8 @@
 //       type: String,
 //       required: true
 //     },
-//     category: [String],
-//     publisher: String,
+//     category: mongoose.SchemaTypes.ObjectId,
+//     publisher: mongoose.SchemaTypes.ObjectId,
 //     rewviewCount: {
 //       type: Number,
 //       min: 0,
@@ -29,6 +29,6 @@
 //     imageObjectId: mongoose.SchemaTypes.ObjectId
 // });
 //
-// const Brand = mongoose.model('Brand',brandSchema);
+// const Product = mongoose.model('Product',productScheme);
 //
 // export default Brand;

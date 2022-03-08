@@ -2,6 +2,7 @@
 import { Readable } from 'stream';
 import mongoose from "mongoose";
 import Brand from "../../model/brand.js";
+import Category from "../../model/category.js";
 import { randomBytes } from 'crypto';
 
 class MongoDBDatabase {
@@ -45,7 +46,7 @@ class MongoDBDatabase {
     }
 
     async #deleteImg(id){
-        await this.#gridFSBucket.delete(id); 
+        await this.#gridFSBucket.delete(id);
     }
 
     async createBrand(name, img) {
@@ -160,8 +161,72 @@ class MongoDBDatabase {
             throw Error("Failed to delete brand");
         }
     }
+
+    async createCategory(name) {
+        try {
+            let category = new Category({ name: name });
+            await category.save();
+            console.log("Category created");
+            return category.id;
+        } catch (e) {
+            console.log(e);
+            throw Error("Failed to create category");
+        }
+    }
+
+    async fetchAllCategory() {
+        const results = await Category.find();
+        return results.map((category) => {
+            return {
+                id: category.id,
+                name: category.name
+            }
+        });
+    }
+
+    async deleteAllCategory() {
+        const categories = await Category.find();
+        try {
+            categories.map(async (category) => {
+                await Category.findByIdAndDelete(category.id);
+            });
+        }
+        catch (e) {
+            console.log(e);
+            throw Error("Failed to delete all Categories");
+        }
+    }
+
+    async fetchCategory(id) {
+        try {
+            const category = await Category.findById(mongoose.mongo.ObjectId(id));
+            if (!category) {
+                throw Error("Category not exist");
+            }
+            return {
+                id: category.id,
+                name: category.name
+            }
+        } catch (e) {
+            console.log(e);
+            throw Error("Failed to fetch category");
+        }
+    }
+
+    async deleteCategory(id) {
+        try {
+            const category = await Category.findById(mongoose.Types.ObjectId(id));
+            if (!category) {
+                throw Error("Category not exist");
+            }
+            await Category.deleteOne({ _id: category.id });
+
+        } catch (e) {
+            console.log(e);
+            throw Error("Failed to delete category");
+        }
+    }
 }
 
 
 export { MongoDBDatabase };
-

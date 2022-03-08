@@ -4,7 +4,6 @@ body {
 }
 
 body {
-  display: flex;
   align-items: center;
   padding-top: 40px;
   padding-bottom: 40px;
@@ -29,7 +28,9 @@ body {
   margin-bottom: 1rem;
 }
 
-
+.row{
+  margin-bottom: 5%;
+}
 
 .my-icon{
   border-radius: 50%;
