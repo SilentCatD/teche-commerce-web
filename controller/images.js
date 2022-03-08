@@ -15,6 +15,4 @@
   };
 
 
-  export {
-    ImageController
-  };
+ export default ImageController;

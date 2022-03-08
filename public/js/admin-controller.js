@@ -1,5 +1,6 @@
 async function addBrand(name, img) {
     let formData = new FormData();
+    console.log(img);
     formData.append('brandName', name);
     formData.append('brandImg', img);
     try {
