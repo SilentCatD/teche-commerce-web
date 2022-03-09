@@ -21,7 +21,7 @@ const BrandController = {
     fetchAllBrand: async (req, res) => {
         try {
             const query =req.query;
-            const result = await database.instance.fetchAllBrand(query.limit , query.sort);
+            const result = await database.instance.fetchAllBrand(query.limit , query.sort, query.type);
             res.writeHead(200, {
                 'Content-Type': 'application/json'
             });

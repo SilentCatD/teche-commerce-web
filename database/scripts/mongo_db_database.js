@@ -83,10 +83,13 @@ class MongoDBDatabase {
                !isNaN(parseInt(value, 10));
     }
 
-    async fetchAllBrand(limit, sort) {
+    async fetchAllBrand(limit, sort, type) {
         let sortedParams = {};
+        if (type != 1 && type != -1){
+            type = -1;
+        }
         if(sort){
-            sortedParams[sort] = 1;        
+            sortedParams[sort] = type;        
         }
         limit = this.#sInt(limit) ? limit : null;
         const results = await Brand.find().limit(limit).sort(sortedParams);
@@ -114,8 +117,6 @@ class MongoDBDatabase {
             }
             await Brand.findByIdAndDelete(brand.id);
         });
-
-
     }
 
     async fetchBrand(id) {
@@ -148,10 +149,13 @@ class MongoDBDatabase {
         return category.id;
     }
 
-    async fetchAllCategory(limit, sort) {
+    async fetchAllCategory(limit, sort, type) {
         let sortedParams = {};
+        if (type != 1 && type != -1){
+            type = -1;
+        }
         if(sort){
-            sortedParams[sort] = 1;        
+            sortedParams[sort] = type;        
         }
         limit = this.#sInt(limit) ? limit : null;
         const results = await Category.find().limit(limit).sort(sortedParams);
