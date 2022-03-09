@@ -106,8 +106,8 @@ class MongoDBDatabase {
     }
 
     async deleteAllBrand() {
-        const brands = await Brand.find();
         try {
+            const brands = await Brand.find();
             brands.map(async (brand) => {
                 let brandImg = brand.imageObjectId;
                 if (brandImg) {
@@ -185,11 +185,8 @@ class MongoDBDatabase {
     }
 
     async deleteAllCategory() {
-        const categories = await Category.find();
         try {
-            categories.map(async (category) => {
-                await Category.findByIdAndDelete(category.id);
-            });
+            await Category.deleteMany({});
         }
         catch (e) {
             console.log(e);
