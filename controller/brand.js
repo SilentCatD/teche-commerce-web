@@ -1,3 +1,4 @@
+import { query } from "express";
 import database from "../database/database.js";
 
 const BrandController = {
@@ -19,7 +20,8 @@ const BrandController = {
     },
     fetchAllBrand: async (req, res) => {
         try {
-            const result = await database.instance.fetchAllBrand();
+            const query =req.query;
+            const result = await database.instance.fetchAllBrand(query.limit , query.sort);
             res.writeHead(200, {
                 'Content-Type': 'application/json'
             });

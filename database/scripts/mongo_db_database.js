@@ -45,7 +45,7 @@ class MongoDBDatabase {
         return writeStream.id;
     }
 
-    async #deleteImg(id){
+    async #deleteImg(id) {
         await this.#gridFSBucket.delete(id);
     }
 
@@ -57,40 +57,39 @@ class MongoDBDatabase {
             });
             return token;
         }
-        try {
-            let imgId = null;
-            if (img) {
-                imgId = await this.#upLoadImg(img);
-            }
-            let brand = new Brand({ name: name, imageObjectId: imgId });
-            await brand.save();
-            console.log("Brand created");
-            return brand.id;
-        } catch (e) {
-            console.log(e);
-            throw Error("Failed to create brand");
+        let imgId = null;
+        if (img) {
+            imgId = await this.#upLoadImg(img);
         }
+        let brand = new Brand({ name: name, imageObjectId: imgId });
+        await brand.save();
+        console.log("Brand created");
+        return brand.id;
     }
 
 
     async fetchImageFileStream(imgId) {
-        try {
-            const imgFile = await this.#gridFSBucket.find({ _id: mongoose.Types.ObjectId(imgId) }).count();
-            if (imgFile) {
-                const imgStream = this.#gridFSBucket.openDownloadStream(mongoose.Types.ObjectId(imgId));
-                return imgStream;
-            }
-            throw Error("Image not found");
-            // return imgStream;
+        const imgFile = await this.#gridFSBucket.find({ _id: mongoose.Types.ObjectId(imgId) }).count();
+        if (imgFile){
+            const imgStream = this.#gridFSBucket.openDownloadStream(mongoose.Types.ObjectId(imgId));
+            return imgStream;   
         }
-        catch (e) {
-            console.log(e);
-            throw Error("Failed to delete image");
-        }
+        throw Error(`Cant locate image with id: ${imgId}`);
     }
 
-    async fetchAllBrand() {
-        const results = await Brand.find();
+    #sInt(value) {
+        return !isNaN(value) && 
+               parseInt(Number(value)) == value && 
+               !isNaN(parseInt(value, 10));
+    }
+
+    async fetchAllBrand(limit, sort) {
+        let sortedParams = {};
+        if(sort){
+            sortedParams[sort] = 1;        
+        }
+        limit = this.#sInt(limit) ? limit : null;
+        const results = await Brand.find().limit(limit).sort(sortedParams);
         return results.map((brand) => {
             let imgId = brand.imageObjectId;
             let imgUrl = null
@@ -100,82 +99,62 @@ class MongoDBDatabase {
             return {
                 id: brand.id,
                 name: brand.name,
-                imageUrl: imgUrl
+                imageUrl: imgUrl,
+                rankingPoints: brand.rankingPoints,
             }
         });
     }
 
     async deleteAllBrand() {
-        try {
-            const brands = await Brand.find();
-            brands.map(async (brand) => {
-                let brandImg = brand.imageObjectId;
-                if (brandImg) {
-                    await this.#deleteImg(brandImg);
-                }
-                await Brand.findByIdAndDelete(brand.id);
-            });
-        }
-        catch (e) {
-            console.log(e);
-            throw Error("Failed to delete all brands");
-        }
-    }
-
-    async fetchBrand(id) {
-        try {
-            const brand = await Brand.findById(mongoose.mongo.ObjectId(id));
-            if (!brand) {
-                throw Error("Brand not exist");
-            }
-            let brandImg = brand.imageObjectId;
-            let imgLink = null;
-            if (brandImg) {
-                imgLink = `${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${brand.imageObjectId}`;
-            }
-            return {
-                id: brand.id,
-                name: brand.name,
-                imageUrl: imgLink
-            }
-        } catch (e) {
-            console.log(e);
-            throw Error("Failed to fetch brand");
-        }
-    }
-
-    async deleteBrand(id) {
-        try {
-            const brand = await Brand.findById(mongoose.Types.ObjectId(id));
-            if (!brand) {
-                throw Error("Brand not exist");
-            }
+        const brands = await Brand.find();
+        brands.map(async (brand) => {
             let brandImg = brand.imageObjectId;
             if (brandImg) {
                 await this.#deleteImg(brandImg);
             }
-            await Brand.deleteOne({ _id: brand.id });
+            await Brand.findByIdAndDelete(brand.id);
+        });
 
-        } catch (e) {
-            console.log(e);
-            throw Error("Failed to delete brand");
+
+    }
+
+    async fetchBrand(id) {
+        const brand = await Brand.findById(mongoose.mongo.ObjectId(id));
+        let brandImg = brand.imageObjectId;
+        let imgLink = null;
+        if (brandImg) {
+            imgLink = `${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${brand.imageObjectId}`;
         }
+        return {
+            id: brand.id,
+            name: brand.name,
+            imageUrl: imgLink
+        }
+    }
+
+    async deleteBrand(id) {
+        const brand = await Brand.findById(mongoose.Types.ObjectId(id));
+        let brandImg = brand.imageObjectId;
+        if (brandImg) {
+            await this.#deleteImg(brandImg);
+        }
+        await Brand.deleteOne({ _id: brand.id });
     }
 
     async createCategory(name) {
-        try {
-            let category = new Category({ name: name });
-            await category.save();
-            console.log("Category created");
-            return category.id;
-        } catch (e) {
-            console.log(e);
-            throw Error("Failed to create category");
-        }
+        let category = new Category({ name: name });
+        await category.save();
+        console.log("Category created");
+        return category.id;
     }
 
-    async fetchAllCategory() {
-        const results = await Category.find();
+    async fetchAllCategory(limit, sort) {
+        let sortedParams = {};
+        if(sort){
+            sortedParams[sort] = 1;        
+        }
+        limit = this.#sInt(limit) ? limit : null;
+        const results = await Category.find().limit(limit).sort(sortedParams);
         return results.map((category) => {
             return {
                 id: category.id,
@@ -185,45 +164,22 @@ class MongoDBDatabase {
     }
 
     async deleteAllCategory() {
-        try {
-            await Category.deleteMany({});
-        }
-        catch (e) {
-            console.log(e);
-            throw Error("Failed to delete all Categories");
-        }
+        await Category.deleteMany({});
     }
 
     async fetchCategory(id) {
-        try {
-            const category = await Category.findById(mongoose.mongo.ObjectId(id));
-            if (!category) {
-                throw Error("Category not exist");
-            }
-            return {
-                id: category.id,
-                name: category.name
-            }
-        } catch (e) {
-            console.log(e);
-            throw Error("Failed to fetch category");
+        const category = await Category.findById(mongoose.mongo.ObjectId(id));
+        return {
+            id: category.id,
+            name: category.name
         }
     }
 
     async deleteCategory(id) {
-        try {
-            const category = await Category.findById(mongoose.Types.ObjectId(id));
-            if (!category) {
-                throw Error("Category not exist");
-            }
-            await Category.deleteOne({ _id: category.id });
+        const category = await Category.findById(mongoose.Types.ObjectId(id));
+        await Category.deleteOne({ _id: category.id });
 
-        } catch (e) {
-            console.log(e);
-            throw Error("Failed to delete category");
-        }
     }
 }
-
 
 export { MongoDBDatabase };
