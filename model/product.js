@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Comment from "./comment";
+import {Comment,  commentSchema } from "./comment.js";
 
 const productSchema = new mongoose.Schema({
     name: {
@@ -42,7 +42,7 @@ const productSchema = new mongoose.Schema({
         default: 0,
         min: 0
     },
-    comments: [Comment],
+    comments: [commentSchema],
 }
 );
 

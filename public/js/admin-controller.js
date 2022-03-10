@@ -130,7 +130,7 @@ $('#delete-cate-btn').click(function (e) {
 
 // ======================================
 
-let imgFileToUpload = [];
+let imgFileToUpload = []; // File 
 let imgMetadata = [];
 $('#add-product-img-btn').click(function (e) { 
     e.preventDefault();
@@ -195,6 +195,7 @@ $("#add-product-btn").click( async function (e) {
         return;
     }
 
+    
     let formData = new FormData();
     formData.append('productName', productName);
     formData.append('productDetails', productDetails);
@@ -205,7 +206,6 @@ $("#add-product-btn").click( async function (e) {
     imgFileToUpload.forEach((file)=>{
         formData.append('images',file);
     })
-   
     let response = await axios({
         method: "post",
         url: "/api/v1/product",
