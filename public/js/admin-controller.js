@@ -202,7 +202,7 @@ $("#add-product-btn").click( async function (e) {
     formData.append('productBrand', productBrand);
     formData.append('productCategory', productCategory);
     formData.append('productPrice', productPrice);
-    formData.append('imagesMetaData', imgMetadata);
+    formData.append('imagesMetaData', JSON.stringify(imgMetadata));
     imgFileToUpload.forEach((file)=>{
         formData.append('images',file);
     })
@@ -220,5 +220,6 @@ $("#add-product-btn").click( async function (e) {
     $('#product-category').val("");
     $('#product-price').val("");
     imgFileToUpload = [];
+    imgMetadata = []; // fuck u
     $("#img-holder-list").html('');
 });
