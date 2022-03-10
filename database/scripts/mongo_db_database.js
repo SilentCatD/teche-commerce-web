@@ -3,6 +3,7 @@ import { Readable } from 'stream';
 import mongoose from "mongoose";
 import Brand from "../../model/brand.js";
 import Category from "../../model/category.js";
+import Product from "../../model/product.js";
 import { randomBytes } from 'crypto';
 
 function isInt(value) {
@@ -35,6 +36,7 @@ class MongoDBDatabase {
         }
     }
 
+    // Image section
     async #upLoadImg(img) {
         function generateFileNames() {
             return randomBytes(48).toString();
@@ -51,29 +53,6 @@ class MongoDBDatabase {
         return writeStream.id;
     }
 
-    async #deleteImg(id) {
-        await this.#gridFSBucket.delete(id);
-    }
-
-    async createBrand(name, img) {
-        function generateFileNames() {
-            let token;
-            randomBytes(48, (err, buffer) => {
-                token = buffer.toString('hex');
-            });
-            return token;
-        }
-        let imgId = null;
-        if (img) {
-            imgId = await this.#upLoadImg(img);
-        }
-        let brand = new Brand({ name: name, imageObjectId: imgId });
-        await brand.save();
-        console.log("Brand created");
-        return brand.id;
-    }
-
-
     async fetchImageFileStream(imgId) {
         const imgFile = await this.#gridFSBucket.find({ _id: mongoose.Types.ObjectId(imgId) }).count();
         if (imgFile) {
@@ -83,6 +62,21 @@ class MongoDBDatabase {
         throw Error(`Cant locate image with id: ${imgId}`);
     }
 
+    async #deleteImg(id) {
+        await this.#gridFSBucket.delete(id);
+    }
+
+    // Brand Section
+    async createBrand(name, img) {
+        let imgId = null;
+        if (img) {
+            imgId = await this.#upLoadImg(img);
+        }
+        let brand = new Brand({ name: name, imageObjectId: imgId });
+        await brand.save();
+        console.log("Brand created");
+        return brand.id;
+    }
 
     async fetchAllBrand(limit, sort, type) {
         let sortedParams = {};
@@ -143,6 +137,9 @@ class MongoDBDatabase {
         await Brand.deleteOne({ _id: brand.id });
     }
 
+
+    // Category section
+
     async createCategory(name) {
         let category = new Category({ name: name });
         await category.save();
@@ -185,6 +182,7 @@ class MongoDBDatabase {
         await Category.deleteOne({ _id: category.id });
 
     }
+    
 }
 
 export default MongoDBDatabase;
