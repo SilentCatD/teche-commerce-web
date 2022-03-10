@@ -91,10 +91,15 @@
     <div class="col-6">
       <div class="form">
         <input type="text" class="form-control" placeholder="product name" id="product-name">
+        <p class="text-danger" id="product-name-input-error"></p>
         <textarea class="form-control" placeholder="product detail" id="product-detail" rows="5"></textarea>
         <input type="text" class="form-control" placeholder="product brand (id)" id="product-brand">
+        <p class="text-danger" id="product-price-brand-error"></p>
         <input type="text" class="form-control" placeholder="product category (id)" id="product-category">
-        <input type="text" class="form-control" placeholder="product price" id="product-category">
+        <p class="text-danger" id="product-category-input-error"></p>
+        <input type="text" class="form-control" placeholder="product price" id="product-price">
+        <p class="text-danger" id="product-price-input-error"></p>
+        <button class="w-100 btn btn-lg btn-primary" id="add-product-btn">Add Product</button>
       </div>
     </div>
     <div class="col-6">
@@ -106,10 +111,11 @@
         <button class="w-100 btn btn-lg btn-primary" id="add-product-img-btn">Add Img</button>
       </div>
     </div>
-  </div>
-  <ul id="img-holder-list">
+    <ul id="img-holder-list">
 
-  </ul>
+    </ul>
+  </div>
+
 
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

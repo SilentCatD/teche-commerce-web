@@ -1,18 +1,16 @@
 import express from "express";
 import multer from "multer";
 import  BrandController from "../../../../controller/brand.js";
-const router = express.Router();
+const brandRouter = express.Router();
 const upload = multer();
 // /api/v1/brand
 
-router
+brandRouter
   .route("/")
   .get(BrandController.fetchAllBrand)
   .post(upload.single("brandImg"), BrandController.createBrand)
   .delete(BrandController.deleteAllBrand);
 
-router.route("/:id").get(BrandController.fetchBrand).delete(BrandController.deleteBrand);
+brandRouter.route("/:id").get(BrandController.fetchBrand).delete(BrandController.deleteBrand);
 
-export {
-  router
-};
+export default brandRouter;

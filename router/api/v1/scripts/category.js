@@ -1,16 +1,14 @@
 import express from "express";
 import  CategoryController from "../../../../controller/category.js";
-const router = express.Router();
+const categoryRouter = express.Router();
 // /api/v1/brand
 
-router
+categoryRouter
   .route("/")
   .get(CategoryController.fetchAllCategory)
   .post(CategoryController.createCategory)
   .delete(CategoryController.deleteAllCategory);
 
-router.route("/:id").get(CategoryController.fetchCategory).delete(CategoryController.deleteCategory);
+categoryRouter.route("/:id").get(CategoryController.fetchCategory).delete(CategoryController.deleteCategory);
 
-export {
-  router
-};
+export default categoryRouter;

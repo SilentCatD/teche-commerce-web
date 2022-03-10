@@ -1,10 +1,8 @@
 import express from "express";
 import ImageController from "../../../../controller/images.js";
 
-const router = express.Router();
+const imageRouter = express.Router();
 
-router.route("/:id").get(ImageController.getImgStream);
+imageRouter.route("/:id").get(ImageController.getImgStream);
 
-export {
-  router
-};
+export default imageRouter;

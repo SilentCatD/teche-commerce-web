@@ -131,7 +131,7 @@ $('#delete-cate-btn').click(function (e) {
 // ======================================
 
 let imgFileToUpload = [];
-
+let imgMetadata = [];
 $('#add-product-img-btn').click(function (e) { 
     e.preventDefault();
     const file = $('#product-img').prop('files')[0];
@@ -155,7 +155,11 @@ $('#add-product-img-btn').click(function (e) {
         return;
     }
     $('#product-img-input-error').text("");
-    imgFileToUpload.append(file);
+    imgMetadata.push({
+        colorName: colorName,
+        colorHex: colorHex,
+    });
+    imgFileToUpload.push(file);
     $("#img-holder-list").append(`
         <li>
             <img src=${URL.createObjectURL(file)} width="200px">
@@ -163,6 +167,58 @@ $('#add-product-img-btn').click(function (e) {
             <div style="background-color: ${colorHex}; width: 50px; height: 50px; display: inline-block"></div>
         </li>
     `);
-
+    $('#product-img').val("");;
+    $('#product-color-name').val("");
+    $('#product-color-hexcode').val("");
 });
 
+function isNumeric(str) {
+    if (typeof str != "string") return false // we only process strings!  
+    return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+           !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+  }
+
+$("#add-product-btn").click( async function (e) { 
+    e.preventDefault();
+    const productName = $('#product-name').val().trim();
+    if(!productName){
+        $('#product-name-input-error').text("Invalid product name");
+        return;
+    }
+    $('#product-name-input-error').text("");
+    const productDetails = $('#product-detail').val().trim();
+    const productBrand = $('#product-brand').val().trim();
+    const productCategory = $('#product-category').val().trim();
+    const productPrice = $('#product-price').val().trim();
+    if(!productPrice || !isNumeric(productPrice)){
+        $('#product-price-input-error').text("Invalid product price");
+        return;
+    }
+
+    let formData = new FormData();
+    formData.append('productName', productName);
+    formData.append('productDetails', productDetails);
+    formData.append('productBrand', productBrand);
+    formData.append('productCategory', productCategory);
+    formData.append('productPrice', productPrice);
+    formData.append('imagesMetaData', imgMetadata);
+    imgFileToUpload.forEach((file)=>{
+        formData.append('images',file);
+    })
+   
+    let response = await axios({
+        method: "post",
+        url: "/api/v1/product",
+        data: formData,
+        headers: { "Content-Type": "multipart/form-data" },
+    });
+    console.log(response);
+   
+    $('#product-price-input-error').text("");
+    $('#product-detail').val("");
+    $('#product-brand').val("");
+    $('#product-category').val("");
+    $('#product-price').val("");
+    imgFileToUpload = [];
+    $("#img-holder-list").html('');
+});
