@@ -182,7 +182,114 @@ class MongoDBDatabase {
         await Category.deleteOne({ _id: category.id });
 
     }
-    
+
+    // Product section
+    async createProduct(name, price, brandId, categoryId, details, variants, images) {
+        for (let i = 0; i < variants.length; i++) {
+            let imgId = null;
+            if (images[i]) {
+                imgId = await this.#upLoadImg(images[i]);
+                variants[i].imageId = imgId;
+            }
+        }
+        let product = new Product({
+            name: name, price: price, variants: variants, brand: brandId,
+            category: categoryId, details: details, variants: variants
+        });
+
+        await product.save();
+        console.log("Product created");
+
+        return product.id;
+    }
+
+    // this can be update multi params sort but i am lazy
+    async fetchAllProduct(limit, sort, type) {
+        let sortedParams = {};
+        if (type != 1 && type != -1) {
+            type = -1;
+        }
+        if (sort) {
+            sortedParams[sort] = type;
+        }
+        limit = isInt(limit) ? limit : null;
+        const results = await Product.find().limit(limit).sort(sortedParams);
+        return results.map((product) => {
+            let variants = product.variants;
+            for (let i = 0; i < variants.length; i++) {
+                let imgId = variants[i]['imageId'];
+                let imgUrl = null
+                if (imgId) {
+                    variants[i]['imageId'] = `${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${imgId}`;
+                }
+            }
+            return {
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                rate: product.rate,
+                variants: product.variants,
+                details: product.details,
+                brand: product.brand,
+                category: product.category,
+                viewCount: product.viewCount
+            }
+        });
+    }
+
+    async deleteAllProduct() {
+        const products = await Product.find();
+        products.map(async (product) => {
+            let variants = product.variants
+            for (let i = 0; i < variants.length; i++) {
+                let productImg = variants[i]['imageId'];
+                if (productImg) {
+                    await this.#deleteImg(productImg);
+                }
+            }
+        });
+        await Product.deleteMany();
+
+    }
+
+
+    async fetchProduct(id) {
+        const product = await Product.findById(mongoose.mongo.ObjectId(id));
+
+        let variants = product.variants;
+        for (let i = 0; i < variants.length; i++) {
+            let productImg = variants[i]['imageId'];
+            let imgLink = null;
+            if (productImg) {
+                variants[i]['imageId'] = `${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${productImg}`;
+            }
+        }
+        return {
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            rate: product.rate,
+            variants: product.variants,
+            details: product.details,
+            brand: product.brand,
+            category: product.category,
+            viewCount: product.viewCount
+        }
+    }
+
+    async deleteProduct(id) {
+        const product = await Product.findById(mongoose.Types.ObjectId(id));
+
+        let variants = product.variants;
+
+        for (let i = 0; i < variants.length; i++) {
+            let productImg = variants[i]['imageId'];
+            if (productImg) {
+                await this.#deleteImg(productImg);
+            }
+        }
+        await Product.deleteOne({ _id: product.id });
+    }
 }
 
 export default MongoDBDatabase;

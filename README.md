@@ -9,8 +9,10 @@
 - DELETE /api/v1/brand/:id => delete  brand with id
 - GET /api/v1/image/:id => get image with id
 
-
-# IM SO FUCKING TIRED
+{
+# I AM TIRED TOO (TODO):
+ - Test deleteProduct API
+ - Change product.inStock to variants.inStock (I will change later, believe me)
 
 # Upcomming Features (will be update after i become Elden Lord)
  - Management all database
