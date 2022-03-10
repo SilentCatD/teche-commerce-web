@@ -12,7 +12,7 @@
         res.status(404).end("Image not found");
       }
     }
-  };
+  };  
 
 
  export default ImageController;

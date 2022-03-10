@@ -125,3 +125,44 @@ $('#delete-cate-btn').click(function (e) {
     $('#cate-id-input-error').text("");
     deleteCategoryById(categoryIdVal);
 });
+
+
+
+// ======================================
+
+let imgFileToUpload = [];
+
+$('#add-product-img-btn').click(function (e) { 
+    e.preventDefault();
+    const file = $('#product-img').prop('files')[0];
+    if(!file){
+        $('#product-img-input-error').text("must input an image");
+        return;
+    }
+    const colorName = $('#product-color-name').val().trim();
+    if(!colorName){
+        $('#product-img-input-error').text("must specified product color of this product");
+        return;
+    }
+    const colorHex = $('#product-color-hexcode').val().trim();
+    if(!colorHex){
+        $('#product-img-input-error').text("Must specified hex color code of this product");
+        return;
+    }
+    var reg=/^#([0-9a-f]{3}){1,2}$/i;
+    if(!reg.test(colorHex)){
+        $('#product-img-input-error').text("Invalid hex color code");
+        return;
+    }
+    $('#product-img-input-error').text("");
+    imgFileToUpload.append(file);
+    $("#img-holder-list").append(`
+        <li>
+            <img src=${URL.createObjectURL(file)} width="200px">
+            <span>${colorName}: </span>
+            <div style="background-color: ${colorHex}; width: 50px; height: 50px; display: inline-block"></div>
+        </li>
+    `);
+
+});
+

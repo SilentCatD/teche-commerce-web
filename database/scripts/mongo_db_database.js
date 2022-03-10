@@ -5,6 +5,12 @@ import Brand from "../../model/brand.js";
 import Category from "../../model/category.js";
 import { randomBytes } from 'crypto';
 
+function isInt(value) {
+    return !isNaN(value) &&
+        parseInt(Number(value)) == value &&
+        !isNaN(parseInt(value, 10));
+}
+
 class MongoDBDatabase {
     #gridFSBucket
     #connectStatus = false;
@@ -70,28 +76,23 @@ class MongoDBDatabase {
 
     async fetchImageFileStream(imgId) {
         const imgFile = await this.#gridFSBucket.find({ _id: mongoose.Types.ObjectId(imgId) }).count();
-        if (imgFile){
+        if (imgFile) {
             const imgStream = this.#gridFSBucket.openDownloadStream(mongoose.Types.ObjectId(imgId));
-            return imgStream;   
+            return imgStream;
         }
         throw Error(`Cant locate image with id: ${imgId}`);
     }
 
-    #sInt(value) {
-        return !isNaN(value) && 
-               parseInt(Number(value)) == value && 
-               !isNaN(parseInt(value, 10));
-    }
 
     async fetchAllBrand(limit, sort, type) {
         let sortedParams = {};
-        if (type != 1 && type != -1){
+        if (type != 1 && type != -1) {
             type = -1;
         }
-        if(sort){
-            sortedParams[sort] = type;        
+        if (sort) {
+            sortedParams[sort] = type;
         }
-        limit = this.#sInt(limit) ? limit : null;
+        limit = isInt(limit) ? limit : null;
         const results = await Brand.find().limit(limit).sort(sortedParams);
         return results.map((brand) => {
             let imgId = brand.imageObjectId;
@@ -151,13 +152,13 @@ class MongoDBDatabase {
 
     async fetchAllCategory(limit, sort, type) {
         let sortedParams = {};
-        if (type != 1 && type != -1){
+        if (type != 1 && type != -1) {
             type = -1;
         }
-        if(sort){
-            sortedParams[sort] = type;        
+        if (sort) {
+            sortedParams[sort] = type;
         }
-        limit = this.#sInt(limit) ? limit : null;
+        limit = this.isInt(limit) ? limit : null;
         const results = await Category.find().limit(limit).sort(sortedParams);
         return results.map((category) => {
             return {
@@ -186,4 +187,4 @@ class MongoDBDatabase {
     }
 }
 
-export { MongoDBDatabase };
+export default MongoDBDatabase;

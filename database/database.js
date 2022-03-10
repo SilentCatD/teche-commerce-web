@@ -1,4 +1,4 @@
-import { MongoDBDatabase } from "./scripts/mongo_db_database.js";
+import MongoDBDatabase from "./scripts/mongo_db_database.js";
 
 MongoDBDatabase
 let dbSingleTon;
