@@ -9,10 +9,12 @@ const productSchema = new mongoose.Schema({
     price: {
         type: Number,
         required: true,
+        min: 0
     },
     rate: {
         type: Number,
         default: 0,
+        min: 0
     },
     variants: [
         {
@@ -26,16 +28,19 @@ const productSchema = new mongoose.Schema({
     inStock: {
         type: Number,
         default: 0,
+        min: 0
     },
     brand: mongoose.SchemaTypes.ObjectId,
     category: mongoose.SchemaTypes.ObjectId,
     buyCount: {
         type: Number,
         default: 0,
+        min: 0
     },
     viewCount: {
         type: Number,
         default: 0,
+        min: 0
     },
     comments: [Comment],
 }
