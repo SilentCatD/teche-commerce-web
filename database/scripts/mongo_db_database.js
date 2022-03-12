@@ -234,7 +234,6 @@ class MongoDBDatabase {
             catch (e){
                 console.log(e);
             }
-            console.log(product);
             return {
                 id: product.id,
                 name: product.name,
@@ -265,26 +264,41 @@ class MongoDBDatabase {
 
     async fetchProduct(id) {
         const product = await Product.findById(mongoose.mongo.ObjectId(id));
-
-        let variants = product.variants;
-        for (let i = 0; i < variants.length; i++) {
-            let productImg = variants[i]['imageId'];
-            let imgLink = null;
-            if (productImg) {
-                variants[i]['imageId'] = `${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${productImg}`;
-            }
+        let imageUrls = [];
+        for (let i = 0; i < product.images.length; i++) {
+            let imgId = product.images[i];
+            imageUrls.push(`${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${imgId}`);
+        }
+        let inStock = 'sold-out';
+        if(product.inStock > 0){
+            inStock = 'in-stock';
+        }
+        let brand = null;
+        try{
+            brand = await this.fetchBrand(product.brand);
+        } catch (e){
+            console.log(e);
+        }
+        let category = null;
+        try{
+            category = await this.fetchCategory(product.category);
+        }
+        catch (e){
+            console.log(e);
         }
         return {
             id: product.id,
             name: product.name,
             price: product.price,
             rate: product.rate,
-            variants: product.variants,
+            images: imageUrls,
             details: product.details,
-            brand: product.brand,
-            category: product.category,
+            inStock : inStock,
+            brand: brand,
+            category: category,
+            buyCount: product.buyCount,
             viewCount: product.viewCount
-        }
+        };
     }
 
     async deleteProduct(id) {
