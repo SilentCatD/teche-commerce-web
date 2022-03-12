@@ -131,7 +131,6 @@ $('#delete-cate-btn').click(function (e) {
 // ======================================
 
 let imgFileToUpload = []; // File 
-let imgMetadata = [];
 $('#add-product-img-btn').click(function (e) { 
     e.preventDefault();
     const file = $('#product-img').prop('files')[0];
@@ -139,37 +138,10 @@ $('#add-product-img-btn').click(function (e) {
         $('#product-img-input-error').text("must input an image");
         return;
     }
-    const colorName = $('#product-color-name').val().trim();
-    if(!colorName){
-        $('#product-img-input-error').text("must specified product color of this product");
-        return;
-    }
-    const colorHex = $('#product-color-hexcode').val().trim();
-    if(!colorHex){
-        $('#product-img-input-error').text("Must specified hex color code of this product");
-        return;
-    }
-    var reg=/^#([0-9a-f]{3}){1,2}$/i;
-    if(!reg.test(colorHex)){
-        $('#product-img-input-error').text("Invalid hex color code");
-        return;
-    }
     $('#product-img-input-error').text("");
-    imgMetadata.push({
-        colorName: colorName,
-        colorHex: colorHex,
-    });
     imgFileToUpload.push(file);
-    $("#img-holder-list").append(`
-        <li>
-            <img src=${URL.createObjectURL(file)} width="200px">
-            <span>${colorName}: </span>
-            <div style="background-color: ${colorHex}; width: 50px; height: 50px; display: inline-block"></div>
-        </li>
-    `);
+    $("#img-holder-list").append(`<li><img src=${URL.createObjectURL(file)} width="200px"></li>`);
     $('#product-img').val("");;
-    $('#product-color-name').val("");
-    $('#product-color-hexcode').val("");
 });
 
 function isNumeric(str) {
@@ -202,7 +174,6 @@ $("#add-product-btn").click( async function (e) {
     formData.append('productBrand', productBrand);
     formData.append('productCategory', productCategory);
     formData.append('productPrice', productPrice);
-    formData.append('imagesMetaData', JSON.stringify(imgMetadata));
     imgFileToUpload.forEach((file)=>{
         formData.append('images',file);
     })
@@ -220,6 +191,5 @@ $("#add-product-btn").click( async function (e) {
     $('#product-category').val("");
     $('#product-price').val("");
     imgFileToUpload = [];
-    imgMetadata = []; // fuck u
     $("#img-holder-list").html('');
 });
