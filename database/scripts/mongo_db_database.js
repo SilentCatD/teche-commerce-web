@@ -303,14 +303,9 @@ class MongoDBDatabase {
 
     async deleteProduct(id) {
         const product = await Product.findById(mongoose.Types.ObjectId(id));
-
-        let variants = product.variants;
-
-        for (let i = 0; i < variants.length; i++) {
-            let productImg = variants[i]['imageId'];
-            if (productImg) {
-                await this.#deleteImg(productImg);
-            }
+        let imageIds = product.images;
+        for (let i = 0; i < imageIds.length; i++) {
+            await this.#deleteImg(imageIds[i]);
         }
         await Product.deleteOne({ _id: product.id });
     }
