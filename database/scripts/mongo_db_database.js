@@ -1,5 +1,5 @@
 
-import { Readable } from 'stream';
+import { PassThrough, Readable } from 'stream';
 import mongoose from "mongoose";
 import Brand from "../../model/brand.js";
 import Category from "../../model/category.js";
@@ -211,27 +211,44 @@ class MongoDBDatabase {
         }
         limit = isInt(limit) ? limit : null;
         const results = await Product.find().limit(limit).sort(sortedParams);
-        return results.map((product) => {
-            let variants = product.variants;
-            for (let i = 0; i < variants.length; i++) {
-                let imgId = variants[i]['imageId'];
-                let imgUrl = null
-                if (imgId) {
-                    variants[i]['imageId'] = `${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${imgId}`;
-                }
+        return await Promise.all(results.map( async (product) => {
+            let imageUrls = [];
+            for (let i = 0; i < product.images.length; i++) {
+                let imgId = product.images[i];
+                imageUrls.push(`${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${imgId}`);
             }
+            let inStock = 'sold-out';
+            if(product.inStock > 0){
+                inStock = 'in-stock';
+            }
+            let brand = null;
+            try{
+                brand = await this.fetchBrand(product.brand);
+            } catch (e){
+                console.log(e);
+            }
+            let category = null;
+            try{
+                category = await this.fetchCategory(product.category);
+            }
+            catch (e){
+                console.log(e);
+            }
+            console.log(product);
             return {
                 id: product.id,
                 name: product.name,
                 price: product.price,
                 rate: product.rate,
-                variants: product.variants,
+                images: imageUrls,
                 details: product.details,
-                brand: product.brand,
-                category: product.category,
+                inStock : inStock,
+                brand: brand,
+                category: category,
+                buyCount: product.buyCount,
                 viewCount: product.viewCount
             }
-        });
+        }));
     }
 
     async deleteAllProduct() {
