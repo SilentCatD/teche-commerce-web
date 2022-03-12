@@ -184,8 +184,9 @@ $("#add-product-btn").click( async function (e) {
         headers: { "Content-Type": "multipart/form-data" },
     });
     console.log(response);
-   
+
     $('#product-price-input-error').text("");
+    $('#product-name').val("");
     $('#product-detail').val("");
     $('#product-brand').val("");
     $('#product-category').val("");
