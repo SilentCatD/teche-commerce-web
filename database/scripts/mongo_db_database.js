@@ -105,13 +105,13 @@ class MongoDBDatabase {
 
     async deleteAllBrand() {
         const brands = await Brand.find();
-        brands.map(async (brand) => {
+        Promise.all(brands.map(async (brand) => {
             let brandImg = brand.imageObjectId;
             if (brandImg) {
                 await this.#deleteImg(brandImg);
             }
             await Brand.findByIdAndDelete(brand.id);
-        });
+        }));
     }
 
     async fetchBrand(id) {
@@ -253,17 +253,13 @@ class MongoDBDatabase {
 
     async deleteAllProduct() {
         const products = await Product.find();
-        products.map(async (product) => {
-            let variants = product.variants
-            for (let i = 0; i < variants.length; i++) {
-                let productImg = variants[i]['imageId'];
-                if (productImg) {
-                    await this.#deleteImg(productImg);
-                }
+        await Promise.all(products.map(async (product) => {
+            let imagesUrls = product.images; 
+            for (let i = 0; i < imagesUrls.length; i++) {
+                await this.#deleteImg(imagesUrls[i]);
             }
-        });
+        }));
         await Product.deleteMany();
-
     }
 
 
