@@ -16,13 +16,7 @@ const productSchema = new mongoose.Schema({
         default: 0,
         min: 0
     },
-    variants: [
-        {
-            name: String,
-            hexValue: String,
-            imageId: mongoose.SchemaTypes.ObjectId,
-        }
-    ],
+    images: [mongoose.SchemaTypes.ObjectId],
 
     details: String,
     inStock: {
