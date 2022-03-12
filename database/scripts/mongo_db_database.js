@@ -184,22 +184,19 @@ class MongoDBDatabase {
     }
 
     // Product section
-    async createProduct(name, price, brandId, categoryId, details, variants, images) {
-        for (let i = 0; i < variants.length; i++) {
-            let imgId = null;
-            if (images[i]) {
-                imgId = await this.#upLoadImg(images[i]);
-                variants[i].imageId = imgId;
-            }
+    async createProduct(name, price, brandId, categoryId, details, images) {
+        let imageIds = []
+        for (let i = 0; i < images.length; i++) {
+            let imgId = await this.#upLoadImg(images[i]);
+            imageIds.push(imgId);
         }
         let product = new Product({
-            name: name, price: price, variants: variants, brand: brandId,
-            category: categoryId, details: details, variants: variants
+            name: name, price: price, brand: brandId,
+            category: categoryId, details: details, images: imageIds,
         });
 
         await product.save();
         console.log("Product created");
-
         return product.id;
     }
 

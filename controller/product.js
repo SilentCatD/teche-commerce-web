@@ -3,8 +3,6 @@ import database from "../database/database.js";
 const ProductController = {
     createProduct: async (req, res) => {
         // console.log(req.body);
-        // let a = req.body.imagesMetaData;
-        // console.log(JSON.parse(a));
         // console.log(req.files);
         // res.end();
         try {
@@ -15,17 +13,14 @@ const ProductController = {
                 productCategory,
                 productPrice
             } = req.body;
-
-            const imagesMetaData = JSON.parse(req.body.imagesMetaData);
-            
-            let productImages = null;
+            let productImages = []
             if (req.files) {
                 productImages = req.files;
+                 
             }
-        
+            
             const id = await database.instance.createProduct(productName, productPrice, productBrand,
-                productCategory, productDetails,
-                imagesMetaData, productImages);
+                productCategory, productDetails, productImages);
             res.status(201).end(`Product created with id ${id}`);
         } catch (e) {
             console.log(e);
