@@ -124,7 +124,8 @@ class MongoDBDatabase {
         return {
             id: brand.id,
             name: brand.name,
-            imageUrl: imgLink
+            imageUrl: imgLink,
+            rankingPoints: brand.rankingPoints,
         }
     }
 
@@ -155,7 +156,7 @@ class MongoDBDatabase {
         if (sort) {
             sortedParams[sort] = type;
         }
-        limit = this.isInt(limit) ? limit : null;
+        limit = isInt(limit) ? limit : null;
         const results = await Category.find().limit(limit).sort(sortedParams);
         return results.map((category) => {
             return {
@@ -190,9 +191,29 @@ class MongoDBDatabase {
             let imgId = await this.#upLoadImg(images[i]);
             imageIds.push(imgId);
         }
+        let brand = null;
+        if(brandId){
+            try{
+                await this.fetchBrand(brandId);
+                brand = brandId;
+            } catch (e){
+                throw Error("Brand not existed");
+            }
+        }
+        let category = null;
+        if(categoryId){
+            try{
+                await this.fetchCategory(categoryId);
+                category = categoryId;
+            }
+            catch (e){
+                throw Error("Category not existed");
+            }
+        }
+     
         let product = new Product({
-            name: name, price: price, brand: brandId,
-            category: categoryId, details: details, images: imageIds,
+            name: name, price: price, brand: brand,
+            category: category, details: details, images: imageIds,
         });
 
         await product.save();
@@ -217,9 +238,9 @@ class MongoDBDatabase {
                 let imgId = product.images[i];
                 imageUrls.push(`${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${imgId}`);
             }
-            let inStock = 'sold-out';
+            let status = 'sold-out';
             if(product.inStock > 0){
-                inStock = 'in-stock';
+                status = 'in-stock';
             }
             let brand = null;
             try{
@@ -241,7 +262,7 @@ class MongoDBDatabase {
                 rate: product.rate,
                 images: imageUrls,
                 details: product.details,
-                inStock : inStock,
+                status : status,
                 brand: brand,
                 category: category,
                 buyCount: product.buyCount,
@@ -269,9 +290,9 @@ class MongoDBDatabase {
             let imgId = product.images[i];
             imageUrls.push(`${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${imgId}`);
         }
-        let inStock = 'sold-out';
+        let status = 'sold-out';
         if(product.inStock > 0){
-            inStock = 'in-stock';
+            status = 'in-stock';
         }
         let brand = null;
         try{
@@ -293,7 +314,7 @@ class MongoDBDatabase {
             rate: product.rate,
             images: imageUrls,
             details: product.details,
-            inStock : inStock,
+            status : status,
             brand: brand,
             category: category,
             buyCount: product.buyCount,
