@@ -16,11 +16,7 @@ const productSchema = new mongoose.Schema({
         default: 0,
         min: 0
     },
-    rateCount: {
-        type: Number,
-        default: 0,
-        min: 0
-    },
+    rate: [Number],
     images: [mongoose.SchemaTypes.ObjectId],
 
     details: String,
