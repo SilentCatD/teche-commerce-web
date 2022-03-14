@@ -210,11 +210,10 @@ class MongoDBDatabase {
                 throw Error("Category not existed");
             }
         }
-        let initialRate = [0, 0, 0, 0, 0];
         let product = new Product({
             name: name, price: price, brand: brand,
             category: category, details: details, images: imageIds,
-            rate: initialRate,
+            rates: [0, 0, 0, 0, 0],
         });
 
         await product.save();
@@ -256,23 +255,18 @@ class MongoDBDatabase {
             catch (e){
                 console.log(e);
             }
-            let rateAverage = 0;
             let rateSum = 0;
-            let rateStart = 0;
-            product.rate.forEach((element, index) => {
+            product.rates.forEach((element, index) => {
                 rateSum += element;
-                rateStart += element * index + 1;
             });
-            if(rateSum > 0){
-                rateAverage = (rateStart / rateSum).toFixed(2);
-            }
 
             return {
                 id: product.id,
                 name: product.name,
                 price: product.price,
-                rate: rateAverage,
+                rateAverage: product.rateAverage,
                 rateCount: rateSum,
+                rates: product.rates,
                 images: imageUrls,
                 details: product.details,
                 status : status,
@@ -280,7 +274,7 @@ class MongoDBDatabase {
                 category: category,
                 buyCount: product.buyCount,
                 viewCount: product.viewCount
-            }
+            };
         }));
     }
 
@@ -320,23 +314,18 @@ class MongoDBDatabase {
         catch (e){
             console.log(e);
         }
-        let rateAverage = 0;
         let rateSum = 0;
-        let rateStart = 0;
-        product.rate.forEach((element, index) => {
+        product.rates.forEach((element, index) => {
             rateSum += element;
-            rateStart += element * index + 1;
         });
-        if(rateSum > 0){
-            rateAverage = (rateStart / rateSum).toFixed(2);
-        }
 
         return {
             id: product.id,
             name: product.name,
             price: product.price,
-            rate: rateAverage,
+            rateAverage: product.rateAverage,
             rateCount: rateSum,
+            rates: product.rates,
             images: imageUrls,
             details: product.details,
             status : status,
