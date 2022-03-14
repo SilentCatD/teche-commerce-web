@@ -66,6 +66,10 @@ class MongoDBDatabase {
         await this.#gridFSBucket.delete(id);
     }
 
+    async #fetchImageURL(imageId){
+        return `${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${imageId}`;
+    }
+
     // Brand Section
     async createBrand(name, img) {
         let imgId = null;
@@ -92,7 +96,7 @@ class MongoDBDatabase {
             let imgId = brand.imageObjectId;
             let imgUrl = null
             if (imgId) {
-                imgUrl = `${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${imgId}`
+                imgUrl = this.#fetchImageURL(imgId);
             }
             return {
                 id: brand.id,
@@ -119,7 +123,7 @@ class MongoDBDatabase {
         let brandImg = brand.imageObjectId;
         let imgLink = null;
         if (brandImg) {
-            imgLink = `${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${brand.imageObjectId}`;
+            imgLink = this.#fetchImageURL(brandImg);
         }
         return {
             id: brand.id,
@@ -235,8 +239,7 @@ class MongoDBDatabase {
         return await Promise.all(results.map( async (product) => {
             let imageUrls = [];
             for (let i = 0; i < product.images.length; i++) {
-                let imgId = product.images[i];
-                imageUrls.push(`${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${imgId}`);
+                imageUrls.push(this.#fetchImageURL(product.images[i]));
             }
             let status = 'sold-out';
             if(product.inStock > 0){
@@ -294,8 +297,7 @@ class MongoDBDatabase {
         const product = await Product.findById(mongoose.mongo.ObjectId(id));
         let imageUrls = [];
         for (let i = 0; i < product.images.length; i++) {
-            let imgId = product.images[i];
-            imageUrls.push(`${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}/api/v1/image/${imgId}`);
+            imageUrls.push(this.#fetchImageURL(product.images[i]));
         }
         let status = 'sold-out';
         if(product.inStock > 0){
