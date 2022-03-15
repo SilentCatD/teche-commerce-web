@@ -1,4 +1,3 @@
-import { query } from "express";
 import database from "../database/database.js";
 
 const BrandController = {
