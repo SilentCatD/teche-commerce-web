@@ -11,14 +11,14 @@ const productSchema = new mongoose.Schema({
         required: true,
         min: 0
     },
-    rate: {
+    rateAverage: { // vdL 4.3, 2.2
         type: Number,
+        min: 0,
         default: 0,
-        min: 0
     },
-    rate: [Number],
+    rates: [Number], // mảng 5 phần tử tương ứng với số rate từ 1* -> 5*
+    
     images: [mongoose.SchemaTypes.ObjectId],
-
     details: String,
     inStock: {
         type: Number,
