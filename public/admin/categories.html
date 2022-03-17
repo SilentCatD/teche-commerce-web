@@ -73,7 +73,8 @@
                             <a href="categories.html" class="dropdown-item active">Categories</a>
                         </div>
                     </div>
-                    <a href="orders.html" class="nav-item nav-link"><i class="fa-solid fa-cart-arrow-down"></i>Orders</a>
+                    <a href="orders.html" class="nav-item nav-link"><i
+                            class="fa-solid fa-cart-arrow-down"></i>Orders</a>
                     <a href="accounts.html" class="nav-item nav-link"><i class="fa-solid fa-users"></i>Accounts</a>
                 </div>
             </nav>
@@ -180,144 +181,149 @@
 
             <!-- Category Control Start -->
             <div class="container-fluid pt-4 px-4">
-                <div class="container-fluid pt-4 px-4">
-                    <div class="row bg-light rounded align-items-center justify-content-center mx-0 p-4">
-                        <div class="col-md-6 col-sm-12">
-                            <form class="d-md-flex ms-4 mb-md-0 mb-4 w-75 ms-md-0 ms-auto me-auto">
-                                <input class="form-control border-0" type="search" placeholder="Search">
-                            </form>
-                        </div>
-                        <div class="col-md-6 col-sm-12 text-md-end text-center">
-                            <button class="btn btn-primary form-collapse-btn" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                                Create new category<i class="fa-solid fa-angle-down ms-2 form-collapse-btn-icon fa-rotate-180"></i>
-                            </button>
-                        </div>
-                        <div class="col-md-8 col-sm-12 text-start">
-                            <div class="collapse" id="collapseExample">
-                                <div class="card card-body mt-4">
-                                    <form>
-                                        <div class="mb-3">
-                                            <label for="inputCategoryName" class="form-label">Category name</label>
-                                            <input type="text" class="form-control" id="inputCategoryName"
-                                                aria-describedby="categoryHelp">
-                                            <div id="categoryHelp" class="form-text">Enter the name of the new category
-                                            </div>
+                <div class="row bg-light rounded align-items-center justify-content-center mx-0 p-4">
+                    <div class="col-md-6 col-sm-12">
+                        <form class="d-md-flex ms-4 mb-md-0 mb-4 w-75 ms-md-0 ms-auto me-auto">
+                            <input class="form-control border-0" type="search" placeholder="Search">
+                        </form>
+                    </div>
+                    <div class="col-md-6 col-sm-12 text-md-end text-center">
+                        <button class="btn btn-primary form-collapse-btn" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                            Create new category<i
+                                class="fa-solid fa-angle-up ms-2 form-collapse-btn-icon fa-rotate-180"></i>
+                        </button>
+                    </div>
+                    <div class="col-md-8 col-sm-12 text-start">
+                        <div class="collapse" id="collapseExample">
+                            <div class="card card-body mt-4">
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="inputCategoryName" class="form-label">Category name</label>
+                                        <input type="text" class="form-control" id="inputCategoryName"
+                                            aria-describedby="categoryHelp">
+                                        <div id="categoryHelp" class="form-text">Enter the name of the new category
                                         </div>
-                                        <div class="text-md-start text-center">
-                                            <button type="button" class="btn btn-primary w-50">Add</button>
-                                        </div>
-                                    </form>
-                                </div>
+                                    </div>
+                                    <div class="text-md-start text-center">
+                                        <button type="button" class="btn btn-primary w-50">Add</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Category Control End -->
-
-                <!-- Category table Start -->
-                <div class="container-fluid pt-4 px-4">
-                    <div class="row vh-100 bg-light rounded align-items-sm-start justify-content-center mx-0">
-                        <div class="col-12">
-                            <div class="bg-light rounded h-100 p-4">
-                                <h6 class="mb-4">Categories</h6>
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">ID</th>
-                                                <th scope="col">Categories Name</th>
-                                                <th scope="col">Number of products</th>
-                                                <th scope="col">Created</th>
-                                                <th scope="col">&nbsp;</th>
-                                                <th scope="col">&nbsp;</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <th scope="row" class="align-middle">11421412451</th>
-                                                <td class="align-middle">Smart Watch</td>
-                                                <td class="align-middle">451</td>
-                                                <td class="align-middle">12/5/2001</td>
-                                                <td class="align-middle">
-                                                    <button type="button" class="btn btn-square btn-secondary"><i class="fa fa-pencil"></i></button>
-                                                </td>
-                                                <td class="align-middle">
-                                                    <button type="button" class="btn btn-square btn-danger"><i class="fa fa-trash-can"></i></button>
-
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row" class="align-middle">11421412451</th>
-                                                <td class="align-middle">Mobile Phone</td>
-                                                <td class="align-middle">124</td>
-                                                <td class="align-middle">12/5/2001</td>
-                                                <td class="align-middle">
-                                                    <button type="button" class="btn btn-square btn-secondary"><i class="fa fa-pencil"></i></button>
-                                                </td>
-                                                <td class="align-middle">
-                                                    <button type="button" class="btn btn-square btn-danger"><i class="fa fa-trash-can"></i></button>
-
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row" class="align-middle">11421412451</th>
-                                                <td class="align-middle">Headphone</td>
-                                                <td class="align-middle">512</td>
-                                                <td class="align-middle">12/5/2001</td>
-                                                <td class="align-middle">
-                                                    <button type="button" class="btn btn-square btn-secondary"><i class="fa fa-pencil"></i></button>
-                                                </td>
-                                                <td class="align-middle">
-                                                    <button type="button" class="btn btn-square btn-danger"><i class="fa fa-trash-can"></i></button>
-
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Category table End -->
-
-                <!-- Pagination Start -->
-
-                <div class="mt-4">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-center">
-                          <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                          <li class="page-item"><a class="page-link" href="#">1</a></li>
-                          <li class="page-item active"><a class="page-link" href="#">2</a></li>
-                          <li class="page-item"><a class="page-link" href="#">3</a></li>
-                          <li class="page-item"><a class="page-link" href="#">4</a></li>
-                          <li class="page-item"><a class="page-link" href="#">5</a></li>
-                          <li class="page-item"><a class="page-link" href="#">...</a></li>
-                          <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                        </ul>
-                      </nav>
-                </div>
-
-                <!-- Pagination End -->
-
-             
-                <!-- Footer Start -->
-                <div class="container-fluid pt-4 px-4">
-                    <div class="bg-light rounded-top p-4">
-                        <div class="row">
-                            <div class="col-12 col-sm-6 text-center text-sm-start">
-                                &copy; <a href="#">Your Site Name</a>, All Right Reserved.
-                            </div>
-                            <div class="col-12 col-sm-6 text-center text-sm-end">
-                                <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                                Designed By <a href="https://htmlcodex.com">HTML Codex</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Footer End -->
             </div>
+            <!-- Category Control End -->
+
+            <!-- Category table Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row vh-100 bg-light rounded align-items-sm-start justify-content-center mx-0">
+                    <div class="col-12">
+                        <div class="bg-light rounded h-100 p-4">
+                            <h6 class="mb-4">Categories</h6>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Categories Name</th>
+                                            <th scope="col">Number of products</th>
+                                            <th scope="col">Created</th>
+                                            <th scope="col">&nbsp;</th>
+                                            <th scope="col">&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row" class="align-middle">11421412451</th>
+                                            <td class="align-middle">Smart Watch</td>
+                                            <td class="align-middle">451</td>
+                                            <td class="align-middle">12/5/2001</td>
+                                            <td class="align-middle">
+                                                <button type="button" class="btn btn-square btn-secondary"><i
+                                                        class="fa fa-pencil"></i></button>
+                                            </td>
+                                            <td class="align-middle">
+                                                <button type="button" class="btn btn-square btn-danger"><i
+                                                        class="fa fa-trash-can"></i></button>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" class="align-middle">11421412451</th>
+                                            <td class="align-middle">Mobile Phone</td>
+                                            <td class="align-middle">124</td>
+                                            <td class="align-middle">12/5/2001</td>
+                                            <td class="align-middle">
+                                                <button type="button" class="btn btn-square btn-secondary"><i
+                                                        class="fa fa-pencil"></i></button>
+                                            </td>
+                                            <td class="align-middle">
+                                                <button type="button" class="btn btn-square btn-danger"><i
+                                                        class="fa fa-trash-can"></i></button>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" class="align-middle">11421412451</th>
+                                            <td class="align-middle">Headphone</td>
+                                            <td class="align-middle">512</td>
+                                            <td class="align-middle">12/5/2001</td>
+                                            <td class="align-middle">
+                                                <button type="button" class="btn btn-square btn-secondary"><i
+                                                        class="fa fa-pencil"></i></button>
+                                            </td>
+                                            <td class="align-middle">
+                                                <button type="button" class="btn btn-square btn-danger"><i
+                                                        class="fa fa-trash-can"></i></button>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Category table End -->
+
+            <!-- Pagination Start -->
+
+            <div class="mt-4">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item active"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">4</a></li>
+                        <li class="page-item"><a class="page-link" href="#">5</a></li>
+                        <li class="page-item"><a class="page-link" href="#">...</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Pagination End -->
+
+
+            <!-- Footer Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="bg-light rounded-top p-4">
+                    <div class="row">
+                        <div class="col-12 col-sm-6 text-center text-sm-start">
+                            &copy; <a href="#">Your Site Name</a>, All Right Reserved.
+                        </div>
+                        <div class="col-12 col-sm-6 text-center text-sm-end">
+                            <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                            Designed By <a href="https://htmlcodex.com">HTML Codex</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer End -->
             <!-- Content End -->
 
 

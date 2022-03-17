@@ -268,7 +268,3 @@
   background: var(--dark);
   border-color: var(--primary);
 }
-
-.form-collapse-btn-icon {
-  transition: ease-in 0.1s;
-}
