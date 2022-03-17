@@ -11,6 +11,10 @@ const commentSchema = new mongoose.Schema({
         required: true,
     },
     images: [mongoose.SchemaTypes.ObjectId],
+    rateCount: {
+        type: Number,
+        required: true,
+    }
 });
 
 

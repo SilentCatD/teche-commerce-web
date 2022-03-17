@@ -54,7 +54,7 @@ class MongoDBDatabase {
     }
 
     async fetchImageFileStream(imgId) {
-        const imgFile = await this.#gridFSBucket.find({ _id: mongoose.Types.ObjectId(imgId) }).count();
+        const imgFile = await this.#gridFSBucket.find({ _id: mongoose.Types.ObjectId(imgId)}).count();
         if (imgFile) {
             const imgStream = this.#gridFSBucket.openDownloadStream(mongoose.Types.ObjectId(imgId));
             return imgStream;

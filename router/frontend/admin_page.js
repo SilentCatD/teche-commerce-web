@@ -1,9 +1,11 @@
 import express from "express";
+import __dirname from "../../dirname.js";
 
-const router = new express.Router();
+const adminPageRouter = new express.Router();
 
-router.get('/', async (req, res)=>{
-    res.send("../../public/admin/index.html");
+adminPageRouter.get('/', async (req, res)=>{
+    let options = {root: __dirname + '/public/admin', index: false};
+    res.sendFile('signin.html', options);
 });
 
-export {router};
+export default adminPageRouter;
