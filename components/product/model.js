@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import {Comment,  commentSchema } from "./comment.js";
+import { commentSchema } from "../comment/model.js";
+import { imageSchema } from "../image/model.js";
 
 const productSchema = new mongoose.Schema({
     name: {
@@ -17,8 +18,8 @@ const productSchema = new mongoose.Schema({
         default: 0,
     },
     rates: [Number], // mảng 5 phần tử tương ứng với số rate từ 1* -> 5*
-    
-    images: [mongoose.SchemaTypes.ObjectId],
+
+    images: [imageSchema],
     details: String,
     inStock: {
         type: Number,
@@ -38,10 +39,9 @@ const productSchema = new mongoose.Schema({
         min: 0
     },
     comments: [commentSchema],
-}
-);
+});
 
 
-const Product = mongoose.model('Product',productSchema);
+const Product = mongoose.model('Product', productSchema);
 
 export default Product;

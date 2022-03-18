@@ -1,4 +1,4 @@
-import database from "../../database/database.js";
+import BrandService from './service.js'
 
 const BrandController = {
     createBrand: async (req, res) => {
@@ -10,7 +10,7 @@ const BrandController = {
             if (req.file) {
                 brandImg = req.file;
             }
-            const id = await database.instance.createBrand(brandName, brandImg);
+            const id = await BrandService.createBrand(brandName, brandImg);
             res.status(201).end(`Brand created with id ${id}`);
         } catch (e) {
             console.log(e);
@@ -20,7 +20,7 @@ const BrandController = {
     fetchAllBrand: async (req, res) => {
         try {
             const query =req.query;
-            const result = await database.instance.fetchAllBrand(query.limit , query.sort, query.type);
+            const result = await BrandService.fetchAllBrand(query.limit , query.sort, query.type);
             res.writeHead(200, {
                 'Content-Type': 'application/json'
             });
@@ -35,7 +35,7 @@ const BrandController = {
             const {
                 id
             } = req.params;
-            const result = await database.instance.fetchBrand(id);
+            const result = await BrandService.fetchBrand(id);
             res.writeHead(200, {
                 "Content-Type": "application/json"
             });
@@ -48,7 +48,7 @@ const BrandController = {
 
     deleteAllBrand: async (req, res) => {
         try {
-            await database.instance.deleteAllBrand();
+            await BrandService.deleteAllBrand();
             res.status(200).end("All brands deleted");
         } catch (e) {
             console.log(e);
@@ -60,7 +60,7 @@ const BrandController = {
             const {
                 id
             } = req.params;
-            await database.instance.deleteBrand(id);
+            await BrandService.deleteBrand(id);
             res.status(200).end("Brand deleted");
         } catch (e) {
             console.log(e);

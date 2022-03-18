@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { imageSchema } from "../image/image.js";
+import { imageSchema } from "../image/model.js";
 
 const brandSchema = new mongoose.Schema({
     name:{
@@ -15,7 +15,7 @@ const brandSchema = new mongoose.Schema({
       type: Number,
       default: 0,
     },
-});
+}, { autoCreate: false });
 
 const Brand = mongoose.model('Brand',brandSchema);
 

@@ -1,13 +1,7 @@
-import database from '../../../database/database.js';
-import ImageService from '../../image/service/imageService.js';
-import Brand from '../brand.js'
-
-function isInt(value) {
-    return !isNaN(value) &&
-        parseInt(Number(value)) == value &&
-        !isNaN(parseInt(value, 10));
-}
-
+import ImageService from '../image/service.js';
+import Brand from './model.js'
+import mongoose from 'mongoose';
+import isInt from '../../utils/is_int.js';
 
 const BrandService = {
     createBrand: async (name, img)=>{

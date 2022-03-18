@@ -10,12 +10,7 @@ const commentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    images: [mongoose.SchemaTypes.ObjectId],
-    rateCount: {
-        type: Number,
-        required: true,
-    }
-});
+}, {autoCreate: false});
 
 
 const Comment =  mongoose.model("Comment", commentSchema);

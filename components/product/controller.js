@@ -1,5 +1,3 @@
-import database from "../database/database.js";
-
 const ProductController = {
     createProduct: async (req, res) => {
         // console.log(req.body);

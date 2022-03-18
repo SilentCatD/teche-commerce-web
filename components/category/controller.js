@@ -1,4 +1,4 @@
-import database from "../database/database.js";
+import CategotyService from "./service.js";
 
 const CategoryController = {
     createCategory: async (req, res) => {
@@ -6,7 +6,7 @@ const CategoryController = {
             const {
                 categoryName
             } = req.body;
-            const id = await database.instance.createCategory(categoryName);
+            const id = await CategotyService.createCategory(categoryName);
             res.status(201).end(`Category created with id ${id}`);
         } catch (e) {
             console.log(e);
@@ -15,7 +15,7 @@ const CategoryController = {
     },
     fetchAllCategory: async (req, res) => {
         try {
-            const result = await database.instance.fetchAllCategory();
+            const result = await CategotyService.fetchAllCategory();
             res.writeHead(200, {
                 'Content-Type': 'application/json'
             });
@@ -30,7 +30,7 @@ const CategoryController = {
             const {
                 id
             } = req.params;
-            const result = await database.instance.fetchCategory(id);
+            const result = await CategotyService.fetchCategory(id);
             res.writeHead(200, {
                 "Content-Type": "application/json"
             });
@@ -43,7 +43,7 @@ const CategoryController = {
 
     deleteAllCategory: async (req, res) => {
         try {
-            await database.instance.deleteAllCategory();
+            await CategotyService.deleteAllCategory();
             res.status(200).end("All Categorys deleted");
         } catch (e) {
             console.log(e);
@@ -55,7 +55,7 @@ const CategoryController = {
             const {
                 id
             } = req.params;
-            await database.instance.deleteCategory(id);
+            await CategotyService.deleteCategory(id);
             res.status(200).end("Category deleted");
         } catch (e) {
             console.log(e);

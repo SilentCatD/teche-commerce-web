@@ -1,5 +1,5 @@
 import database from "../../database/database.js";
-import Image from "../image.js";
+import {Image} from "./model.js";
 
 
 const ImageService = {
