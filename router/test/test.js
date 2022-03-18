@@ -7,16 +7,7 @@ import {v4 as uuidv4} from 'uuid';
 const testRouter = Router();
 
 testRouter.use('/', async (req, res)=>{
-    const originFileName = 'this_is_file_name.jpg'
-    const fileExt = originFileName.split('.').pop();
-    const storageRef = ref(storage, `/images/${uuidv4()+fileExt}`);
-    const metadata = {
-        contentType: 'image/jpeg',
-      };
-    const data = await readFile(__dirname + '/router/test/test_img.jpg');
-    const result = await uploadBytes(storageRef, data, metadata);
-    const url = await getDownloadURL(result.ref);
-    res.end(url);
+   res.render('test');
 });
 
 export default testRouter;

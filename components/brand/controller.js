@@ -1,4 +1,4 @@
-import database from "../database/database.js";
+import database from "../../database/database.js";
 
 const BrandController = {
     createBrand: async (req, res) => {

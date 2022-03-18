@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import  BrandController from "../../../../controller/brand.js";
+import  BrandController from "../../../../components/brand/controller.js";
 const brandRouter = express.Router();
 const upload = multer();
 // /api/v1/brand

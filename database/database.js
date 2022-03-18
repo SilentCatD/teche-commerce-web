@@ -1,12 +1,12 @@
-import MongoDBDatabase from "./scripts/mongo_db_database.js";
+import Database from "./scripts/database_service.js";
 
-MongoDBDatabase
+Database
 let dbSingleTon;
 
 const database = {
   get instance(){
       if (!dbSingleTon){
-          dbSingleTon = new MongoDBDatabase();
+          dbSingleTon = new Database();
       }
       return dbSingleTon;
   }
