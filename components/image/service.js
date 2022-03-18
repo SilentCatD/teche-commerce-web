@@ -1,4 +1,4 @@
-import database from "../../../database/database.js";
+import database from "../../database/database.js";
 import Image from "../image.js";
 
 
@@ -7,9 +7,8 @@ const ImageService = {
         // file <File>: file object need to upload
         // return id of Image Schema
         const result = await database.instance.upLoadImg(file);
-        const imgPath = result[0];
-        const imgUrl = result[1];
-        const image = new Image({firebasePath: imgPath, firebaseUrl: imgUrl});
+        const {firebasePath, firebaseUrl} = result;
+        const image = new Image({firebasePath: firebasePath, firebaseUrl: firebaseUrl});
         return image;
     },
     deleteImage: async(imgPath)=>{

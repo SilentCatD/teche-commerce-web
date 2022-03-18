@@ -24,7 +24,6 @@ class Database {
         }
     }
 
-    // Image section
     async upLoadImg(file) {
         // file<File>: image file to upload
         // return firebase path and file download url
@@ -36,7 +35,10 @@ class Database {
           };
         const result = await uploadBytes(storageRef, data, metadata);
         const url = await getDownloadURL(result.ref);
-        return [firebasePath, url];
+        return {
+            firebasePath: firebasePath,
+            firebaseUrl: url,
+        };
     }
 
     async deleteImg(firebasePath) {
