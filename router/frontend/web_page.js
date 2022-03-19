@@ -1,9 +1,9 @@
 import express from "express";
 
-const router = new express.Router();
+const webPageRouter = new express.Router();
 
-router.get('/', async (req, res)=>{
-    res.render("admin-controller");
+webPageRouter.get('/', async (req, res)=>{
+    res.send("not have this yet");
 });
 
-export {router};
+export default webPageRouter;

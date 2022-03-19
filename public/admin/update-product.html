@@ -181,90 +181,96 @@
             <div class="container-fluid pt-4 px-4">
                 <!-- Content Start -->
                 <div class="row vh-100 bg-light rounded align-items-sm-start justify-content-center mx-0">
-                  <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
-                    <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
-                      <div class="row">
-                        <div class="col-12">
-                          <h6 class="tm-block-title d-inline-block">Add Product</h2>
-                        </div>
-                      </div>
-                      <div class="row tm-edit-product-row">
-                        <div class="col-xl-6 col-lg-6 col-md-12">
-                          <form action="" class="tm-edit-product-form">
-                            <div class="form-group mb-3">
-                              <label for="name">Product Name
-                              </label>
-                              <input id="name" name="name" type="text" class="form-control validate" required="">
+                    <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
+                        <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h6 class="tm-block-title d-inline-block">Add Product</h2>
+                                </div>
                             </div>
-                            <div class="form-group mb-3">
-                              <label for="description">Description</label>
-                              <textarea class="form-control validate" rows="3" required=""></textarea>
-                            </div>
-                            <div class="form-group mb-3">
-                              <label for="brand">Brand</label>
-                              <select class="custom-select tm-select-accounts" id="brand">
-                                <option selected="">Select Brand</option>
-                                <option value="1">Nintendo</option>
-                                <option value="2">Sony</option>
-                                <option value="3">Xbox</option>
-                              </select>
-                            </div>
+                            <div class="row tm-edit-product-row">
+                                <div class="col-xl-6 col-lg-6 col-md-12">
+                                    <form action="" class="tm-edit-product-form">
+                                        <div class="form-group mb-3">
+                                            <label for="name">Product Name
+                                            </label>
+                                            <input id="name" name="name" type="text" class="form-control validate"
+                                                required="">
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="description">Description</label>
+                                            <textarea class="form-control validate" rows="3" required=""></textarea>
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="brand">Brand</label>
+                                            <select class="custom-select tm-select-accounts" id="brand">
+                                                <option selected="">Select Brand</option>
+                                                <option value="1">Nintendo</option>
+                                                <option value="2">Sony</option>
+                                                <option value="3">Xbox</option>
+                                            </select>
+                                        </div>
 
-                            <div class="form-group mb-3">
-                              <label for="category">Category</label>
-                              <select class="custom-select tm-select-accounts" id="category">
-                                <option selected="">Select category</option>
-                                <option value="1">PC</option>
-                                <option value="2">Mobile</option>
-                                <option value="3">Chetah</option>
-                              </select>
+                                        <div class="form-group mb-3">
+                                            <label for="category">Category</label>
+                                            <select class="custom-select tm-select-accounts" id="category">
+                                                <option selected="">Select category</option>
+                                                <option value="1">PC</option>
+                                                <option value="2">Mobile</option>
+                                                <option value="3">Chetah</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label for="name">Units In Stock
+                                            </label>
+                                            <input id="name" name="name" type="number" class="form-control validate"
+                                                required="" autocomplete="off">
+                                        </div>
+
+                                    </form>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-12 mx-auto mb-4">
+                                    <div class="tm-product-img-dummy mx-auto">
+                                        <i class="fas fa-cloud-upload-alt tm-upload-icon"
+                                            onclick="document.getElementById('fileInput').click();"></i>
+                                    </div>
+                                    <div class="custom-file mt-3 mb-3">
+                                        <input id="fileInput" type="file" style="display:none;">
+                                        <input type="button" class="btn btn-primary btn-block mx-auto"
+                                            value="Update Product Image"
+                                            onclick="document.getElementById('fileInput').click();">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit"
+                                        class="btn btn-primary btn-block text-uppercase">Update</button>
+                                </div>
+
                             </div>
-                            
-                            <div class="form-group mb-3">
-                              <label for="name">Units In Stock
-                              </label>
-                              <input id="name" name="name" type="number" class="form-control validate" required="" autocomplete="off">
-                            </div>
-                            
-                        </form>
-                      </div>
-                        <div class="col-xl-6 col-lg-6 col-md-12 mx-auto mb-4">
-                          <div class="tm-product-img-dummy mx-auto">
-                            <i class="fas fa-cloud-upload-alt tm-upload-icon" onclick="document.getElementById('fileInput').click();"></i>
-                          </div>
-                          <div class="custom-file mt-3 mb-3">
-                            <input id="fileInput" type="file" style="display:none;">
-                            <input type="button" class="btn btn-primary btn-block mx-auto" value="Update Product Image" onclick="document.getElementById('fileInput').click();">
-                          </div>
                         </div>
-                        <div class="col-12">
-                          <button type="submit" class="btn btn-primary btn-block text-uppercase">Update</button>
-                        </div>
-                      
-                      </div>
                     </div>
-                  </div>
                 </div>
             </div>
             <!-- Content End -->
-                            <!-- Footer Start -->
-                            <div class="container-fluid pt-4 px-4">
-                              <div class="bg-light rounded-top p-4">
-                                  <div class="row">
-                                      <div class="col-12 col-sm-6 text-center text-sm-start">
-                                          &copy; <a href="#">Your Site Name</a>, All Right Reserved.
-                                      </div>
-                                      <div class="col-12 col-sm-6 text-center text-sm-end">
-                                          <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                                          Designed By <a href="https://htmlcodex.com">HTML Codex</a>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                          <!-- Footer End -->
+            <!-- Footer Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="bg-light rounded-top p-4">
+                    <div class="row">
+                        <div class="col-12 col-sm-6 text-center text-sm-start">
+                            &copy; <a href="#">Your Site Name</a>, All Right Reserved.
+                        </div>
+                        <div class="col-12 col-sm-6 text-center text-sm-end">
+                            <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
+                            Designed By <a href="https://htmlcodex.com">HTML Codex</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer End -->
 
             <!-- Back to Top -->
-            
+
             <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
         </div>
 
