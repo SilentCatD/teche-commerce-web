@@ -158,6 +158,7 @@ const ProductService ={
         for (let i = 0; i < product.images.length; i++) {
             await ImageService.deleteImage(product.images[i].firebasePath);
         }
+        await Product.deleteOne({ _id: product.id });
     }
 };
 
