@@ -1,5 +1,6 @@
 import Category from "./model.js";
 import isInt from '../../utils/is_int.js';
+import mongoose from "mongoose";
 
 const CategotyService = {
     createCategory: async (name) =>{
@@ -21,8 +22,10 @@ const CategotyService = {
         return results.map((category) => {
             return {
                 id: category.id,
-                name: category.name
-            }
+                name: category.name,
+                productsHold: category.productsHold,
+                rankingPoints: category.rankingPoints
+            };
         });
     },
 
@@ -31,11 +34,14 @@ const CategotyService = {
     },
 
     fetchCategory: async(id) => {
+        console.log(id);
         const category = await Category.findById(mongoose.mongo.ObjectId(id));
         return {
             id: category.id,
-            name: category.name
-        }
+            name: category.name,
+            productsHold: category.productsHold,
+            rankingPoints: category.rankingPoints
+        };
     },
 
     deleteCategory: async (id) =>{
