@@ -3,6 +3,7 @@ import BrandService from "../brand/service.js";
 import CategotyService from "../category/service.js";
 import ImageService from "../image/service.js";
 import Product from "./model.js";
+import mongoose from "mongoose";
 
 const ProductService ={
     createProduct: async(name, price, brandId, categoryId, details, imageFiles) =>{
