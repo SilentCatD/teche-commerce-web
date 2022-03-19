@@ -2,9 +2,6 @@ import ProductService from "./service.js";
 
 const ProductController = {
     createProduct: async (req, res) => {
-        // console.log(req.body);
-        // console.log(req.files);
-        // res.end();
         try {
             const {
                 productName,

@@ -1,15 +1,25 @@
 # teche-commerce-web
-- Beautiful website make by Tarnished from the Land Between, them who seek to elden ring to become Elden Lord
+- I don't want play elden ring anymore
 # How to use
 
-- GET /api/v1/brand => all brand available
-- GET /api/v1/brand/:id => brand with id
-- POST  /api/v1/brand  send with body {FormData: {brandName: name(String), brandImg: img (File)}}} => createBrand, use the web UI 
-- DELETE /api/v1/brand => delete all brands
-- DELETE /api/v1/brand/:id => delete  brand with id
-- GET /api/v1/image/:id => get image with id
+### Collection Available: Product, Brand, Category, Image, Product
 
-{
+#### GET /api/v1/{collection_name}: get all collection in database
+##### Option: You can pass option for sort by product's attribute, sort type(increasement and decreasement), limit the number of items
+- sort by product's attribute: req.query[sort]
+- sort by Type: req.query[type]
+- limit the number of items: req.query[limit]
+
+
+#### GET /api/v1/{collection_name}/:{id}: get one specific document in collection
+
+#### DELETE /api/v1/{collection_name} => delete all document in collection
+
+#### DELETE /api/v1/{collection_name}/{document_id} => delete one document in collection
+
+#### POST /api.v1/{collection_name} send with req.body {FormData} -> create document in collection. Each collection has different parameter we explain later
+
+
 # I AM TIRED TOO (TODO):
  - Test deleteProduct API
  - Change product.inStock to variants.inStock (I will change later, believe me)
