@@ -1,3 +1,5 @@
+import ProductService from "./service";
+
 const ProductController = {
     createProduct: async (req, res) => {
         // console.log(req.body);
@@ -17,7 +19,7 @@ const ProductController = {
                  
             }
             
-            const id = await database.instance.createProduct(productName, productPrice, productBrand,
+            const id = await ProductService.createProduct(productName, productPrice, productBrand,
                 productCategory, productDetails, productImages);
             res.status(201).end(`Product created with id ${id}`);
         } catch (e) {
@@ -29,7 +31,7 @@ const ProductController = {
     fetchAllProduct: async (req, res) => {
         try {
             const query =req.query;
-            const result = await database.instance.fetchAllProduct(query.limit , query.sort, query.type);
+            const result = await ProductService.fetchAllProduct(query.limit , query.sort, query.type);
             res.writeHead(200, {
                 'Content-Type': 'application/json'
             });
@@ -42,7 +44,7 @@ const ProductController = {
 
     deleteAllProduct: async (req, res) => {
         try {
-            await database.instance.deleteAllProduct();
+            await ProductService.deleteAllProduct();
             res.status(200).end("All Product deleted");
         } catch (e) {
             console.log(e);
@@ -55,7 +57,7 @@ const ProductController = {
             const {
                 id
             } = req.params;
-            const result = await database.instance.fetchProduct(id);
+            const result = await ProductService.fetchProduct(id);
             res.writeHead(200, {
                 "Content-Type": "application/json"
             });
@@ -71,7 +73,7 @@ const ProductController = {
             const {
                 id
             } = req.params;
-            await database.instance.deleteProduct(id);
+            await ProductService.deleteProduct(id);
             res.writeHead(200,{
                 "Content-Type":"application/json"
             });
