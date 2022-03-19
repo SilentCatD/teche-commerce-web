@@ -1,0 +1,25 @@
+// LOGIN TEST SECTION
+GET http://localhost:3000/api/v1/login
+Content-Type: application/json
+
+{
+    "userName":"chetah",
+    "userPassword":"yummychetah"
+}
+
+// SignUp
+###
+POST http://localhost:3000/api/v1/login
+Content-Type: application/json
+
+{
+    "userName": "chetah",
+    "userPassword": "yummychetah",
+    "userEmail": "slientrabit@gmail.com"
+}
+
+###
+// TEST hompage with token
+
+GET http://localhost:3000/homepage/
+x-access-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMzE4MmUxNWE0ODQ2Y2JjZjI0ZTViMiIsImlhdCI6MTY0NzQxNzI1MiwiZXhwIjoxNjQ3NTAzNjUyfQ.Wed-5NPvKbYPx6e2tdssbfw9bikEQuSQmu6enxrQ6pY

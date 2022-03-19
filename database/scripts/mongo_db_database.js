@@ -1,16 +1,44 @@
 
 import { PassThrough, Readable } from 'stream';
+import { randomBytes } from 'crypto';
+
 import mongoose from "mongoose";
 import Brand from "../../model/brand.js";
 import Category from "../../model/category.js";
 import Product from "../../model/product.js";
-import { randomBytes } from 'crypto';
+import User from '../../model/user.js';
+import Role from '../../model/role.js';
 
 function isInt(value) {
     return !isNaN(value) &&
         parseInt(Number(value)) == value &&
         !isNaN(parseInt(value, 10));
 }
+
+// Initilize Database when connect (run only once to create role)
+async function initialDatabase() {
+    Role.estimatedDocumentCount((err,count) => {
+        if(!err && count < 2) {
+            const userRole = new Role({name:"user"});
+            userRole.save(err => {
+                if(err) {
+                    console.log("error", err);
+                }
+                console.log("added 'user' to roles collection");
+            });
+            
+            const adminRole = new Role({name:"admin"});
+            adminRole.save(err => {
+                if(err) {
+                    console.log("admin",err);
+                }
+                console.log("added 'admin' to roles collection");
+            });
+
+        };
+    });
+}
+
 
 class MongoDBDatabase {
     #gridFSBucket
@@ -20,14 +48,17 @@ class MongoDBDatabase {
         if (this.#connectStatus) {
             return;
         }
+        // note: adding useUnifiedTopology: true (i dunnu why)
         try {
-            await mongoose.connect(`mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@thisisfortestpurpose.3mdrb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, { useNewUrlParser: true, });
+            await mongoose.connect(`mongodb+srv://${process.env.MONGO_DB_USERNAME}:${process.env.MONGO_DB_PASSWORD}@thisisfortestpurpose.3mdrb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true });
             console.log("Database connected");
 
             this.#connectStatus = true;
             this.#gridFSBucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
                 bucketName: 'images'
             });
+            // here i initialize
+            await initialDatabase();
 
         }
         catch (e) {
@@ -357,6 +388,38 @@ class MongoDBDatabase {
         }
         await Product.deleteOne({ _id: product.id });
     }
+
+    // user section
+    async findUserByName(userName) {
+        const user =  await User.findOne({name:userName});
+        return user;
+    }
+
+    async findUserByEmail(userEmail){
+        const user =  await User.findOne({email:userEmail});
+        return user;
+    }
+
+    async findRoleByName(userRole){
+        const role = await Role.findOne({name:userRole});
+        return role;
+    }
+
+    async findRoleById(roleId){
+        const role = await Role.find({_id: roleId});
+        return role;
+    }
+
+    async createUser(userName, userPassword, userEmail) {
+        //find user role id first
+        let useRoleId = await this.findRoleByName("user");
+
+        let user = new User({ name: userName, password: userPassword, email: userEmail,role:useRoleId._id});
+        await user.save();
+        console.log("User created");
+        return user.id;
+    }
+
 }
 
 export default MongoDBDatabase;
