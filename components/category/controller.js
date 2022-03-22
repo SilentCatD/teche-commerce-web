@@ -64,6 +64,21 @@ const CategoryController = {
                 .end("Can't delete category, it's not exist or something went wrong");
         }
     },
+    editCategory: async (req, res) => {
+        try {
+            const {
+                categoryName
+            } = req.body;
+            const {
+                id
+            } = req.params;            
+            await CategotyService.editCategory(id,categoryName);
+            res.status(200).end("Category successfully edit")
+        } catch (e) {
+            console.log(e);
+            res.status(404).end(e.msg);
+        }
+    }
 };
 
 export default CategoryController;
