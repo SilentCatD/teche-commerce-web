@@ -198,6 +198,7 @@ const ProductService = {
     },
 
     editProduct: async(id, name, price, brandId, categoryId, details, imageFiles)=>{
+        // imageFiles undeinfed => not edit
         const session = await Product.startSession();
         session.startTransaction();
         try {
