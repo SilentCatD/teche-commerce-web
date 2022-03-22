@@ -48,7 +48,79 @@ const CategotyService = {
         const category = await Category.findById(mongoose.Types.ObjectId(id));
         await Category.deleteOne({ _id: category.id });
 
-    }
+    },
+
+    editProductHolds: async (id, op) => {
+        // editProductHolds(id, '+') => plus 1
+        const session = await Category.startSession();
+        session.startTransaction();
+        try {
+            const category = await Category.findById(mongoose.Types.ObjectId(id)).session(session);
+            if (!op){
+                throw Error("operation not specifief");
+            }
+            if(op=='+'){
+                category.productsHold = category.productsHold + 1;
+
+            }else if(op=='-'){
+                category.productsHold = category.productsHold - 1;
+            }else{
+                throw Error("operation invalid");
+            }
+            await category.save();
+            await session.commitTransaction();
+        } catch (e) {
+            await session.abortTransaction();
+            throw e;
+        } finally{
+            await session.endSession();
+        }
+    },
+    editrankingPoints: async (id, op) => {
+        // editrankingPoints(id, '+') => plus 1
+        const session = await Category.startSession();
+        session.startTransaction();
+        try {
+            const category = await Category.findById(mongoose.Types.ObjectId(id)).session(session);
+            if (!op){
+                throw Error("operation not specifief");
+            }
+            if(op=='+'){
+                category.rankingPoints = category.rankingPoints + 1;
+
+            }else if(op=='-'){
+                category.rankingPoints = category.rankingPoints - 1;
+            }else{
+                throw Error("operation invalid");
+            }
+            await category.save();
+            await session.commitTransaction();
+        } catch (e) {
+            await session.abortTransaction();
+            throw e;
+        } finally{
+            await session.endSession();
+        }
+    },
+
+    editCategory: async (id, name)=>{
+        //  undefined => not change
+        const session = await Category.startSession();
+        session.startTransaction();
+        try {
+            const category = await Category.findById(mongoose.Types.ObjectId(id)).session(session);
+            if(name){
+                category.name=name;
+            }
+            await category.save();
+            await session.commitTransaction();
+        } catch (e) {
+            await session.abortTransaction();
+            throw e;
+        } finally{
+            await session.endSession();
+        }
+    },
 }
 
 export default CategotyService;

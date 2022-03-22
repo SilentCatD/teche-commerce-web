@@ -2,9 +2,10 @@ import ImageService from '../image/service.js';
 import Brand from './model.js'
 import mongoose from 'mongoose';
 import isInt from '../../utils/is_int.js';
+import { async } from '@firebase/util';
 
 const BrandService = {
-    createBrand: async (name, img)=>{
+    createBrand: async (name, img) => {
         // name: <String> Sname of the brand
         // img: <File> object represent the file
 
@@ -12,13 +13,13 @@ const BrandService = {
         if (img) {
             imageModel = await ImageService.createImage(img);
         }
-        let brand = new Brand({ name: name, image: imageModel});
+        let brand = new Brand({ name: name, image: imageModel });
         await brand.save();
         console.log("Brand created");
         return brand.id;
     },
 
-    fetchAllBrand : async (limit, sort, type)=> {
+    fetchAllBrand: async (limit, sort, type) => {
         let sortedParams = {};
         if (type != 1 && type != -1) {
             type = -1;
@@ -44,7 +45,7 @@ const BrandService = {
         });
     },
 
-    deleteAllBrand: async() => {
+    deleteAllBrand: async () => {
         const brands = await Brand.find();
         await Promise.all(brands.map(async (brand) => {
             let brandImg = brand.image;
@@ -78,6 +79,89 @@ const BrandService = {
             await ImageService.deleteImage(brandImg.firebasePath);
         }
         await Brand.findByIdAndDelete(brand.id);
+    },
+
+    editProductHolds: async (id, op) => {
+        // editProductHolds(id, '+') => plus 1
+        const session = await Brand.startSession();
+        session.startTransaction();
+        try {
+            const brand = await Brand.findById(mongoose.Types.ObjectId(id)).session(session);
+            if (!op){
+                throw Error("operation not specifief");
+            }
+            if(op=='+'){
+                brand.productsHold = brand.productsHold + 1;
+
+            }else if(op=='-'){
+                brand.productsHold = brand.productsHold - 1;
+            }else{
+                throw Error("operation invalid");
+            }
+            await brand.save();
+            await session.commitTransaction();
+        } catch (e) {
+            await session.abortTransaction();
+            throw e;
+        } finally{
+            await session.endSession();
+        }
+    },
+    editrankingPoints: async (id, op) => {
+        // editrankingPoints(id, '+') => plus 1
+        const session = await Brand.startSession();
+        session.startTransaction();
+        try {
+            const brand = await Brand.findById(mongoose.Types.ObjectId(id)).session(session);
+            if (!op){
+                throw Error("operation not specifief");
+            }
+            if(op=='+'){
+                brand.rankingPoints = brand.rankingPoints + 1;
+
+            }else if(op=='-'){
+                brand.rankingPoints = brand.rankingPoints - 1;
+            }else{
+                throw Error("operation invalid");
+            }
+            await brand.save();
+            await session.commitTransaction();
+        } catch (e) {
+            await session.abortTransaction();
+            throw e;
+        } finally{
+            await session.endSession();
+        }
+    },
+
+    editBrand: async (id, name, image)=>{
+        // image undefined => not change
+        // image null => delete brand Image
+        const session = await Brand.startSession();
+        session.startTransaction();
+        try {
+            const brand = await Brand.findById(mongoose.Types.ObjectId(id)).session(session);
+            if(name){
+                brand.name=name;
+            }
+            if(image!==undefined){
+                if(brand.image){
+                    await ImageService.deleteImage(brand.image.firebasePath);
+                    brand.image = null;
+                }
+                if(image){
+                    const newImg = await ImageService.createImage(image);
+                    brand.image = newImg;
+                }
+            }
+            await brand.save();
+            await session.commitTransaction();
+        } catch (e) {
+            await session.abortTransaction();
+            throw e;
+        } finally{
+            await session.endSession();
+        }
     },
 };
 
