@@ -1,7 +1,7 @@
 
 import { initializeApp } from "firebase/app";
 import {getStorage, ref, uploadBytes, getDownloadURL, deleteObject} from 'firebase/storage';
-import firebaseConfig from "./firebase_config.js";
+import firebaseConfig from "../../../config/firebase_config.js";
 import mongoose from "mongoose";
 import {v4 as uuidv4} from 'uuid';
 
