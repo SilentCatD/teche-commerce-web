@@ -11,6 +11,9 @@ brandRouter
   .post(upload.single("brandImg"), BrandController.createBrand)
   .delete(BrandController.deleteAllBrand);
 
-brandRouter.route("/:id").get(BrandController.fetchBrand).delete(BrandController.deleteBrand);
+brandRouter
+  .route("/:id").get(BrandController.fetchBrand)
+  .delete(BrandController.deleteBrand)
+  .post(upload.single("brandImg"),BrandController.editBrand);
 
 export default brandRouter;

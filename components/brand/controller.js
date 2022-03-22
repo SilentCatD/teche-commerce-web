@@ -69,6 +69,26 @@ const BrandController = {
                 .end("Can't delete brand, it's not exist or something went wrong");
         }
     },
+    editBrand: async (req, res) => {
+        try {
+            const {
+                brandName
+            } = req.body;
+            const {
+                id
+            } = req.params;
+            let brandImg = undefined;
+            if (req.file) {
+                brandImg = req.file;
+            }
+            
+            await BrandService.editBrand(id,brandName,brandImg);
+            res.status(200).end("brand successfully edit")
+        } catch (e) {
+            console.log(e);
+            res.status(404)
+        }
+    }
 };
 
 export default BrandController;
