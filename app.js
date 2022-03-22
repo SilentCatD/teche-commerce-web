@@ -20,6 +20,10 @@ app.use('/admin',adminPageRouter);
 app.use('/test', testRouter)
 app.use('/user', webPageRouter);
 
+app.get("/",(req, res, next) =>{
+  res.redirect("/user");
+})
+
 app.listen(process.env.PORT || 3000, async ()=> {
   await database.instance.connect();
   console.log(`Server is running at: ${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}`);
