@@ -217,6 +217,92 @@ $('#delete-cate-btn').click(function (e) {
 
 // ======================================
 
+function isNumeric(str) {
+    if (typeof str != "string") return false // we only process strings!  
+    return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+           !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+  }
+
+
+async function CreateProduct(productName, productDetails, productBrand, productCategory, productPrice) {
+    let formData = new FormData();
+    formData.append('productName', productName);
+    formData.append('productDetails', productDetails);
+    formData.append('productBrand', productBrand);
+    formData.append('productCategory', productCategory);
+    formData.append('productPrice', productPrice);
+    imgFileToUpload.forEach((file) => {
+        formData.append('images', file);
+    });
+    let response = await axios({
+        method: "post",
+        url: "/api/v1/product",
+        data: formData,
+        headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response;
+}
+
+$("#add-product-btn").click( async function (e) { 
+    e.preventDefault();
+    $('#product-name-input-error').text("");
+
+    const productName = $('#product-name').val().trim();
+    const productDetails = $('#product-detail').val().trim();
+    const productBrand = $('#product-brand').val().trim();
+    const productCategory = $('#product-category').val().trim();
+    const productPrice = $('#product-price').val().trim();
+    if(!productPrice || !isNumeric(productPrice)){
+        $('#product-price-input-error').text("Invalid product price");
+        return;
+    }
+
+    if(!productName){
+        $('#product-name-input-error').text("Invalid product name");
+        return;
+    }
+    if(!productBrand){
+        $('#product-name-input-error').text("Invalid product Brand");
+        return;
+    }    if(!productCategory){
+        $('#product-name-input-error').text("Invalid product Category");
+        return;
+    }
+
+    
+    let response = await CreateProduct(productName, productDetails, productBrand, productCategory, productPrice);
+    console.log(response);
+
+    resetProductInput();
+});
+
+async function deleteProductById(id) {
+    try {
+        let response = await axios({
+            method: "delete",
+            url: `/api/v1/product/${id}`,
+        });
+        console.log(response);
+        $('#db-res').text(response.data);
+    }
+    catch (e) {
+        $('#db-res').text("Failed to delete product");
+    }
+    $('#product-id-input').val("");
+}
+
+$('#delete-product-btn').click(function (e) {
+    e.preventDefault();
+    const productIdVal = $('#product-id-input').val();
+    if (!productIdVal) {
+        $('#product-id-input-error').text("category id cant be empty");
+        return;
+    }
+    $('#product-id-input-error').text("");
+    deleteProductById(productIdVal);
+});
+
+
 let imgFileToUpload = []; // File 
 $('#add-product-img-btn').click(function (e) { 
     e.preventDefault();
@@ -231,47 +317,8 @@ $('#add-product-img-btn').click(function (e) {
     $('#product-img').val("");;
 });
 
-function isNumeric(str) {
-    if (typeof str != "string") return false // we only process strings!  
-    return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
-           !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
-  }
 
-$("#add-product-btn").click( async function (e) { 
-    e.preventDefault();
-    const productName = $('#product-name').val().trim();
-    if(!productName){
-        $('#product-name-input-error').text("Invalid product name");
-        return;
-    }
-    $('#product-name-input-error').text("");
-    const productDetails = $('#product-detail').val().trim();
-    const productBrand = $('#product-brand').val().trim();
-    const productCategory = $('#product-category').val().trim();
-    const productPrice = $('#product-price').val().trim();
-    if(!productPrice || !isNumeric(productPrice)){
-        $('#product-price-input-error').text("Invalid product price");
-        return;
-    }
-
-    
-    let formData = new FormData();
-    formData.append('productName', productName);
-    formData.append('productDetails', productDetails);
-    formData.append('productBrand', productBrand);
-    formData.append('productCategory', productCategory);
-    formData.append('productPrice', productPrice);
-    imgFileToUpload.forEach((file)=>{
-        formData.append('images',file);
-    })
-    let response = await axios({
-        method: "post",
-        url: "/api/v1/product",
-        data: formData,
-        headers: { "Content-Type": "multipart/form-data" },
-    });
-    console.log(response);
-
+function resetProductInput() {
     $('#product-price-input-error').text("");
     $('#product-name').val("");
     $('#product-detail').val("");
@@ -280,4 +327,5 @@ $("#add-product-btn").click( async function (e) {
     $('#product-price').val("");
     imgFileToUpload = [];
     $("#img-holder-list").html('');
-});
+}
+

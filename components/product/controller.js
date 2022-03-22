@@ -71,9 +71,6 @@ const ProductController = {
                 id
             } = req.params;
             await ProductService.deleteProduct(id);
-            res.writeHead(200,{
-                "Content-Type":"application/json"
-            });
             res.status(200).end("Delete success");
         } catch(e) {
             console.log(e);
