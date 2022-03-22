@@ -101,6 +101,7 @@ const ProductService = {
         }));
     },
 
+    // Mising edit product,category holds
     deleteAllProduct: async () => {
         const products = await Product.find();
         await Promise.all(products.map(async (product) => {
@@ -176,14 +177,14 @@ const ProductService = {
             let rates = product.rates;
             rates[rate-1] =rates[rate-1]+1;
             let totalRates = 0;
-            let totalStarts = 0;
+            let totalStars = 0;
             let rateAverage = 0;
             for(let i = 0; i< 5; i++){
                 totalRates+= rates[i];
-                totalStarts+= rates[i] * (i+1);
+                totalStars+= rates[i] * (i+1);
             }
             if(totalRates!=0){
-                rateAverage = totalStarts / totalRates;
+                rateAverage = totalStars / totalRates;
             }
             product.rateAverage = rateAverage;
             product.rates = rates;
@@ -208,6 +209,9 @@ const ProductService = {
             }
             if(price){
                 product.price = price;
+            }
+            if(details){
+                product.details = details;
             }
             if(brandId){
                 try {
@@ -235,7 +239,6 @@ const ProductService = {
                 }
                 product.category = categoryId;
             }
-            product.details = details;
             if(imageFiles!==undefined){
                 let images = []
                 for (let i = 0; i < imageFiles.length; i++) {
