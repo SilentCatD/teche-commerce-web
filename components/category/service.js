@@ -105,8 +105,7 @@ const CategotyService = {
 
     editCategory: async (id, name)=>{
         //  undefined => not change
-        //  null => delete brand Image
-        const session = await Brand.startSession();
+        const session = await Category.startSession();
         session.startTransaction();
         try {
             const category = await Category.findById(mongoose.Types.ObjectId(id)).session(session);
