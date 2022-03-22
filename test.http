@@ -1,1 +1,8 @@
-GET localhost:3000/api/v1/product
+
+// product test
+DELETE  http://localhost:3000/api/v1/product/
+
+
+// Brand test
+###
+DELETE  http://localhost:3000/api/v1/brand/

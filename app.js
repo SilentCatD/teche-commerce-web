@@ -18,7 +18,7 @@ app.use(express.json());
 app.use('/api', api);
 app.use('/admin',adminPageRouter);
 app.use('/test', testRouter)
-app.use('/', webPageRouter);
+app.use('/user', webPageRouter);
 
 app.listen(process.env.PORT || 3000, async ()=> {
   await database.instance.connect();
