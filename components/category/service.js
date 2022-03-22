@@ -109,12 +109,8 @@ const CategotyService = {
         session.startTransaction();
         try {
             const category = await Category.findById(mongoose.Types.ObjectId(id)).session(session);
-            if(name!==undefined){
-                if(name===null){
-                    category.name='';
-                }else{
-                    category.name = name;
-                }
+            if(name){
+                category.name=name;
             }
             await category.save();
             await session.commitTransaction();
