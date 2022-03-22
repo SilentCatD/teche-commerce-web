@@ -141,7 +141,7 @@ const BrandService = {
         session.startTransaction();
         try {
             const brand = await Brand.findById(mongoose.Types.ObjectId(id)).session(session);
-            if(name){
+            if(name!==undefined){
                 brand.name = name;
             }
             if(image!==undefined){
