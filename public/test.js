@@ -18,6 +18,29 @@ async function addBrand(name, img) {
     $('#add-brand-img').val("");
 }
 
+$('#add-brand-btn').click(function (e) {
+    e.preventDefault();
+
+    const brandNameVal = $('#add-brand-name').val();
+    const imgFile = $('#add-brand-img').prop('files')[0];
+
+    if (!brandNameVal) {
+        $('#add-brand-name-error').text("Must provide a valid brand name");
+        return;
+    }
+    $('#add-brand-name-error').text("");
+    if (imgFile) {
+        const imgFileType = imgFile.type;
+        const validImageTypes = ['image/jpeg', 'image/png'];
+        if (!validImageTypes.includes(imgFileType)) {
+            $('#add-brand-img-error').text("That's not an image");
+            return;
+        }
+        $('#add-brand-img-error').text("");
+    }
+    addBrand(brandNameVal, imgFile);
+});
+
 
 async function editBrand(id,name, img) {
     let formData = new FormData();
@@ -38,66 +61,6 @@ async function editBrand(id,name, img) {
     $('#add-brand-name').val("");
     $('#add-brand-img').val("");
 }
-
-async function deleteBrandById(id) {
-    try {
-        let response = await axios({
-            method: "delete",
-            url: `/api/v1/brand/${id}`,
-        });
-        console.log(response);
-        $('#db-res').text(response.data);
-    }
-    catch (e) {
-        $('#db-res').text("Failed to delete brand");
-    }
-    $('#brand-id-input').val("");
-}
-
-async function addCategory(name) {
-    let data = {};
-    data.categoryName = name;
-    try {
-        let res = await axios({
-            method: "post",
-            url: "/api/v1/category",
-            data: data
-          });
-        $('#db-res').text(res.data);
-    } catch (e) {
-        $('#db-res').text(e);
-    }
-    $('#add-cate-name').val("");
-}
-
-async function deleteCategoryById(id) {
-    try {
-        let response = await axios({
-            method: "delete",
-            url: `/api/v1/category/${id}`,
-        });
-        console.log(response);
-        $('#db-res').text(response.data);
-    }
-    catch (e) {
-        $('#db-res').text("Failed to delete category");
-    }
-    $('#cate-id-input').val("");
-}
-
-$('#delete-brand-btn').click(function (e) {
-    e.preventDefault();
-    const brandIdVal = $('#brand-id-input').val();
-    if (!brandIdVal) {
-        $('#brand-id-input-error').text("brand id cant be empty");
-        return;
-    }
-    $('#brand-id-input-error').text("");
-    deleteBrandById(brandIdVal);
-});
-
-
-
 
 $('#edit-brand-btn').click(function (e) {
     e.preventDefault();
@@ -128,30 +91,47 @@ $('#edit-brand-btn').click(function (e) {
     editBrand(brandId,brandNameVal, imgFile);
 });
 
+async function deleteBrandById(id) {
+    try {
+        let response = await axios({
+            method: "delete",
+            url: `/api/v1/brand/${id}`,
+        });
+        console.log(response);
+        $('#db-res').text(response.data);
+    }
+    catch (e) {
+        $('#db-res').text("Failed to delete brand");
+    }
+    $('#brand-id-input').val("");
+}
 
-$('#add-brand-btn').click(function (e) {
+$('#delete-brand-btn').click(function (e) {
     e.preventDefault();
-
-    const brandNameVal = $('#add-brand-name').val();
-    const imgFile = $('#add-brand-img').prop('files')[0];
-
-    if (!brandNameVal) {
-        $('#add-brand-name-error').text("Must provide a valid brand name");
+    const brandIdVal = $('#brand-id-input').val();
+    if (!brandIdVal) {
+        $('#brand-id-input-error').text("brand id cant be empty");
         return;
     }
-    $('#add-brand-name-error').text("");
-    if (imgFile) {
-        const imgFileType = imgFile.type;
-        const validImageTypes = ['image/jpeg', 'image/png'];
-        if (!validImageTypes.includes(imgFileType)) {
-            $('#add-brand-img-error').text("That's not an image");
-            return;
-        }
-        $('#add-brand-img-error').text("");
-    }
-    addBrand(brandNameVal, imgFile);
+    $('#brand-id-input-error').text("");
+    deleteBrandById(brandIdVal);
 });
 
+async function addCategory(categoryName) {
+    let data = {};
+    data.categoryName = categoryName;
+    try {
+        let res = await axios({
+            method: "post",
+            url: "/api/v1/category",
+            data: data
+          });
+        $('#db-res').text(res.data);
+    } catch (e) {
+        $('#db-res').text(e);
+    }
+    $('#add-cate-name').val("");
+}
 
 $('#add-cate-btn').click(function (e) {
     e.preventDefault();
@@ -166,6 +146,61 @@ $('#add-cate-btn').click(function (e) {
     $('#add-cate-name-error').text("");
     addCategory(categoryNameVal);
 });
+
+
+async function editCategory(id, categoryName) {
+    let data = {};
+    data.categoryName = categoryName;
+    try {
+        let res = await axios({
+            method: "post",
+            url: `/api/v1/category/${id}`,
+            data: data
+          });
+        $('#db-res').text(res.data);
+    } catch (e) {
+        $('#db-res').text(e);
+    }
+    $('#edit-cate-name').val("");
+}
+
+$('#edit-cate-btn').click(function (e) {
+    e.preventDefault();
+
+    console.log("fuck");
+    const categoryIdVal = $('#edit-cate-id').val();
+
+    const categoryNameVal = $('#edit-cate-name').val();
+
+    if (!categoryIdVal) {
+        $('#edit-cate-name-error').text("Must provide a valid category ID");
+        return;
+    }
+    if (!categoryNameVal) {
+        $('#edit-cate-name-error').text("Must provide a valid category name");
+        return;
+    }
+    $('#edit-cate-name-error').text("");
+    editCategory(categoryIdVal,categoryNameVal);
+});
+
+
+
+async function deleteCategoryById(id) {
+    try {
+        let response = await axios({
+            method: "delete",
+            url: `/api/v1/category/${id}`,
+        });
+        console.log(response);
+        $('#db-res').text(response.data);
+    }
+    catch (e) {
+        $('#db-res').text("Failed to delete category");
+    }
+    $('#cate-id-input').val("");
+}
+
 
 $('#delete-cate-btn').click(function (e) {
     e.preventDefault();

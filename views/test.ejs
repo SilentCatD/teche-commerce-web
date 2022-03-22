@@ -25,8 +25,19 @@
 </head>
 
 <body class="text-center">
-  <h1 class="text-start font-weight-bold">Add Branch</h1>
-  <div class="row">
+
+  <div class="col-lg-12 mb-5">
+    <main class="form">
+      <img class="mb-4 my-icon" src="https://i.ytimg.com/vi/s-998kFFsLA/maxresdefault.jpg" alt="" width="200"
+        height="200">
+      <h1 class="h3 mb-3 fw-normal" id="db-res">Database response:</h1>
+      <h3 id="dbs-response-msg">
+      </h3>
+    </main>
+  </div>
+
+  <h1 class="text-start fw-bold">Branch</h1>
+  <div class="row mb-5">
     <div class="col-lg-4">
       <main class="form">
         <img class="mb-4 my-icon" src="https://pbs.twimg.com/media/FE_Ln6AUYAAEBai.jpg" alt="" width="200" height="200">
@@ -58,24 +69,14 @@
         <p class="text-danger" id="edit-brand-name-error"></p>
         <input type="file" class="form-control" id="edit-brand-img">
         <p class="text-danger" id="edit-brand-img-error"></p>
-        <button class="w-100 btn btn-lg btn-primary" id="edit-brand-btn">Edit</button>
-      </main>
-    </div>
-
-    <div class="col-lg-12">
-      <main class="form">
-        <img class="mb-4 my-icon" src="https://i.ytimg.com/vi/s-998kFFsLA/maxresdefault.jpg" alt="" width="200"
-          height="200">
-        <h1 class="h3 mb-3 fw-normal" id="db-res">Database response:</h1>
-        <h3 id="dbs-response-msg">
-        </h3>
+        <button class="w-100 btn btn-lg btn-primary" id="edit-brand-btn">Add</button>
       </main>
     </div>
   </div>
 
-  <h1 class="text-start font-weight-bold">Add Category</h1>
-  <div class="row">
-    <div class="col-lg-6">
+  <h1 class="text-start fw-bold">Category</h1>
+  <div class="row mb-5">
+    <div class="col-lg-4">
       <main class="form">
         <img class="mb-4 my-icon" src="https://i.pinimg.com/originals/c7/67/c0/c767c01df6f9036a8e8ea256b41267bc.png" alt="" width="200" height="200">
         <h1 class="h3 mb-3 fw-normal">Adding Category!</h1>
@@ -85,22 +86,32 @@
         <button class="w-100 btn btn-lg btn-primary" id="add-cate-btn">Add</button>
       </main>
     </div>
-    <div class="col-lg-6">
+    <div class="col-lg-4">
       <main class="form">
         <img class="mb-4 my-icon" src="https://i.pinimg.com/originals/c7/67/c0/c767c01df6f9036a8e8ea256b41267bc.png" alt="" width="200" height="200">
-        <h1 class="h3 mb-3 fw-normal">Delete Company</h1>
+        <h1 class="h3 mb-3 fw-normal">Delete Category</h1>
         <p class="text-warning">You should worry about ID</p>
         <input type="text" class="form-control" name="cName" placeholder="Category Id" autocomplete="off" id="cate-id-input">
         <p class="text-danger" id="cate-id-input-error"></p>
         <button class="w-100 btn btn-lg btn-primary" id="delete-cate-btn">Kick</button>
       </main>
     </div>
+  <div class="col-lg-4">
+    <main class="form">
+      <img class="mb-4 my-icon" src="https://i.pinimg.com/originals/c7/67/c0/c767c01df6f9036a8e8ea256b41267bc.png" alt="" width="200" height="200">
+      <h1 class="h3 mb-3 fw-normal">Edit Category!</h1>
+      <input type="text" class="form-control" name="cName" placeholder="Category ID" autofocus autocomplete="off" id="edit-cate-id">
+      <input type="text" class="form-control" name="cName" placeholder="Category Name" autofocus autocomplete="off" id="edit-cate-name">
+      <p class="text-danger" id="edit-cate-name-error"></p>
+      <button class="w-100 btn btn-lg btn-primary" id="edit-cate-btn">Edit</button>
+    </main>
   </div>
+</div>
 
 
-  <h1 class="text-start fw-bold">Add product</h1>
+<h1 class="text-start fw-bold mb-5">Product</h1>
   <div class="row">
-    <div class="col-6">
+    <div class="col-4">
       <div class="form">
         <input type="text" class="form-control" placeholder="product name" id="product-name">
         <p class="text-danger" id="product-name-input-error"></p>
@@ -113,17 +124,28 @@
         <p class="text-danger" id="product-price-input-error"></p>
         <button class="w-100 btn btn-lg btn-primary" id="add-product-btn">Add Product</button>
       </div>
+        <div class="form">
+          <input type="file" class="form-control" id="product-img" accept=".jpg,.png">
+          <p class="text-danger" id="product-img-input-error"></p>
+          <button class="w-100 btn btn-lg btn-primary" id="add-product-img-btn">Add Img</button>
+        </div>
+      <ul id="img-holder-list">
+  
+      </ul>
     </div>
-    <div class="col-6">
-      <div class="form">
-        <input type="file" class="form-control" id="product-img" accept=".jpg,.png">
-        <p class="text-danger" id="product-img-input-error"></p>
-        <button class="w-100 btn btn-lg btn-primary" id="add-product-img-btn">Add Img</button>
-      </div>
-    </div>
-    <ul id="img-holder-list">
+  
 
-    </ul>
+    <div class="col-lg-4">
+      <main class="form">
+        <img class="mb-4 my-icon" src="https://i.pinimg.com/originals/c7/67/c0/c767c01df6f9036a8e8ea256b41267bc.png" alt="" width="200" height="200">
+        <h1 class="h3 mb-3 fw-normal">Delete Company</h1>
+        <p class="text-warning">You should worry about ID</p>
+        <input type="text" class="form-control" name="cName" placeholder="Product Id" autocomplete="off" id="product-id-input">
+        <p class="text-danger" id="product-id-input-error"></p>
+        <button class="w-100 btn btn-lg btn-primary" id="delete-product-btn">Kick</button>
+      </main>
+    </div>
+
   </div>
 
 
