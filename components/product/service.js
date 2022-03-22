@@ -114,7 +114,9 @@ const ProductService = {
 
 
     fetchProduct: async (id) => {
+        try {
         const product = await Product.findById(mongoose.mongo.ObjectId(id));
+        if(product === null) throw new Error(`Product ${id} is not found`);
         let imageUrls = [];
         for (let i = 0; i < product.images.length; i++) {
             imageUrls.push(product.images[i].firebaseUrl);
@@ -156,14 +158,22 @@ const ProductService = {
             buyCount: product.buyCount,
             viewCount: product.viewCount
         };
+    } catch (e) {
+        throw e;
+    }
     },
 
     deleteProduct: async (id) => {
+        try {
         const product = await Product.findById(mongoose.Types.ObjectId(id));
+        if(product===null) throw new Error(`Product ${id} found`)
         for (let i = 0; i < product.images.length; i++) {
             await ImageService.deleteImage(product.images[i].firebasePath);
         }
         await Product.deleteOne({ _id: product.id });
+    } catch (e) {
+        throw e;
+    }
     },
 
     rateProduct: async (id, rate) => {
@@ -174,6 +184,7 @@ const ProductService = {
         session.startTransaction();
         try {
             const product = await Product.findById(mongoose.Types.ObjectId(id)).session(session);
+            if(product === null) throw new Error(`Product ${id} is not existed`);
             let rates = product.rates;
             rates[rate-1] =rates[rate-1]+1;
             let totalRates = 0;
@@ -204,6 +215,7 @@ const ProductService = {
         session.startTransaction();
         try {
             const product = await Product.findById(mongoose.Types.ObjectId(id)).session(session);
+            if(product === null) throw new Error(`Product ${id} is not found`);
             if(name){
                 product.name = name;
             }

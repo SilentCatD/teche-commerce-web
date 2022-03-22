@@ -57,7 +57,11 @@ const BrandService = {
     },
 
     fetchBrand: async (id) => {
+        try {
         const brand = await Brand.findById(mongoose.mongo.ObjectId(id));
+        if(brand === null) {
+            throw new Error(`Brand ${id} is not existed`);
+        }
         let brandImg = brand.image;
         let imgLink = null;
         if (brandImg) {
@@ -70,15 +74,26 @@ const BrandService = {
             rankingPoints: brand.rankingPoints,
             productsHold: brand.productsHold,
         }
+    }catch (e) {
+        throw e;
+    }
     },
 
     deleteBrand: async (id) => {
+        try {
         const brand = await Brand.findById(mongoose.Types.ObjectId(id));
+        if(brand === null) {
+            throw new Error(`Brand ${id} is not existed`);
+        }
         let brandImg = brand.image;
         if (brandImg) {
             await ImageService.deleteImage(brandImg.firebasePath);
         }
         await Brand.findByIdAndDelete(brand.id);
+    }
+    catch (e) {
+        throw e;
+    }
     },
 
     editProductHolds: async (id, op) => {
@@ -87,6 +102,9 @@ const BrandService = {
         session.startTransaction();
         try {
             const brand = await Brand.findById(mongoose.Types.ObjectId(id)).session(session);
+            if(brand === null) {
+                throw new Error(`Brand ${id} is not existed`);
+            }
             if (!op){
                 throw Error("operation not specifief");
             }
@@ -113,6 +131,9 @@ const BrandService = {
         session.startTransaction();
         try {
             const brand = await Brand.findById(mongoose.Types.ObjectId(id)).session(session);
+            if(brand === null) {
+                throw new Error(`Brand ${id} is not existed`);
+            }
             if (!op){
                 throw Error("operation not specifief");
             }
@@ -141,6 +162,9 @@ const BrandService = {
         session.startTransaction();
         try {
             const brand = await Brand.findById(mongoose.Types.ObjectId(id)).session(session);
+            if(brand === null) {
+                throw new Error(`Brand ${id} is not existed`);
+            }
             if(name){
                 brand.name=name;
             }

@@ -34,19 +34,32 @@ const CategotyService = {
     },
 
     fetchCategory: async(id) => {
-        console.log(id);
+        try {
         const category = await Category.findById(mongoose.mongo.ObjectId(id));
+        if(category === null) {
+            throw new Error(`Category ${id} is not existed`);
+        }
         return {
             id: category.id,
             name: category.name,
             productsHold: category.productsHold,
             rankingPoints: category.rankingPoints
         };
+    }catch (e) {
+        throw e;
+    }
     },
 
     deleteCategory: async (id) =>{
-        const category = await Category.findById(mongoose.Types.ObjectId(id));
+        try {
+            const category = await Category.findById(mongoose.Types.ObjectId(id));
+            if(category === null) {
+                throw new Error(`Category ${id} is not existed`);
+            }
         await Category.deleteOne({ _id: category.id });
+        } catch (e) {
+            throw e;
+        }
 
     },
 
@@ -56,6 +69,9 @@ const CategotyService = {
         session.startTransaction();
         try {
             const category = await Category.findById(mongoose.Types.ObjectId(id)).session(session);
+            if(category === null) {
+                throw new Error(`Category ${id} is not existed`);
+            }
             if (!op){
                 throw Error("operation not specifief");
             }
@@ -82,6 +98,9 @@ const CategotyService = {
         session.startTransaction();
         try {
             const category = await Category.findById(mongoose.Types.ObjectId(id)).session(session);
+            if(category === null) {
+                throw new Error(`Category ${id} is not existed`);
+            }
             if (!op){
                 throw Error("operation not specifief");
             }
@@ -109,6 +128,9 @@ const CategotyService = {
         session.startTransaction();
         try {
             const category = await Category.findById(mongoose.Types.ObjectId(id)).session(session);
+            if(category === null) {
+                throw new Error(`Category ${id} is not existed`);
+            }
             if(name){
                 category.name=name;
             }
