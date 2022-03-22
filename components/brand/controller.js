@@ -42,7 +42,7 @@ const BrandController = {
             res.status(200).end(JSON.stringify(result));
         } catch (e) {
             console.log(e);
-            res.status(404).end("Brand not exist");
+            res.status(404).end(e.message);
         }
     },
 
@@ -81,7 +81,6 @@ const BrandController = {
             if (req.file) {
                 brandImg = req.file;
             }
-            
             await BrandService.editBrand(id,brandName,brandImg);
             res.status(200).end("brand successfully edit")
         } catch (e) {
