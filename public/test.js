@@ -18,6 +18,27 @@ async function addBrand(name, img) {
     $('#add-brand-img').val("");
 }
 
+
+async function editBrand(id,name, img) {
+    let formData = new FormData();
+    console.log(img);
+    formData.append('brandName', name);
+    formData.append('brandImg', img);
+    try {
+        let res = await axios({
+            method: "post",
+            url: `/api/v1/brand/${id}`,
+            data: formData,
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+        $('#db-res').text(res.data);
+    } catch (e) {
+        $('#db-res').text(e);
+    }
+    $('#add-brand-name').val("");
+    $('#add-brand-img').val("");
+}
+
 async function deleteBrandById(id) {
     try {
         let response = await axios({
@@ -75,6 +96,37 @@ $('#delete-brand-btn').click(function (e) {
     deleteBrandById(brandIdVal);
 });
 
+
+
+
+$('#edit-brand-btn').click(function (e) {
+    e.preventDefault();
+
+    const brandId = $("#edit-brand-id").val();
+    const brandNameVal = $('#edit-brand-name').val();
+    const imgFile = $('#edit-brand-img').prop('files')[0];
+
+
+    if (!brandId) {
+        $('#edit-brand-name-error').text("Must provide a valid brand ID");
+        return;
+    }
+    if (!brandNameVal) {
+        $('#edit-brand-name-error').text("Must provide a valid brand name");
+        return;
+    }
+    $('#edit-brand-name-error').text("");
+    if (imgFile) {
+        const imgFileType = imgFile.type;
+        const validImageTypes = ['image/jpeg', 'image/png'];
+        if (!validImageTypes.includes(imgFileType)) {
+            $('#edit-brand-img-error').text("That's not an image");
+            return;
+        }
+        $('#edit-brand-img-error').text("");
+    }
+    editBrand(brandId,brandNameVal, imgFile);
+});
 
 
 $('#add-brand-btn').click(function (e) {
