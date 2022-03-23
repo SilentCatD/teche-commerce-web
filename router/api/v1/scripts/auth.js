@@ -6,5 +6,6 @@ const authRouter = express.Router();
 authRouter.route('/login').get(AuthenticationController.login);
 authRouter.route('/register').post(AuthenticationController.registerUser);
 authRouter.route('/register-admin').post(AuthorizationController.verifyAccessToken, AuthorizationController.isAdmin, AuthenticationController.registerAdmin);
+authRouter.report('/logout').post(AuthorizationController.verifyRefreshToken, AuthenticationController.logout);
 
 export default authRouter;
