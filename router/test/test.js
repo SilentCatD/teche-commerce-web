@@ -8,5 +8,5 @@ testRouter.get('/protected', AuthorizationController.verifyAccessToken, Authoriz
    res.end("authorized");
 });
 
-
 export default testRouter;
+
