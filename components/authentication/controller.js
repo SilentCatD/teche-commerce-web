@@ -4,7 +4,7 @@ import User from "../user/model.js";
 import AuthenticationService from "./service.js";
 
 const AuthenticationController = {
-    register: async (req, res) => {
+    registerUser: async (req, res) => {
         const saltHash = AuthenticationService.genPassword(req.body.password);
         const salt = saltHash.salt;
         const hash = saltHash.hash;
@@ -13,6 +13,21 @@ const AuthenticationController = {
            hash: hash,
            salt: salt,
            role: 'user',
+        });
+        await newUser.save();
+        res.json({ success: true, user: newUser });
+     },
+
+
+     registerAdmin: async (req, res) => {
+        const saltHash = AuthenticationService.genPassword(req.body.password);
+        const salt = saltHash.salt;
+        const hash = saltHash.hash;
+        const newUser = new User({
+           email: req.body.email,
+           hash: hash,
+           salt: salt,
+           role: 'admin',
         });
         await newUser.save();
         res.json({ success: true, user: newUser });
