@@ -48,6 +48,11 @@ const AuthenticationController = {
            res.status(401).json({ success: false, msg: "you entered the wrong password" });
         }
      },
+
+     logout: async (req, res)=>{
+         const refreshToken = req.body.token;
+         await AuthoriztionService.revokeRefreshToken(refreshToken);
+     }
 };
 
 export default AuthenticationController;
