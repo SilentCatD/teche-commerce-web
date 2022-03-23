@@ -20,6 +20,10 @@ const AuthoriztionService = {
         return false;
     },
 
+    deleteRevokedToken: async()=>{
+        await RefreshToken.deleteMany({active: false});
+    },
+
     revokeRefreshToken: async(tokenId)=>{
         const refreshToken =await RefreshToken.findOne({id: tokenId});
         if(refreshToken){
@@ -38,6 +42,7 @@ const AuthoriztionService = {
         };
         const signedRefreshToken = jsonwebtoken.sign(refreshTokenPayload, PRIV_KEY, { algorithm: 'RS256' });
         newRefreshToken.token = signedRefreshToken;
+        newRefreshToken.userId = id;
         await newRefreshToken.save();
         return signedRefreshToken;
     },

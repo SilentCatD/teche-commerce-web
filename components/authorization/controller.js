@@ -1,8 +1,10 @@
 import accessTokenExpiraion from "../../config/access_token_expire.js";
-import {PUB_KEY } from "../../utils/cert/key_pair.js";
+import { PUB_KEY } from "../../utils/cert/key_pair.js";
 import User from '../user/model.js';
 import AuthoriztionService from "./service.js";
 import jsonwebtoken from "jsonwebtoken";
+const { TokenExpiredError } = jsonwebtoken;
+import mongoose from "mongoose";
 
 const AuthorizationController = {
     verifyAccessToken: async (req, res, next) => {
@@ -13,7 +15,6 @@ const AuthorizationController = {
         }
         jsonwebtoken.verify(token, PUB_KEY, { algorithms: 'RS256' }, async (err, data) => {
             if (err) {
-                console.log(err);
                 if (err instanceof TokenExpiredError) {
                     return res.status(401).end('token expired');
                 }
@@ -29,10 +30,9 @@ const AuthorizationController = {
                 if (!user) {
                     return res.status(401).end('user not found');
                 }
-                req.user = user;
+                req.body.user = user;
                 next();
             } catch (e) {
-                console.log(e);
                 return res.status(401).end('unauthorized');
             }
         });
@@ -45,7 +45,6 @@ const AuthorizationController = {
         }
         jsonwebtoken.verify(refreshToken, PUB_KEY, { algorithms: 'RS256', ignoreExpiration: true }, async (err, data) => {
             if (err) {
-                console.log(err);
                 return res.status(401).end('invalid token');
             };
             const tokenId = data.id;
@@ -61,25 +60,32 @@ const AuthorizationController = {
         });
     },
 
-    getNewAccessToken: async (req, res)=>{
+    getNewAccessToken: async (req, res) => {
         // use verifyRefreshToken before this 
         const expiredIn = accessTokenExpiraion;
-        try{
-           const {userId} = req.body
-           if(!userId){
-              throw Error('NO user Id to make new token');
-           }
-           const newAccessToken = AuthoriztionService.issueAccessToken(userId, expiredIn);
-           res.status(200).json({
-              accessToken: newAccessToken,
-              expiresIn: expiredIn
-           });
-        }catch(e){
-           res.status(500).send('something went wrong');
+        try {
+            const { userId } = req.body
+            if (!userId) {
+                throw Error('NO user Id to make new token');
+            }
+            const newAccessToken = AuthoriztionService.issueAccessToken(userId, expiredIn);
+            res.status(200).json({
+                accessToken: newAccessToken,
+                expiresIn: expiredIn
+            });
+        } catch (e) {
+            res.status(500).send('something went wrong');
         }
-     },
+    },
 
-
+    isAdmin: async (req, res, next) => {
+        const user = req.body.user;
+        if(user && user.role=='admin'){
+            next();
+            return;
+        }
+        res.status(403).send('forbidden');
+    },
 };
 
 export default AuthorizationController;
