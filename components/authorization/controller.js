@@ -1,9 +1,10 @@
 import accessTokenExpiraion from "../../config/access_token_expire.js";
-import { PRIV_KEY, PUB_KEY } from "../../utils/cert/key_pair.js";
+import {PUB_KEY } from "../../utils/cert/key_pair.js";
 import User from '../user/model.js';
 import AuthoriztionService from "./service.js";
+import jsonwebtoken from "jsonwebtoken";
 
-const Authorization = {
+const AuthorizationController = {
     verifyAccessToken: async (req, res, next) => {
         const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')['1'];
@@ -42,14 +43,15 @@ const Authorization = {
         if (!refreshToken) {
             return res.status(401).end('unauthorized');
         }
-        if (!AuthoriztionService.validateRefreshToken(refreshToken)) {
-            return res.status(403).end('forbidden');
-        }
         jsonwebtoken.verify(refreshToken, PUB_KEY, { algorithms: 'RS256', ignoreExpiration: true }, async (err, data) => {
             if (err) {
                 console.log(err);
                 return res.status(401).end('invalid token');
             };
+            const tokenId = data.id;
+            if (!AuthoriztionService.validateRefreshToken(tokenId)) {
+                return res.status(403).end('forbidden');
+            }
             const type = data.type;
             if (!type || type != 'refresh-token') {
                 return res.status(401).end('invalid token');
@@ -61,15 +63,16 @@ const Authorization = {
 
     getNewAccessToken: async (req, res)=>{
         // use verifyRefreshToken before this 
+        const expiredIn = accessTokenExpiraion;
         try{
            const {userId} = req.body
            if(!userId){
               throw Error('NO user Id to make new token');
            }
-           const newAccessToken = AuthoriztionService.issueAccessToken(userId, accessTokenExpiraion);
+           const newAccessToken = AuthoriztionService.issueAccessToken(userId, expiredIn);
            res.status(200).json({
               accessToken: newAccessToken,
-              expiresIn: accessTokenExpiraion
+              expiresIn: expiredIn
            });
         }catch(e){
            res.status(500).send('something went wrong');
@@ -79,4 +82,4 @@ const Authorization = {
 
 };
 
-export default Authorization;
+export default AuthorizationController;

@@ -1,3 +1,5 @@
+import accessTokenExpiraion from "../../config/access_token_expire.js";
+import AuthoriztionService from "../authorization/service.js";
 import User from "../user/model.js";
 import AuthenticationService from "./service.js";
 
@@ -24,7 +26,7 @@ const AuthenticationController = {
         }
         const isValid = AuthenticationService.validPassword(req.body.password, user.hash, user.salt);
         if (isValid) {
-           const tokenObject = issueJWTToken(user._id);
+           const tokenObject = await AuthoriztionService.issueJWTToken(user._id, accessTokenExpiraion);
            res.status(200).json({ success: true, accessToken: tokenObject.accessToken, refreshToken: tokenObject.refreshToken, expiresIn: tokenObject.expiresIn });
      
         } else {

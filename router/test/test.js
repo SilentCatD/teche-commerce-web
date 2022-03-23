@@ -21,6 +21,9 @@ function genPassword(password) {
    };
 }
 
+function revokeRefreshToken(token){
+}
+
 function validPassword(password, hash, salt) {
    var hashVerify = pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('hex');
    return hash === hashVerify;
@@ -58,8 +61,7 @@ async function verifyAccessToken (req, res, next) {
            console.log(e);
            return res.status(401).end('unauthorized');
        }
-   });
-}
+
 
 function verifyRefreshToken(req, res, next) {
    const refreshToken = req.body.token;
