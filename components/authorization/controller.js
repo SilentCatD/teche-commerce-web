@@ -3,6 +3,7 @@ import {PUB_KEY } from "../../utils/cert/key_pair.js";
 import User from '../user/model.js';
 import AuthoriztionService from "./service.js";
 import jsonwebtoken from "jsonwebtoken";
+const { TokenExpiredError } = jsonwebtoken;
 
 const AuthorizationController = {
     verifyAccessToken: async (req, res, next) => {
