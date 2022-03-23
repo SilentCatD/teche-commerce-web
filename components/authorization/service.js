@@ -1,20 +1,8 @@
 import jsonwebtoken from "jsonwebtoken";
-import database from "../database/database";
+import { PRIV_KEY } from "../../utils/cert/key_pair.js";
+import RefreshToken from "./model.js";
 
 const AuthoriztionService = {
-    addRefreshToken: async (token) => {
-        await database.instance.addRefreshToken(token);
-    },
-
-    revokeRefreshToken: async (token) => {
-        await database.instance.removeRefreshToken(token);
-    },
-
-    validateRefreshToken: async (token) => {
-        const result = await database.instance.isValidRefreshToken(token);
-        return result;
-    },
-
     issueAccessToken: (id, expiresIn) => {
         const accessTokenPayload = {
             sub: id,
@@ -24,15 +12,33 @@ const AuthoriztionService = {
         const signedAccessToken = jsonwebtoken.sign(accessTokenPayload, PRIV_KEY, { expiresIn: expiresIn, algorithm: 'RS256' });
         return signedAccessToken;
     },
+    validateRefreshToken: async(tokenId)=>{
+        const refreshToken =await RefreshToken.findOne({id: tokenId});
+        if(refreshToken && refreshToken.active){
+            return true;
+        }
+        return false;
+    },
+
+    revokeRefreshToken: async(tokenId)=>{
+        const refreshToken =await RefreshToken.findOne({id: tokenId});
+        if(refreshToken){
+            refreshToken.active = false;
+            await refreshToken.save();
+        }
+    },
 
     issueRefreshToken: async (id) => {
+        const newRefreshToken = new RefreshToken({active: true});
         const refreshTokenPayload = {
+            id: newRefreshToken.id,
             sub: id,
             iat: Math.floor(Date.now() / 1000),
             type: "refresh-token",
         };
         const signedRefreshToken = jsonwebtoken.sign(refreshTokenPayload, PRIV_KEY, { algorithm: 'RS256' });
-        await AuthoriztionService.addRefreshToken(signedRefreshToken);
+        newRefreshToken.token = signedRefreshToken;
+        await newRefreshToken.save();
         return signedRefreshToken;
     },
 
