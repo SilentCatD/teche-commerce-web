@@ -50,6 +50,18 @@ class Database {
         const fileRef = ref(this.#storage, firebasePath);
         await deleteObject(fileRef);
     }
+
+    async isValidRefreshToken(token){
+
+    }
+
+    async addRefreshToken(token){
+
+    }
+
+    async removeRefreshToken(token){
+
+    }
 }
 
 export default Database;

@@ -5,7 +5,7 @@
  */
  import { generateKeyPairSync } from 'crypto';
  import { writeFileSync } from 'fs';
-import __dirname from './dirname.js';
+import __dirname from '../../dirname.js';
  
  function genKeyPair() {
      
@@ -23,10 +23,10 @@ import __dirname from './dirname.js';
      });
  
      // Create the public key file
-     writeFileSync(__dirname + '/id_rsa_pub.pem', keyPair.publicKey); 
+     writeFileSync(__dirname +  '/utils/cert/id_rsa_pub.pem', keyPair.publicKey); 
      
      // Create the private key file
-     writeFileSync(__dirname + '/id_rsa_priv.pem', keyPair.privateKey);
+     writeFileSync(__dirname + '/utils/cert/id_rsa_priv.pem', keyPair.privateKey);
  
  }
  

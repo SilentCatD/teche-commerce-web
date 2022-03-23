@@ -3,18 +3,14 @@ import 'dotenv/config';
 import database from "./components/database/database.js";
 import __dirname from './dirname.js';
 import router from './router/router.js';
-import passport from 'passport';
-import passportConfig from './config/passport_config.js';
 
 const app = express();
-passportConfig(passport);
 
 
 app.set('view engine', 'ejs');
 app.use(express.static( __dirname  + '/public',  {index: false}));
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
-app.use(passport.initialize());
 
 app.use(router);
 
