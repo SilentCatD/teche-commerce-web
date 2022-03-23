@@ -20,6 +20,10 @@ const AuthoriztionService = {
         return false;
     },
 
+    deleteRevokedToken: async()=>{
+        await RefreshToken.deleteMany({active: false});
+    },
+
     revokeRefreshToken: async(tokenId)=>{
         const refreshToken =await RefreshToken.findOne({id: tokenId});
         if(refreshToken){
