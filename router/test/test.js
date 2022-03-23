@@ -31,37 +31,38 @@ function validPassword(password, hash, salt) {
 
 
 
-async function verifyAccessToken (req, res, next) {
+function verifyAccessToken(req, res, next) {
    const authHeader = req.headers['authorization'];
    const token = authHeader && authHeader.split(' ')['1'];
    if (!token) {
-       return res.status(401).end('unauthorized');
+      return res.status(401).end('unauthorized');
    }
    jsonwebtoken.verify(token, PUB_KEY, { algorithms: 'RS256' }, async (err, data) => {
-       if (err) {
-           console.log(err);
-           if (err instanceof TokenExpiredError) {
-               return res.status(401).end('token expired');
-           }
-           return res.status(401).end('invalid token');
-       };
-       const type = data.type;
-       if (!type || type != 'access-token') {
-           return res.status(401).end('invalid token');
-       }
-       try {
-           const user = await User.findById(mongoose.Types.ObjectId(data.sub));
-           // maybe check suspended status here?
-           if (!user) {
-               return res.status(401).end('user not found');
-           }
-           req.user = user;
-           next();
-       } catch (e) {
-           console.log(e);
-           return res.status(401).end('unauthorized');
-       }
-
+      if (err) { 
+         console.log(err);
+         if(err instanceof TokenExpiredError){
+            return res.status(401).end('token expired');
+         }
+         return res.status(401).end('invalid token');
+      };
+      const type = data.type;
+      if(!type || type !='access-token'){
+         return res.status(401).end('invalid token');
+      }
+      try{ 
+         const user = await User.findById(mongoose.Types.ObjectId(data.sub));
+         // maybe check suspended status here?
+         if(!user){
+            return res.status(401).end('user not found');
+         }
+         req.user = user;
+         next();
+      }catch(e){
+         console.log(e);
+         return res.status(401).end('unauthorized'); 
+      }
+   });
+}
 
 function verifyRefreshToken(req, res, next) {
    const refreshToken = req.body.token;
@@ -174,5 +175,5 @@ testRouter.get('/protected', verifyAccessToken, (req, res) => {
    res.end("authorized");
 });
 
-
 export default testRouter;
+
