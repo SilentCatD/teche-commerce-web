@@ -16,3 +16,5 @@ const AuthenticationService = {
         return hash === hashVerify;
     },
 };
+
+export default AuthenticationService
