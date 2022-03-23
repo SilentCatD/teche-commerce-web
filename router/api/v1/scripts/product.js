@@ -13,5 +13,6 @@ productRouter.route('/')
 
 productRouter.route('/:id')
     .get(ProductController.fetchProduct)
-    .delete(ProductController.deleteProduct);
+    .delete(ProductController.deleteProduct)
+    .post(upload.any('images'),ProductController.editProduct);
 export default productRouter;

@@ -76,7 +76,31 @@ const ProductController = {
             console.log(e);
             res.status(404).end("Product can not delete");
         }
-    }
+    },
+    editProduct: async (req,res) => {
+        try {
+            const {
+                productName,
+                productDetails,
+                productBrand,
+                productCategory,
+                productPrice
+            } = req.body;
+            const {
+                id
+            } = req.params;
+            let productImages = undefined;
+            if (req.files.length > 0) {
+                console.log(req.files)
+                productImages = req.files;
+            }
+            await ProductService.editProduct(id,productName,productPrice, productBrand, productCategory,productDetails,productImages);
+            res.status(200).end("Edit Product successfully");
+        } catch (e){
+            console.log(e);
+            res.status(404).end(e.message);
+        }
+    },
 };
 
 export default ProductController;
