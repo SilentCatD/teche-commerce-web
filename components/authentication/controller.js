@@ -1,35 +1,21 @@
 import accessTokenExpiraion from "../../config/access_token_expire.js";
 import AuthoriztionService from "../authorization/service.js";
 import User from "../user/model.js";
+import UserService from "../user/service.js";
 import AuthenticationService from "./service.js";
 
 const AuthenticationController = {
     registerUser: async (req, res) => {
-        const saltHash = AuthenticationService.genPassword(req.body.password);
-        const salt = saltHash.salt;
-        const hash = saltHash.hash;
-        const newUser = new User({
-           email: req.body.email,
-           hash: hash,
-           salt: salt,
-           role: 'user',
-        });
-        await newUser.save();
+
+        const {email, password} = req.body;
+        const newUser = await UserService.createUserWithRole(email, password, 'user');
         res.json({ success: true, user: newUser });
      },
 
 
      registerAdmin: async (req, res) => {
-        const saltHash = AuthenticationService.genPassword(req.body.password);
-        const salt = saltHash.salt;
-        const hash = saltHash.hash;
-        const newUser = new User({
-           email: req.body.email,
-           hash: hash,
-           salt: salt,
-           role: 'admin',
-        });
-        await newUser.save();
+        const {email, password} = req.body;
+        const newUser = await UserService.createUserWithRole(email, password, 'admin');
         res.json({ success: true, user: newUser });
      },
      
@@ -52,6 +38,7 @@ const AuthenticationController = {
      logout: async (req, res)=>{
          const refreshToken = req.body.token;
          await AuthoriztionService.revokeRefreshToken(refreshToken);
+         res.send(200);
      }
 };
 
