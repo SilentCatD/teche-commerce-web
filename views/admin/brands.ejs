@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%-include('partials/head.ejs', {title: title}) %> 
+
+
+<body>
+    <div class="container-xxl position-relative bg-white d-flex p-0">
+        <!-- Spinner Start -->
+        <%-include('partials/spinner.ejs') %> 
+
+        <!-- Spinner End -->
+
+
+        <!-- Sidebar Start -->
+        <%-include('partials/sidebar.ejs', {active: active}) %> 
+
+        <!-- Sidebar End -->
+
+
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            <%-include('partials/navbar.ejs') %> 
+            <!-- Navbar End -->
+
+
+            <!-- Brand Control Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row bg-light rounded align-items-center justify-content-center mx-0 p-4">
+                    <div class="col-md-6 col-sm-12">
+                        <form class="d-md-flex ms-4 mb-md-0 mb-4 w-75 ms-md-0 ms-auto me-auto">
+                            <input class="form-control border-0" type="search" placeholder="Search">
+                        </form>
+                    </div>
+                    <div class="col-md-6 col-sm-12 text-md-end text-center">
+                        <button class="btn btn-primary form-collapse-btn" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                            Create New Brand<i
+                                class="fa-solid fa-angle-up ms-2 form-collapse-btn-icon fa-rotate-180"></i>
+                        </button>
+                    </div>
+                    <div class="col-md-8 col-sm-12 text-start">
+                        <div class="collapse" id="collapseExample">
+                            <div class="card card-body mt-4">
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="inputCategoryName" class="form-label">Brand name</label>
+                                        <input type="text" class="form-control" id="inputCategoryName"
+                                            aria-describedby="categoryHelp">
+                                        <div id="categoryHelp" class="form-text">Enter the name of the new Brand
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-5">
+                                        <input class="form-control" type="file" id="formFile">
+
+                                        <div class="mt-3">
+                                            <img src="https://www.w3schools.com/howto/img_avatar.png" alt="" id="brand-img">
+                                        </div>
+
+                                    </div>
+                                    
+                                    <div class="text-md-start text-center">
+                                        <button type="button" class="btn btn-primary w-50">Add</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Brand Control End -->
+
+            <!-- Brand table Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row vh-100 bg-light rounded align-items-sm-start justify-content-center mx-0">
+                    <div class="col-12">
+                        <div class="bg-light rounded h-100 p-4">
+                            <h6 class="mb-4">Brands</h6>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">&nbsp;</th>
+                                            <th scope="col">Brands Name</th>
+                                            <th scope="col">Number of products</th>
+                                            <th scope="col">Created</th>
+                                            <th scope="col">&nbsp;</th>
+                                            <th scope="col">&nbsp;</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td scope="row" class="align-middle">
+                                                <img src="./img/user.jpg" class="rounded mx-auto user-avatar"
+                                                    style="width: 60px; height: 60px;">
+                                            </td>                                            <td class="align-middle">Smart Watch</td>
+                                            <td class="align-middle">451</td>
+                                            <td class="align-middle">12/5/2001</td>
+                                            <td class="align-middle">
+                                                <button type="button" class="btn btn-square btn-secondary"><i
+                                                        class="fa fa-pencil"></i></button>
+                                            </td>
+                                            <td class="align-middle">
+                                                <button type="button" class="btn btn-square btn-danger"><i
+                                                        class="fa fa-trash-can"></i></button>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="row" class="align-middle">
+                                                <img src="./img/user.jpg" class="rounded mx-auto user-avatar"
+                                                    style="width: 60px; height: 60px;">
+                                            </td>                                            <td class="align-middle">Mobile Phone</td>
+                                            <td class="align-middle">124</td>
+                                            <td class="align-middle">12/5/2001</td>
+                                            <td class="align-middle">
+                                                <button type="button" class="btn btn-square btn-secondary"><i
+                                                        class="fa fa-pencil"></i></button>
+                                            </td>
+                                            <td class="align-middle">
+                                                <button type="button" class="btn btn-square btn-danger"><i
+                                                        class="fa fa-trash-can"></i></button>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="row" class="align-middle">
+                                                <img src="./img/user.jpg" class="rounded mx-auto user-avatar"
+                                                    style="width: 60px; height: 60px;">
+                                            </td>                                            <td class="align-middle">Headphone</td>
+                                            <td class="align-middle">512</td>
+                                            <td class="align-middle">12/5/2001</td>
+                                            <td class="align-middle">
+                                                <button type="button" class="btn btn-square btn-secondary"><i
+                                                        class="fa fa-pencil"></i></button>
+                                            </td>
+                                            <td class="align-middle">
+                                                <button type="button" class="btn btn-square btn-danger"><i
+                                                        class="fa fa-trash-can"></i></button>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Brand table End -->
+
+            <!-- Pagination Start -->
+
+            <div class="mt-4">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item active"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">4</a></li>
+                        <li class="page-item"><a class="page-link" href="#">5</a></li>
+                        <li class="page-item"><a class="page-link" href="#">...</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Pagination End -->
+
+
+            <!-- Footer Start -->
+            <%-include('partials/footer.ejs') %> 
+            <!-- Footer End -->
+            
+            <!-- Content End -->
+
+
+            <!-- Back to Top -->
+            <%-include('partials/back_to_top_btn.ejs') %> 
+        </div>
+
+        <!-- JavaScript Libraries -->
+        <%-include('partials/include_js.ejs') %> 
+        <!-- MyScript -->
+        <script src="js/form_collapse_button.js"></script>
+</body>
+
+</html> 
