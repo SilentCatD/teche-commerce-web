@@ -42,6 +42,7 @@ const AuthoriztionService = {
         };
         const signedRefreshToken = jsonwebtoken.sign(refreshTokenPayload, PRIV_KEY, { algorithm: 'RS256' });
         newRefreshToken.token = signedRefreshToken;
+        newRefreshToken.userId = id;
         await newRefreshToken.save();
         return signedRefreshToken;
     },
