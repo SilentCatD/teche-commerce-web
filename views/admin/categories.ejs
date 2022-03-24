@@ -4,26 +4,25 @@
 <%-include('partials/head.ejs', {title: title}) %> 
 
 <body>
+
+
     <div class="container-xxl position-relative bg-white d-flex p-0">
         <!-- Spinner Start -->
         <%-include('partials/spinner.ejs') %> 
         <!-- Spinner End -->
-
-
         <!-- Sidebar Start -->
         <%-include('partials/sidebar.ejs', {active: active}) %> 
         <!-- Sidebar End -->
-
-
         <!-- Content Start -->
         <div class="content">
             <!-- Navbar Start -->
             <%-include('partials/navbar.ejs') %> 
-
             <!-- Navbar End -->
-
-
             <!-- Category Control Start -->
+            <div class="alert" id="success-alert">
+                <strong>Success! </strong> 
+                <span>Category added</span>.
+            </div>
             <div class="container-fluid pt-4 px-4">
                 <div class="row bg-light rounded align-items-center justify-content-center mx-0 p-4">
                     <div class="col-md-6 col-sm-12">
@@ -41,17 +40,24 @@
                     <div class="col-md-8 col-sm-12 text-start">
                         <div class="collapse" id="collapseExample">
                             <div class="card card-body mt-4">
-                                <form>
+                                <form novalidate>
                                     <div class="mb-3">
                                         <label for="inputCategoryName" class="form-label">Category name</label>
                                         <input type="text" class="form-control" id="inputCategoryName"
-                                            aria-describedby="categoryHelp">
+                                            aria-describedby="categoryHelp" autocomplete="off" required>
+                                        <div class="valid-feedback">Looks good!</div>
+                                        <div class="invalid-feedback" id="categoryErrorMsg"></div>
                                         <div id="categoryHelp" class="form-text">Enter the name of the new category
                                         </div>
                                     </div>
                                     <div class="text-md-start text-center">
-                                        <button type="button" class="btn btn-primary w-50">Add</button>
+                                        
+                                        <button type="submit" class="btn btn-primary w-50" id="categorySubmit">
+                                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true" id="loading-spinner"></span>
+                                            <span id="btn-text">Add</span>
+                                        </button>
                                     </div>
+                                    
                                 </form>
                             </div>
                         </div>
@@ -151,21 +157,20 @@
             </div>
 
             <!-- Pagination End -->
-
-
             <!-- Footer Start -->
             <%-include('partials/footer.ejs') %> 
-
             <!-- Footer End -->
             <!-- Content End -->
-
-
             <!-- Back to Top -->
             <%-include('partials/back_to_top_btn.ejs') %> 
+              
+
         </div>
 
         <!-- JavaScript Libraries -->
         <%-include('partials/include_js.ejs') %> 
-</body>
+        <script type="module" src="/admin/js/categories.js"></script>
+        <script src="https://unpkg.com/validator@latest/validator.min.js"></script>
+    </body>
 
 </html>
