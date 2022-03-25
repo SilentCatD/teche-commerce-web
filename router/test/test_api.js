@@ -43,7 +43,7 @@ testApiRouter.get(
       .limit(limit);
     const result = {
       ...(limit && { "total-pages": totalPages }),
-      ...(limit && { "current-page": page ? parseInt(page) : 1 }),
+      ...(limit && { "current-page": page ? page: 1 }),
       "total-item": totalCount,
       "item-count": categories.length,
       items: categories,
