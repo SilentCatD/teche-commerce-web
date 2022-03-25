@@ -1,12 +1,14 @@
 import express from "express";
 import CategoryController from "../../../../components/category/controller.js";
+import {body} from 'express-validator';
+
 const categoryRouter = express.Router();
-// /api/v1/brand
+
 
 categoryRouter
   .route("/")
   .get(CategoryController.fetchAllCategory)
-  .post(CategoryController.createCategory)
+  .post(body('categoryName').isByteLength({min: 3, max: 50}), body('categoryName').not().isEmpty({ignore_whitespace: true}) ,CategoryController.createCategory)
   .delete(CategoryController.deleteAllCategory);
 
 categoryRouter.route("/:id")
