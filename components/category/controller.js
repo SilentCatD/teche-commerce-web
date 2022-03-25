@@ -1,7 +1,7 @@
 import CategotyService from "./service.js";
 import { body, validationResult } from "express-validator";
 import CommonMiddleWares from "../common/middleware.js";
-import CommonServices from "../common/service.js";
+import CommomDatabaseServies from "../common/services.js"
 import Category from './model.js'
 
 const CategoryController = {
@@ -35,7 +35,7 @@ const CategoryController = {
     async (req, res) => {
       try {
         const { limit, page, sortParams, range } = req.params;
-        const result = await CommonServices.queryAllWithModel(Category, limit, page, sortParams, range);
+        const result = await CommomDatabaseServies.queryAllWithModel(Category, limit, page, sortParams, range);
         res.status(200).json(result);
       } catch (e) {
         console.log(e);

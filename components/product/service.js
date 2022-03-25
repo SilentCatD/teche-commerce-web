@@ -4,8 +4,7 @@ import CategotyService from "../category/service.js";
 import ImageService from "../image/service.js";
 import Product from "./model.js";
 import mongoose from "mongoose";
-import { async } from "@firebase/util";
-import databaseServiceUtils from "../../utils/databaseServiceUtils.js";
+import CommomDatabaseServies from "../common/services.js";
 
 const ProductService = {
     createProduct: async (name, price, brandId, categoryId, details, imageFiles) => {
@@ -40,7 +39,7 @@ const ProductService = {
             category: category, details: details, images: images,
             rates: [0, 0, 0, 0, 0],
         };
-        return databaseServiceUtils.createDocument(Product,productDocObj);
+        return CommomDatabaseServies.createDocument(Product,productDocObj);
     },
 
     // this can be update multi params sort but i am lazy
@@ -101,7 +100,7 @@ const ProductService = {
 
     // Mising edit product,category holds
     deleteAllProduct: async () => {
-        databaseServiceUtils.deleteCollection(Product,true);
+        CommomDatabaseServies.deleteCollection(Product,true);
     },
 
 
@@ -156,7 +155,7 @@ const ProductService = {
     },
 
     deleteProduct: async (id) => {
-        databaseServiceUtils.deleteDocument(Product,id,true);
+        CommomDatabaseServies.deleteDocument(Product,id,true);
     },
 
     rateProduct: async (id, rate) => {

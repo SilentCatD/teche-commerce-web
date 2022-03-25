@@ -1,11 +1,8 @@
 import ImageService from '../image/service.js';
 import Brand from './model.js'
 import mongoose from 'mongoose';
-import isInt from '../../utils/is_int.js';
-import { async } from '@firebase/util';
 import calculatePaging from "../../utils/calculatePaging.js";
-import databaseServiceUtils from "../../utils/databaseServiceUtils.js";
-import { connectStorageEmulator } from 'firebase/storage';
+import CommomDatabaseServies from "../common/services.js";
 
 
 
@@ -19,7 +16,7 @@ const BrandService = {
             brandImg.push(imageModel);
         }
         let brandDocObject = {name: name,images: brandImg};
-        return databaseServiceUtils.createDocument(Brand,brandDocObject);
+        return CommomDatabaseServies.createDocument(Brand,brandDocObject);
     },
 
     fetchAllBrand: async (page,limit, sort, type) => {
@@ -55,7 +52,7 @@ const BrandService = {
     },
 
     deleteAllBrand: async () => {
-        databaseServiceUtils.deleteCollection(Brand,true);
+        CommomDatabaseServies.deleteCollection(Brand,true);
     },
 
     fetchBrand: async (id) => {
@@ -82,16 +79,16 @@ const BrandService = {
     },
 
     deleteBrand: async (id) => {
-        databaseServiceUtils.deleteDocument(Brand,id,true);
+        CommomDatabaseServies.deleteDocument(Brand,id,true);
     },
 
     editProductHolds: async (id, op) => {
         // editProductHolds(id, '+') => plus 1
-        databaseServiceUtils.editProductHolds(Brand,id,op);
+        CommomDatabaseServies.editProductHolds(Brand,id,op);
     },
     editrankingPoints: async (id, op) => {
         // editrankingPoints(id, '+') => plus 1
-        databaseServiceUtils.editRankingPoints(Brand,id,op);
+        CommomDatabaseServies.editRankingPoints(Brand,id,op);
     },
 
     editBrand: async (id, name, image)=>{

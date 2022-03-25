@@ -1,13 +1,12 @@
 import Category from "./model.js";
-import isInt from '../../utils/is_int.js';
 import mongoose from "mongoose";
 import calculatePaging from "../../utils/calculatePaging.js";
-import databaseServiceUtils from "../../utils/databaseServiceUtils.js";
+import CommomDatabaseServies from "../common/services.js";
 
 
 const CategotyService = {
     createCategory: async (name) =>{
-        return databaseServiceUtils.createDocument(Category,{name:name});
+        return CommomDatabaseServies.createDocument(Category,{name:name});
     },
     fetchAllCategory: async(page,limit, sort, type) =>{
         let sortedParams = {};
@@ -38,7 +37,7 @@ const CategotyService = {
     },
 
     deleteAllCategory: async() =>{
-        databaseServiceUtils.deleteCollection(Category,false);
+        CommomDatabaseServies.deleteCollection(Category,false);
     },
 
     fetchCategory: async(id) => {
@@ -59,15 +58,15 @@ const CategotyService = {
     },
 
     deleteCategory: async (id) =>{
-        databaseServiceUtils.deleteDocument(Category,id,false);
+        CommomDatabaseServies.deleteDocument(Category,id,false);
     },
 
     editProductHolds: async (id, op) => {
-        databaseServiceUtils.editProductHolds(Category,id,op);
+        CommomDatabaseServies.editProductHolds(Category,id,op);
     },
     editrankingPoints: async (id, op) => {
         // editrankingPoints(id, '+') => plus 1
-        databaseServiceUtils.editRankingPoints(Category,id,op);
+        CommomDatabaseServies.editRankingPoints(Category,id,op);
     },
 
     editCategory: async (id, name)=>{
@@ -92,22 +91,6 @@ const CategotyService = {
         }
     },
 
-    calculatePaging: async(limit,page,model) => {
-        const result = {};
-        result.totalItem = await Category.countDocuments();
-        if(!isInt(limit)) {
-            result.totalPage = 1;
-            result.skipItem = 0;
-            result.limit = null;
-            
-        } else {
-            if(!isInt(page) || page < 1) page = 1;
-            result.totalPage = Math.floor(result.totalItem / limit);
-            result.skipItem = limit*page;
-            result.limit = limit;
-        }
-        return result;
-    }
 }
 
 export default CategotyService;
