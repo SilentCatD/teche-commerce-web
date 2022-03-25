@@ -5,8 +5,10 @@ const CategoryController = {
   createCategory: [
     body("categoryName")
       .exists()
-      .isByteLength({ min: 3, max: 50 }).withMessage("character of field must be in range 3-50")
+      .bail()
       .not().isEmpty({ ignore_whitespace: true }).withMessage('field can\'t be emtpy')
+      .bail()
+      .isByteLength({ min: 3, max: 50 }).withMessage("character of field must be in range 3-50")
       .trim(),
     async (req, res) => {
       try {
