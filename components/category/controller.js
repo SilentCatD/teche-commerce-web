@@ -11,7 +11,6 @@ const CategoryController = {
     async (req, res) => {
       try {
         const errors = validationResult(req);
-        console.log(errors);
         if (!errors.isEmpty()) {
           return res.status(400).json({ errors: errors.array() });
         }
@@ -19,7 +18,6 @@ const CategoryController = {
         const id = await CategotyService.createCategory(categoryName);
         res.status(201).end(`Category created with id ${id}`);
       } catch (e) {
-        console.log(e);
         res
           .status(500)
           .end(`Can't create category, something went wrong: ${e}`);
