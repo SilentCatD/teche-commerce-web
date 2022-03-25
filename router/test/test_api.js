@@ -44,9 +44,9 @@ testApiRouter.get(
     const result = {
       ...(limit && { "total-pages": totalPages }),
       ...(limit && { "current-page": page ? page: 1 }),
-      "total-item": totalCount,
+      "total-items": totalCount,
       "item-count": categories.length,
-      items: categories,
+      "items": categories,
     };
     res.status(200).json(result);
   }
