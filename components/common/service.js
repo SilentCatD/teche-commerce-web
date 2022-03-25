@@ -2,6 +2,9 @@ const CommonServices = {
     queryAllWithModel: async (model, limit, page, sortParams, range) =>{
         const totalCount = await model.countDocuments(range);
         const totalPages = Math.ceil(totalCount / limit);
+        if(page && page > totalPages){
+            page=totalPages;
+        }
         const items = await model.find(range)
             .skip(limit * page - limit)
             .limit(limit).sort(sortParams);
