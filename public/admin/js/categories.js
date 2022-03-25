@@ -91,6 +91,13 @@ function validateCategoryNameInput() {
         $('#inputCategoryName').addClass('is-invalid');
         return false;
     }
+    const minChar = 3;
+    const maxChar = 50;
+    if(!validator.isByteLength(input, {min:minChar, max: maxChar})){
+        $('#categoryErrorMsg').text(`Category name length must be between ${minChar}-${maxChar} characters`);
+        $('#inputCategoryName').addClass('is-invalid');
+        return false;
+    }
     $('#inputCategoryName').removeClass('is-invalid');
     $('#inputCategoryName').addClass('is-valid');
     return input;
