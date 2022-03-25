@@ -19,7 +19,8 @@ testApiRouter.get('/gen-cat', async (req, res)=>{
 
 testApiRouter.get('/get-cat/', async (req, res)=>{
     const {page, limit} = req.query;
-    // check isInt by express-validator
+    // check isInt by express-validator => important
+    // missing page or limit is fine
     if (page<1){
         return res.status(404).send('invalid page request');
     }
@@ -29,6 +30,7 @@ testApiRouter.get('/get-cat/', async (req, res)=>{
     const result = {
         ...(limit && {'total-pages': totalPages}),
         ...(limit && {'current-page': page ? parseInt(page): 1}),
+        'total-item': totalCount,
         'item-count': categories.length,
         'items': categories,
     };
