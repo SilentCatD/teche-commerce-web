@@ -1,5 +1,8 @@
 import CategotyService from "./service.js";
-import { body ,validationResult } from "express-validator";
+import { body, validationResult } from "express-validator";
+import CommonMiddleWares from "../common/middleware.js";
+import CommonServices from "../common/service.js";
+import Category from './model.js'
 
 const CategoryController = {
   createCategory: [
@@ -26,20 +29,20 @@ const CategoryController = {
       }
     },
   ],
-  fetchAllCategory: async (req, res) => {
-    try {
-      const query =req.query;
-      console.log(query);
-      const result = await CategotyService.fetchAllCategory(query.page,query.limit,query.sort,query.type);
-      res.writeHead(200, {
-        "Content-Type": "application/json",
-      });
-      res.status(200).end(JSON.stringify(result));
-    } catch (e) {
-      console.log(e);
-      res.status(404).end("Not Found");
+  fetchAllCategory: [
+    CommonMiddleWares.apiQueryValidations,
+    CommonMiddleWares.apiQueryParamsExtract,
+    async (req, res) => {
+      try {
+        const { limit, page, sortParams, range } = req.params;
+        const result = await CommonServices.queryAllWithModel(Category, limit, page, sortParams, range);
+        res.status(200).json(result);
+      } catch (e) {
+        console.log(e);
+        res.status(404).end("Not Found");
+      }
     }
-  },
+  ],
   fetchCategory: async (req, res) => {
     try {
       const { id } = req.params;

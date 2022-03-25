@@ -1,0 +1,18 @@
+.table-spinner-icon{
+    width: 5rem;
+    height: 5rem;
+}
+
+.table-data.table-loading .table-fields{
+    display: none;
+}
+.table-data.table-loading .table-spinner{
+    display:block;
+}
+
+.table-data.table-loaded .table-fields{
+    display:block;
+}
+.table-data.table-loaded .table-spinner{
+    display: none;
+}

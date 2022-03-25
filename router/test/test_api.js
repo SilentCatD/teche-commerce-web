@@ -32,7 +32,25 @@ testApiRouter.get(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { page, limit } = req.query;
+    const { page, limit, sort} = req.query;
+    let orderBy;
+    if(sort){
+      orderBy = req.query.order_by;
+      if(!orderBy){
+        orderBy = 'desc';
+      }
+      if(!['desc', 'asc'].includes(orderBy)){
+        return res.status(400).send("invalid sort params");
+      }
+
+      if(orderBy=='desc'){
+        orderBy = -1;
+      }else{
+        orderBy = 1;
+      }
+    }
+
+   
     // check isInt by express-validator => important
     // missing page or limit is fine
 
@@ -40,7 +58,7 @@ testApiRouter.get(
     const totalPages = Math.ceil(totalCount / limit);
     const categories = await Category.find()
       .skip(limit * page - limit)
-      .limit(limit);
+      .limit(limit).sort({sort: orderBy});
     const result = {
       ...(limit && { "total-pages": totalPages }),
       ...(limit && { "current-page": page ? page: 1 }),
@@ -53,3 +71,46 @@ testApiRouter.get(
 );
 
 export default testApiRouter;
+
+
+async function queryAll(res, req, model){
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+  const { page, limit, sort} = req.query;
+  let orderBy;
+  if(sort){
+    orderBy = req.query.order_by;
+    if(!orderBy){
+      orderBy = 'desc';
+    }
+    if(!['desc', 'asc'].includes(orderBy)){
+      return res.status(400).send("invalid sort params");
+    }
+
+    if(orderBy=='desc'){
+      orderBy = -1;
+    }else{
+      orderBy = 1;
+    }
+  }
+
+ 
+  // check isInt by express-validator => important
+  // missing page or limit is fine
+
+  const totalCount = await Category.countDocuments();
+  const totalPages = Math.ceil(totalCount / limit);
+  const categories = await Category.find()
+    .skip(limit * page - limit)
+    .limit(limit).sort({sort: orderBy});
+  const result = {
+    ...(limit && { "total-pages": totalPages }),
+    ...(limit && { "current-page": page ? page: 1 }),
+    "total-items": totalCount,
+    "item-count": categories.length,
+    "items": categories,
+  };
+  res.status(200).json(result);
+}

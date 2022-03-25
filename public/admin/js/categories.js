@@ -22,6 +22,12 @@ $('#inputCategoryName').on('input propertychange', function (e) {
 });
 
 
+$('.table-load-trigger').click(function (e) { 
+    e.preventDefault();
+    $('.table-data').toggleClass('table-loading table-loaded');
+    
+});
+
 async function createCategory(categoryName){
     try{
         let data = {};
