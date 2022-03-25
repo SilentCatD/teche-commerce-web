@@ -1,0 +1,53 @@
+<section class="product__discount">
+    <div class="container">
+        <div class="section-title product__discount__title">
+            <h2>Sale Off</h2>
+        </div>
+        <div class="row">
+            <div class="product__discount__slider owl-carousel">
+                <div class="col-lg-4">
+                    <%-include('discount-item',{price:" 20.00",discountPrice:
+                        "36.00",productImage:"https://cdn.tgdd.vn/Products/Images/44/270831/lenovo-ideapad-3-15itl6-i5-82h801p9vn-280122-043109-600x600.jpg",
+                        productName:"MSI 1650",
+                        category:"Laptop",
+                        discount: 50
+                    })%>
+                </div>
+                <div class="col-lg-4">
+                    <%-include('discount-item',{price: "30.00",discountPrice:
+                        36.55,productImage:"https://cdn.tgdd.vn/Products/Images/44/270831/lenovo-ideapad-3-15itl6-i5-82h801p9vn-280122-043109-600x600.jpg",
+                        productName:"Lenuvo",
+                        category:"Laptop",
+                        discount:10
+                    })%>           
+
+                </div>
+
+                <div class="col-lg-4">
+                    <%-include('discount-item',{price: "30.00",discountPrice:
+                        "36.00",productImage:"https://lh3.googleusercontent.com/6eDTiBbhfX013LLcenK3_fLC15sRB0zhmnSlqFlMFQ5IznybQOiDQ9hJonGsq73njscXWP60AiPkW4Ct9D2reb5MFLNq9oU=w500-rw",
+                        productName: "I Don't Know",
+                        category: "Dunu",
+                        discount:15
+                        }) %>
+                </div>
+                <div class="col-lg-4">
+                    <%-include('discount-item',{price: "30.00",discountPrice:
+                        "36.00",productImage:"https://lh3.googleusercontent.com/6eDTiBbhfX013LLcenK3_fLC15sRB0zhmnSlqFlMFQ5IznybQOiDQ9hJonGsq73njscXWP60AiPkW4Ct9D2reb5MFLNq9oU=w500-rw"
+                        ,category: "Accessories Peripherals",
+                        productName: "Cổng 2",
+                        discount:5
+                        }) %>
+                </div>
+                <div class="col-lg-4">
+                    <%-include('discount-item',{price: 30,discountPrice:"24.00"
+                        ,productImage:"https://lh3.googleusercontent.com/6eDTiBbhfX013LLcenK3_fLC15sRB0zhmnSlqFlMFQ5IznybQOiDQ9hJonGsq73njscXWP60AiPkW4Ct9D2reb5MFLNq9oU=w500-rw"
+                        ,category: "Accessories Peripherals",
+                        productName: "Bad Keyboard",
+                        discount:20
+                        }) %>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

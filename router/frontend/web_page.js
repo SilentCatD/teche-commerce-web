@@ -9,8 +9,19 @@ webPageRouter.get('/', async (req, res)=>{
 });
 
 webPageRouter.get('/index', async (req, res)=>{
-    let options = {root: __dirname + '/public/user', index: false};
-    res.sendFile("index.html",options);
+    const params = {title: "eTech Home"};
+    res.render('user/index',params);
+});
+
+
+webPageRouter.get('/shop', async (req, res)=>{
+    const params = {title: "eTech Shop"};
+    res.render('user/shop-grid',params);
+});
+
+webPageRouter.get('/contact', async (req, res)=>{
+    const params = {title: "eTech Contact"};
+    res.render('user/contact',params);
 });
 
 
