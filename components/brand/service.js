@@ -3,23 +3,26 @@ import Brand from './model.js'
 import mongoose from 'mongoose';
 import isInt from '../../utils/is_int.js';
 import { async } from '@firebase/util';
+import calculatePaging from "../../utils/calculatePaging.js";
+import databaseServiceUtils from "../../utils/databaseServiceUtils.js";
+import { connectStorageEmulator } from 'firebase/storage';
+
+
 
 const BrandService = {
     createBrand: async (name, img) => {
         // name: <String> Sname of the brand
         // img: <File> object represent the file
-
-        let imageModel = null;
-        if (img) {
-            imageModel = await ImageService.createImage(img);
+        let brandImg = []
+        for (let i = 0; i < img.length; i++) {
+            let imageModel = await ImageService.createImage(img[i]);
+            brandImg.push(imageModel);
         }
-        let brand = new Brand({ name: name, image: imageModel });
-        await brand.save();
-        console.log("Brand created");
-        return brand.id;
+        let brandDocObject = {name: name,images: brandImg};
+        return databaseServiceUtils.createDocument(Brand,brandDocObject);
     },
 
-    fetchAllBrand: async (limit, sort, type) => {
+    fetchAllBrand: async (page,limit, sort, type) => {
         let sortedParams = {};
         if (type != 1 && type != -1) {
             type = -1;
@@ -27,9 +30,12 @@ const BrandService = {
         if (sort) {
             sortedParams[sort] = type;
         }
-        limit = isInt(limit) ? limit : null;
-        const results = await Brand.find().limit(limit).sort(sortedParams);
-        return results.map((brand) => {
+        
+        let pagingResult = await calculatePaging(page,limit,Brand);
+
+        const results = await Brand.find().limit(pagingResult.limit).sort(sortedParams).skip(pagingResult.skipItem);
+        return {
+            items: results.map((brand) => {
             let img = brand.image;
             let imgUrl = null
             if (img) {
@@ -42,18 +48,14 @@ const BrandService = {
                 rankingPoints: brand.rankingPoints,
                 productsHold: brand.productsHold,
             }
-        });
+        }),
+        totalPage: pagingResult.totalPage,
+        totalItem: pagingResult.totalItem
+    }
     },
 
     deleteAllBrand: async () => {
-        const brands = await Brand.find();
-        await Promise.all(brands.map(async (brand) => {
-            let brandImg = brand.image;
-            if (brandImg) {
-                await ImageService.deleteImage(brandImg.firebasePath);
-            }
-            await Brand.findByIdAndDelete(brand.id);
-        }));
+        databaseServiceUtils.deleteCollection(Brand,true);
     },
 
     fetchBrand: async (id) => {
@@ -80,79 +82,16 @@ const BrandService = {
     },
 
     deleteBrand: async (id) => {
-        try {
-        const brand = await Brand.findById(mongoose.Types.ObjectId(id));
-        if(brand === null) {
-            throw new Error(`Brand ${id} is not existed`);
-        }
-        let brandImg = brand.image;
-        if (brandImg) {
-            await ImageService.deleteImage(brandImg.firebasePath);
-        }
-        await Brand.findByIdAndDelete(brand.id);
-    }
-    catch (e) {
-        throw e;
-    }
+        databaseServiceUtils.deleteDocument(Brand,id,true);
     },
 
     editProductHolds: async (id, op) => {
         // editProductHolds(id, '+') => plus 1
-        const session = await Brand.startSession();
-        session.startTransaction();
-        try {
-            const brand = await Brand.findById(mongoose.Types.ObjectId(id)).session(session);
-            if(brand === null) {
-                throw new Error(`Brand ${id} is not existed`);
-            }
-            if (!op){
-                throw Error("operation not specifief");
-            }
-            if(op=='+'){
-                brand.productsHold = brand.productsHold + 1;
-
-            }else if(op=='-'){
-                brand.productsHold = brand.productsHold - 1;
-            }else{
-                throw Error("operation invalid");
-            }
-            await brand.save();
-            await session.commitTransaction();
-        } catch (e) {
-            await session.abortTransaction();
-            throw e;
-        } finally{
-            await session.endSession();
-        }
+        databaseServiceUtils.editProductHolds(Brand,id,op);
     },
     editrankingPoints: async (id, op) => {
         // editrankingPoints(id, '+') => plus 1
-        const session = await Brand.startSession();
-        session.startTransaction();
-        try {
-            const brand = await Brand.findById(mongoose.Types.ObjectId(id)).session(session);
-            if(brand === null) {
-                throw new Error(`Brand ${id} is not existed`);
-            }
-            if (!op){
-                throw Error("operation not specifief");
-            }
-            if(op=='+'){
-                brand.rankingPoints = brand.rankingPoints + 1;
-
-            }else if(op=='-'){
-                brand.rankingPoints = brand.rankingPoints - 1;
-            }else{
-                throw Error("operation invalid");
-            }
-            await brand.save();
-            await session.commitTransaction();
-        } catch (e) {
-            await session.abortTransaction();
-            throw e;
-        } finally{
-            await session.endSession();
-        }
+        databaseServiceUtils.editRankingPoints(Brand,id,op);
     },
 
     editBrand: async (id, name, image)=>{

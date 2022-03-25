@@ -1,8 +1,10 @@
 async function addBrand(name, img) {
   let formData = new FormData();
   console.log(img);
+  img.forEach((file) => {
+    formData.append("images", file);
+  });
   formData.append("brandName", name);
-  formData.append("brandImg", img);
   try {
     let res = await axios({
       method: "post",
@@ -38,7 +40,7 @@ $("#add-brand-btn").click(function (e) {
     }
     $("#add-brand-img-error").text("");
   }
-  addBrand(brandNameVal, imgFile);
+  addBrand(brandNameVal, [imgFile]);
 });
 
 async function editBrand(id, name, img) {

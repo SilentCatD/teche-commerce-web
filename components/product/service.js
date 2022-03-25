@@ -5,6 +5,7 @@ import ImageService from "../image/service.js";
 import Product from "./model.js";
 import mongoose from "mongoose";
 import { async } from "@firebase/util";
+import databaseServiceUtils from "../../utils/databaseServiceUtils.js";
 
 const ProductService = {
     createProduct: async (name, price, brandId, categoryId, details, imageFiles) => {
@@ -34,15 +35,12 @@ const ProductService = {
                 throw Error("Category not existed");
             }
         }
-        let product = new Product({
+        let productDocObj = {
             name: name, price: price, brand: brand,
             category: category, details: details, images: images,
             rates: [0, 0, 0, 0, 0],
-        });
-
-        await product.save();
-        console.log("Product created");
-        return product.id;
+        };
+        return databaseServiceUtils.createDocument(Product,productDocObj);
     },
 
     // this can be update multi params sort but i am lazy
@@ -103,13 +101,7 @@ const ProductService = {
 
     // Mising edit product,category holds
     deleteAllProduct: async () => {
-        const products = await Product.find();
-        await Promise.all(products.map(async (product) => {
-            for (let i = 0; i < product.images.length; i++) {
-                await ImageService.deleteImage(product.images[i].firebasePath);
-            }
-        }));
-        await Product.deleteMany();
+        databaseServiceUtils.deleteCollection(Product,true);
     },
 
 
@@ -164,16 +156,7 @@ const ProductService = {
     },
 
     deleteProduct: async (id) => {
-        try {
-        const product = await Product.findById(mongoose.Types.ObjectId(id));
-        if(product===null) throw new Error(`Product ${id} found`)
-        for (let i = 0; i < product.images.length; i++) {
-            await ImageService.deleteImage(product.images[i].firebasePath);
-        }
-        await Product.deleteOne({ _id: product.id });
-    } catch (e) {
-        throw e;
-    }
+        databaseServiceUtils.deleteDocument(Product,id,true);
     },
 
     rateProduct: async (id, rate) => {

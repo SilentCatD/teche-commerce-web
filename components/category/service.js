@@ -2,14 +2,12 @@ import Category from "./model.js";
 import isInt from '../../utils/is_int.js';
 import mongoose from "mongoose";
 import calculatePaging from "../../utils/calculatePaging.js";
+import databaseServiceUtils from "../../utils/databaseServiceUtils.js";
 
 
 const CategotyService = {
     createCategory: async (name) =>{
-        let category = new Category({ name: name });
-        await category.save();
-        console.log("Category created");
-        return category.id;
+        return databaseServiceUtils.createDocument(Category,{name:name});
     },
     fetchAllCategory: async(page,limit, sort, type) =>{
         let sortedParams = {};
@@ -20,7 +18,7 @@ const CategotyService = {
             sortedParams[sort] = type;
         }
 
-        let pagingResult = await calculatePaging(limit,page,Category);
+        let pagingResult = await calculatePaging(page,limit,Category);
         
         const categories = await Category.find().limit(pagingResult.limit).sort(sortedParams).skip(pagingResult.skipItem);
         const result = {};
@@ -40,7 +38,7 @@ const CategotyService = {
     },
 
     deleteAllCategory: async() =>{
-        await Category.deleteMany({});
+        databaseServiceUtils.deleteCollection(Category,false);
     },
 
     fetchCategory: async(id) => {
@@ -61,75 +59,15 @@ const CategotyService = {
     },
 
     deleteCategory: async (id) =>{
-        try {
-            const category = await Category.findById(mongoose.Types.ObjectId(id));
-            if(category === null) {
-                throw new Error(`Category ${id} is not existed`);
-            }
-        await Category.deleteOne({ _id: category.id });
-        } catch (e) {
-            throw e;
-        }
-
+        databaseServiceUtils.deleteDocument(Category,id,false);
     },
 
     editProductHolds: async (id, op) => {
-        // editProductHolds(id, '+') => plus 1
-        const session = await Category.startSession();
-        session.startTransaction();
-        try {
-            const category = await Category.findById(mongoose.Types.ObjectId(id)).session(session);
-            if(category === null) {
-                throw new Error(`Category ${id} is not existed`);
-            }
-            if (!op){
-                throw Error("operation not specifief");
-            }
-            if(op=='+'){
-                category.productsHold = category.productsHold + 1;
-
-            }else if(op=='-'){
-                category.productsHold = category.productsHold - 1;
-            }else{
-                throw Error("operation invalid");
-            }
-            await category.save();
-            await session.commitTransaction();
-        } catch (e) {
-            await session.abortTransaction();
-            throw e;
-        } finally{
-            await session.endSession();
-        }
+        databaseServiceUtils.editProductHolds(Category,id,op);
     },
     editrankingPoints: async (id, op) => {
         // editrankingPoints(id, '+') => plus 1
-        const session = await Category.startSession();
-        session.startTransaction();
-        try {
-            const category = await Category.findById(mongoose.Types.ObjectId(id)).session(session);
-            if(category === null) {
-                throw new Error(`Category ${id} is not existed`);
-            }
-            if (!op){
-                throw Error("operation not specifief");
-            }
-            if(op=='+'){
-                category.rankingPoints = category.rankingPoints + 1;
-
-            }else if(op=='-'){
-                category.rankingPoints = category.rankingPoints - 1;
-            }else{
-                throw Error("operation invalid");
-            }
-            await category.save();
-            await session.commitTransaction();
-        } catch (e) {
-            await session.abortTransaction();
-            throw e;
-        } finally{
-            await session.endSession();
-        }
+        databaseServiceUtils.editRankingPoints(Category,id,op);
     },
 
     editCategory: async (id, name)=>{

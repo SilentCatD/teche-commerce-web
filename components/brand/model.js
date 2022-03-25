@@ -6,7 +6,7 @@ const brandSchema = new mongoose.Schema({
       type: String,
       required: true
     },
-    image: imageSchema,
+    images: [imageSchema],
     productsHold: {
       type: Number,
       default: 0,
