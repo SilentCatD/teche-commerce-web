@@ -7,12 +7,13 @@
     display: none;
 }
 .table-data.table-loading .table-spinner{
-    display:block;
+    display: flex;
 }
 
 .table-data.table-loaded .table-fields{
-    display:block;
+    display: block;
 }
 .table-data.table-loaded .table-spinner{
     display: none;
 }
+
