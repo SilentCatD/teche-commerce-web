@@ -13,7 +13,6 @@ const ProductController = {
             let productImages = []
             if (req.files) {
                 productImages = req.files;
-                 
             }
             
             const id = await ProductService.createProduct(productName, productPrice, productBrand,

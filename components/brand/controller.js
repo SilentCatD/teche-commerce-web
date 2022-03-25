@@ -6,10 +6,11 @@ const BrandController = {
             const {
                 brandName
             } = req.body;
-            let brandImg = null;
-            if (req.file) {
-                brandImg = req.file;
+            let brandImg = []
+            if (req.files) {
+                brandImg = req.files;
             }
+            console.log(req.files);
             const id = await BrandService.createBrand(brandName, brandImg);
             res.status(201).end(`Brand created with id ${id}`);
         } catch (e) {
@@ -20,7 +21,8 @@ const BrandController = {
     fetchAllBrand: async (req, res) => {
         try {
             const query =req.query;
-            const result = await BrandService.fetchAllBrand(query.limit , query.sort, query.type);
+            console.log(req.query);
+            const result = await BrandService.fetchAllBrand(query.page,query.limit , query.sort, query.type);
             res.writeHead(200, {
                 'Content-Type': 'application/json'
             });
@@ -77,11 +79,12 @@ const BrandController = {
             const {
                 id
             } = req.params;
-            let brandImg = undefined;
-            if (req.file) {
-                brandImg = req.file;
+            let brandImages = undefined;
+            if (req.files.length > 0) {
+                console.log(req.files)
+                brandImages = req.files;
             }
-            await BrandService.editBrand(id,brandName,brandImg);
+            await BrandService.editBrand(id,brandName,brandImages);
             res.status(200).end("brand successfully edit")
         } catch (e) {
             console.log(e);

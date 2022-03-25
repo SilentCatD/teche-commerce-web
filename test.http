@@ -8,8 +8,11 @@ DELETE  http://localhost:3000/api/v1/product/
 DELETE  http://localhost:3000/api/v1/brand/
 
 ###
-
-GET http://localhost:3000/api/v1/category/page=5
+GET   http://localhost:3000/api/v1/brand/
 
 ###
-GET  http://localhost:3000/test-api/get-cat/
+DELETE   http://localhost:3000/api/v1/brand/
+
+
+###
+GET  http://localhost:3000/test-api/get-cat?page=5&limit=2
