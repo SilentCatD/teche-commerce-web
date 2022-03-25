@@ -30,7 +30,7 @@ testApiRouter.get('/get-cat/', async (req, res)=>{
         ...(limit && {'total-pages': totalPages}),
         ...(limit && {'current-page': page ? parseInt(page): 1}),
         'item-count': categories.length,
-        'categories': categories,
+        'items': categories,
     };
     res.status(200).json(result);
 });
