@@ -11,6 +11,6 @@ router.use('/api', apiRouter);
 router.use('/admin',adminPageRouter);
 router.use('/test', testRouter);
 router.use('/user', webPageRouter);
-router.use('/testapi', testApiRouter);
+router.use('/test-api', testApiRouter);
 
 export default router;

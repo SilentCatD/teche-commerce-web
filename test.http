@@ -13,5 +13,8 @@ POST http://localhost:3000/api/v1/category/
 content-type: application/json
 
 {
-    "categoryName": "test"
+    "categoryName": "afaa";
 }
+
+###
+GET  http://localhost:3000/test-api/get-cat/
