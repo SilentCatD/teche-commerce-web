@@ -28,7 +28,9 @@ const CategoryController = {
   ],
   fetchAllCategory: async (req, res) => {
     try {
-      const result = await CategotyService.fetchAllCategory();
+      const query =req.query;
+      console.log(query);
+      const result = await CategotyService.fetchAllCategory(query.page,query.limit,query.sort,query.type);
       res.writeHead(200, {
         "Content-Type": "application/json",
       });

@@ -1,6 +1,8 @@
 import Category from "./model.js";
 import isInt from '../../utils/is_int.js';
 import mongoose from "mongoose";
+import calculatePaging from "../../utils/calculatePaging.js";
+
 
 const CategotyService = {
     createCategory: async (name) =>{
@@ -9,7 +11,7 @@ const CategotyService = {
         console.log("Category created");
         return category.id;
     },
-    fetchAllCategory: async(limit, sort, type) =>{
+    fetchAllCategory: async(page,limit, sort, type) =>{
         let sortedParams = {};
         if (type != 1 && type != -1) {
             type = -1;
@@ -17,9 +19,13 @@ const CategotyService = {
         if (sort) {
             sortedParams[sort] = type;
         }
-        limit = isInt(limit) ? limit : null;
-        const results = await Category.find().limit(limit).sort(sortedParams);
-        return results.map((category) => {
+
+        let pagingResult = await calculatePaging(limit,page,Category);
+        
+        const categories = await Category.find().limit(pagingResult.limit).sort(sortedParams).skip(pagingResult.skipItem);
+        const result = {};
+        
+        result.items = categories.map((category) => {
             return {
                 id: category.id,
                 name: category.name,
@@ -27,6 +33,10 @@ const CategotyService = {
                 rankingPoints: category.rankingPoints
             };
         });
+        result.totalPage = pagingResult.totalPage;
+        result.totalItem = pagingResult.totalItem;
+
+        return result;
     },
 
     deleteAllCategory: async() =>{
@@ -143,6 +153,23 @@ const CategotyService = {
             await session.endSession();
         }
     },
+
+    calculatePaging: async(limit,page,model) => {
+        const result = {};
+        result.totalItem = await Category.countDocuments();
+        if(!isInt(limit)) {
+            result.totalPage = 1;
+            result.skipItem = 0;
+            result.limit = null;
+            
+        } else {
+            if(!isInt(page) || page < 1) page = 1;
+            result.totalPage = Math.floor(result.totalItem / limit);
+            result.skipItem = limit*page;
+            result.limit = limit;
+        }
+        return result;
+    }
 }
 
 export default CategotyService;
