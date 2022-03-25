@@ -15,7 +15,7 @@ const brandSchema = new mongoose.Schema({
       type: Number,
       default: 0,
     },
-}, { autoCreate: false });
+}, { autoCreate: false , timestamps: true});
 
 const Brand = mongoose.model('Brand',brandSchema);
 

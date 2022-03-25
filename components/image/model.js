@@ -8,7 +8,7 @@ const imageSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-}, { autoCreate: false });
+}, { autoCreate: false , timestamps: true});
 
 const Image = mongoose.model('Image', imageSchema);
 

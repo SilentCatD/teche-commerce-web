@@ -10,7 +10,7 @@ const commentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-}, {autoCreate: false});
+}, {autoCreate: false, timestamps: true});
 
 
 const Comment =  mongoose.model("Comment", commentSchema);

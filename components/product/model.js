@@ -39,7 +39,7 @@ const productSchema = new mongoose.Schema({
         min: 0
     },
     comments: [commentSchema],
-});
+}, {autoCreate: false, timestamps: true});
 
 
 const Product = mongoose.model('Product', productSchema);
