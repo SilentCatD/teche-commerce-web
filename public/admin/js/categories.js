@@ -5,10 +5,9 @@ $('#categorySubmit').click(async function (e) {
     if (input === false) return;
     toggleBtnLoading(true);
     toggleFormInput(true);
-    let result = await new Promise(r => setTimeout(r, 2000));
+    const result = await createCategory(input);
     toggleBtnLoading(false);
     toggleFormInput(false);
-    result = true;
     if(result){
         displayAlert(true);
         clearAllInput();
@@ -21,6 +20,25 @@ $('#inputCategoryName').on('input propertychange', function (e) {
     e.preventDefault();
     validateCategoryNameInput();
 });
+
+
+async function createCategory(categoryName){
+    try{
+        let data = {};
+        data.categoryName = categoryName;
+        let res = await axios({
+            method: "post",
+            url: "/api/v1/category",
+            data: data,
+        });
+        console.log(res);
+        return true;
+    } catch(e){
+        console.log(e);
+        return false;
+    }
+   
+}
 
 function toggleFormInput(valid){
     if(valid){

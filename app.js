@@ -18,7 +18,7 @@ app.get("/",(req, res, next) =>{
 })
 
 app.listen(process.env.PORT || 3000, async ()=> {
-  // await database.instance.connect();
+  await database.instance.connect();
   console.log(`Server is running at: ${process.env.CONNECTION_TYPE}://${process.env.HOST_URL}:${process.env.PORT}`);
 });
 
