@@ -1,24 +1,16 @@
-const limit = 15;
-let page = 1;
+let limit;
+let page;
 let totalPage;
-const displayPage = 5;
+let displayPage;
 let items = [];
 
 function renderTable() {
   $(".table-fields tbody").html("");
   for (let row = 0; row < items.length; row++) {
-    $(".table-fields tbody:last-child").append(
-      `<tr>
-                <td class="align-middle">${items[row].name}</td>
-                <td class="align-middle">${items[row].productsHold}</td>
-                <td class="align-middle">${items[row].rankingPoints}</td>
-                <td class="align-middle">${items[row].createdAt}</td>
-            </tr>
-            `
-    );
+    const item = items[row];
+    $(".table-fields tbody:last-child").append(renderTableRow(item));
   }
 }
-
 
 function renderPagination() {
   const pages = [];
@@ -60,10 +52,7 @@ function renderPagination() {
 async function tableLoadData() {
   $(".table-data").addClass("table-loading");
   $(".table-data").removeClass("table-loaded");
-  let res = await axios({
-    method: "get",
-    url: `/api/v1/category?limit=${limit}&page=${page}`,
-  });
+  let res = await getItemsMethods(limit, page);
   items = [];
   totalPage = res.data["total-pages"];
   for (let i = 0; i < res.data["item-count"]; i++) {
@@ -76,9 +65,14 @@ async function tableLoadData() {
   $(".table-data").addClass("table-loaded");
 }
 
+function renderHead() {
+  $(".table-fields thead").html(renderTableHead());
+}
+
 async function initialLoading() {
   $(".table-load-trigger").prop("disabled", true);
   $(".table-load-trigger").toggleClass("btn-primary btn-secondary");
+  renderHead();
   await tableLoadData();
   $(".table-load-trigger").prop("disabled", false);
   $(".table-load-trigger").toggleClass("btn-primary btn-secondary");
@@ -107,6 +101,40 @@ $(".table-load-trigger").click(async function (e) {
 });
 
 $(document).ready(async function () {
+  limit = setLimit();
+  displayPage = setDisplayPage();
+  page = initialPage();
   await initialLoading();
 });
 
+class NotImplementedError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "NotImplementedError";
+  }
+}
+
+function renderTableRow(item) {
+  throw new NotImplementedError();
+}
+
+function setLimit() {
+  throw new NotImplementedError();
+}
+
+function setDisplayPage(){
+  throw new NotImplementedError();
+}
+
+function initialPage(){
+  throw new NotImplementedError();
+}
+
+function renderTableHead(){
+  throw new NotImplementedError();
+
+}
+
+async function getItemsMethods(limit, page){
+  throw new NotImplementedError();
+}

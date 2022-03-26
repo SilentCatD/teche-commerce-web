@@ -21,7 +21,5 @@ function displayAlert(result, text) {
 
 $(document).ready(function () {
   $("#success-alert").hide();
-  console.log("alert ready");
 });
 
-module.exports = displayAlert;

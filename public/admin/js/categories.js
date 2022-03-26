@@ -1,7 +1,4 @@
-// import displayAlert from "/admin/js/alert.js";
-
 $(document).ready(function () {
-  console.log('cate.js ready')
   $("#categorySubmit").click(async function (e) {
     e.preventDefault();
     const input = validateCategoryNameInput();
@@ -89,3 +86,43 @@ function clearAllInput() {
   $("#inputCategoryName").val("");
   $("#inputCategoryName").removeClass("is-valid");
 }
+
+
+renderTableHead = () =>{
+  return ` <tr>
+  <th scope="col">Categories Name</th>
+  <th scope="col">Number of products</th>
+  <th scope="col">Ranking Points</th>
+  <th scope="col">Created At</th>
+</tr>`;
+}
+
+
+getItemsMethods =  async (limit, page)=>{
+  return axios({
+    method: "get",
+    url: `/api/v1/category?limit=${limit}&page=${page}`,
+  });
+}
+
+
+setLimit = ()=>{
+  return 12;
+}
+
+  
+setDisplayPage = ()=>{
+  return 5;
+}
+
+renderTableRow = (item)=>{
+  return `<tr>
+  <td class="align-middle">${item.name}</td>
+  <td class="align-middle">${item.productsHold}</td>
+  <td class="align-middle">${item.rankingPoints}</td>
+  <td class="align-middle">${item.createdAt}</td>
+</tr>
+`;
+}
+
+initialPage = ()=>{return 1};
