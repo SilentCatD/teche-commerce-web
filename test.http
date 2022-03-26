@@ -8,12 +8,8 @@ DELETE  http://localhost:3000/api/v1/product/
 DELETE  http://localhost:3000/api/v1/brand/
 
 ###
-<<<<<<< HEAD
 
 GET http://localhost:3000/api/v1/category?hi=1
-=======
-GET   http://localhost:3000/api/v1/brand/
->>>>>>> c81059019f04b220e0a64fb7d359425458ef5a8a
 
 ###
 DELETE   http://localhost:3000/api/v1/brand/

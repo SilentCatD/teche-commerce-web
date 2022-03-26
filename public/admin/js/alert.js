@@ -24,4 +24,4 @@ $(document).ready(function () {
   console.log("alert ready");
 });
 
-window.displayAlert = displayAlert;
+module.exports = displayAlert;
