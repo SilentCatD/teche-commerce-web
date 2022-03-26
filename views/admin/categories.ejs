@@ -21,13 +21,9 @@
                 <!-- Content Start -->
         <div class="content">
             <!-- Navbar Start -->
-            <%-include('partials/navbar.ejs') %>
             <!-- Navbar End -->
             <!-- Category Control Start -->
-            <div class="alert" id="success-alert">
-                <strong>Success! </strong>
-                <span>Category added</span>.
-            </div>
+            <%-include('partials/alert.ejs') %>
             <div class="container-fluid pt-4 px-4">
                 <div class="row bg-light rounded align-items-center justify-content-center mx-0 p-4">
                     <div class="col-md-6 col-sm-12">
@@ -78,59 +74,9 @@
             <!-- Category Control End -->
 
             <!-- Category table Start -->
-            <div class="container-fluid pt-4 px-4 vh-100">
-                <div class=" row justify-content-center py-4 bg-light rounded mx-0 px-0 h-100">
-                    <div class="d-flex flex-column">
-                        <div class="row p-4">
-                            <div class="col-6">
-                                <h6 class="mb-4">Categories</h6>
-                            </div>
-                            <div class="col-6 d-flex justify-content-end">
-                                <button class="btn btn-primary table-load-trigger"><i
-                                        class="fa-solid fa-arrows-rotate"></i></button>
-                            </div>
-                        </div>
-                        <div class="col-12 flex-grow-1">
-                            <div class="table-data">
-                                <div class="table-responsive table-fields">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Categories Name</th>
-                                                <th scope="col">Number of products</th>
-                                                <th scope="col">Ranking Points</th>
-                                                <th scope="col">Created At</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="table-spinner">
-                                    <div class="spinner-border table-spinner-icon " role="status">
-                                        <span class="visually-hidden">Loading...</span>
-                                    </div>
-                                </div>
-                            </div>
-                         
-                        </div>
-                    </div>
-                 
-                </div>
-            </div>
+            <%-include('partials/data_table.ejs') %>
             <!-- Category table End -->
 
-            <!-- Pagination Start -->
-
-            <div class="mt-4">
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-center">  
-                    </ul>
-                </nav>
-            </div>
-
-            <!-- Pagination End -->
             <!-- Footer Start -->
             <%-include('partials/footer.ejs') %>
             <!-- Footer End -->
@@ -143,10 +89,11 @@
 
                 <!-- JavaScript Libraries -->
         <%-include('partials/include_js.ejs') %>
-        <script type="module" src="/admin/js/categories.js"></script>
         <script src="https://unpkg.com/validator@latest/validator.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
+        <script type="module" src="/admin/js/alert.js"></script>
+        <script type="" src="/admin/js/categories.js"></script>
+        <script type="" src="/admin/js/data_table.js"></script>
 </body>
 
 </html>
