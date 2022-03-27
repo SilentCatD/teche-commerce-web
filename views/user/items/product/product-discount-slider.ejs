@@ -1,0 +1,12 @@
+<div class="product__discount__slider owl-carousel">
+    <% for(let i=0; i < 10; i++) { %>
+        <div class="col-lg-4">
+            <%- include('product-discount-item', {price: 30,discountPrice:"24.00"
+            ,productImage:"https://lh3.googleusercontent.com/6eDTiBbhfX013LLcenK3_fLC15sRB0zhmnSlqFlMFQ5IznybQOiDQ9hJonGsq73njscXWP60AiPkW4Ct9D2reb5MFLNq9oU=w500-rw"
+            ,category: "Accessories Peripherals",
+            productName: "Bad Keyboard",
+            discount:20
+            }) %>
+        </div>
+        <% } %>
+</div>
