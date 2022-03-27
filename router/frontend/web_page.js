@@ -24,5 +24,10 @@ webPageRouter.get('/contact', async (req, res)=>{
     res.render('user/contact',params);
 });
 
+webPageRouter.get('/detail/', async (req, res)=>{
+    const params = {title: "eTech Contact"};
+    res.render('user/shop-details',params);
+});
+
 
 export default webPageRouter;
