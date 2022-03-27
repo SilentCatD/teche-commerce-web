@@ -1,9 +1,8 @@
 import ImageService from '../image/service.js';
 import Brand from './model.js'
 import mongoose from 'mongoose';
-import calculatePaging from "../../utils/calculatePaging.js";
 import CommomDatabaseServies from "../common/services.js";
-
+import { body, validationResult } from "express-validator";
 
 
 const BrandService = {
@@ -17,38 +16,6 @@ const BrandService = {
         }
         let brandDocObject = {name: name,images: brandImg};
         return CommomDatabaseServies.createDocument(Brand,brandDocObject);
-    },
-
-    fetchAllBrand: async (page,limit, sort, type) => {
-        let sortedParams = {};
-        if (type != 1 && type != -1) {
-            type = -1;
-        }
-        if (sort) {
-            sortedParams[sort] = type;
-        }
-        
-        let pagingResult = await calculatePaging(page,limit,Brand);
-
-        const results = await Brand.find().limit(pagingResult.limit).sort(sortedParams).skip(pagingResult.skipItem);
-        return {
-            items: results.map((brand) => {
-            let img = brand.image;
-            let imgUrl = null
-            if (img) {
-                imgUrl = img.firebaseUrl;
-            }
-            return {
-                id: brand.id,
-                name: brand.name,
-                imageUrl: imgUrl,
-                rankingPoints: brand.rankingPoints,
-                productsHold: brand.productsHold,
-            }
-        }),
-        totalPage: pagingResult.totalPage,
-        totalItem: pagingResult.totalItem
-    }
     },
 
     deleteAllBrand: async () => {

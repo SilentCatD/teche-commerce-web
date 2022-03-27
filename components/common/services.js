@@ -103,7 +103,13 @@ const CommomDatabaseServies = {
   },
   queryAllWithModel: async (model, limit, page, sortParams, range) => {
     const totalCount = await model.countDocuments(range);
-    const totalPages = Math.ceil(totalCount / limit);
+    let totalPages = Math.ceil(totalCount / limit);
+    if(totalPages==0){
+      totalPages=1;
+    }
+    if(page && page> totalPages){
+      page = totalPages;
+    }
     const items = await model
       .find(range)
       .skip(limit * page - limit)

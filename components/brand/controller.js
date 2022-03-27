@@ -1,4 +1,7 @@
+import Brand from './model.js';
 import BrandService from './service.js'
+import CommonMiddleWares from "../common/middleware.js";
+import CommomDatabaseServies from "../common/services.js"
 
 const BrandController = {
     createBrand: async (req, res) => {
@@ -18,20 +21,20 @@ const BrandController = {
             res.status(402).end(`Can't create brand, something went wrong: ${e}`);
         }
     },
-    fetchAllBrand: async (req, res) => {
-        try {
-            const query =req.query;
-            console.log(req.query);
-            const result = await BrandService.fetchAllBrand(query.page,query.limit , query.sort, query.type);
-            res.writeHead(200, {
-                'Content-Type': 'application/json'
-            });
-            res.status(200).end(JSON.stringify(result));
-        } catch (e) {
+    fetchAllBrand: [
+        CommonMiddleWares.apiQueryValidations,
+        CommonMiddleWares.apiQueryParamsExtract,
+        async (req, res) => {
+          try {
+            const { limit, page, sortParams, range } = req.params;
+            const result = await CommomDatabaseServies.queryAllWithModel(Brand, limit, page, sortParams, range);
+            res.status(200).json(result);
+          } catch (e) {
             console.log(e);
             res.status(404).end("Not Found");
+          }
         }
-    },
+      ],
     fetchBrand: async (req, res) => {
         try {
             const {
