@@ -104,8 +104,17 @@ $(".table-load-trigger").click(async function (e) {
 
 $(document).ready(async function () {
   limit = setLimit();
+  if(limit <= 0){
+    limit = 1
+  }
   displayPage = setDisplayPage();
+  if(displayPage <= 0 ){
+    displayPage = 1;
+  }
   page = initialPage();
+  if(page <= 0){
+    page = 1;
+  }
   await initialLoading();
 });
 
