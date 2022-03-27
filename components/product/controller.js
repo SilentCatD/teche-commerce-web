@@ -1,4 +1,9 @@
 import ProductService from "./service.js";
+import Product from "./model.js";
+
+import CommonMiddleWares from "../common/middleware.js";
+import CommomDatabaseServies from "../common/services.js"
+
 
 const ProductController = {
     createProduct: async (req, res) => {
@@ -24,19 +29,20 @@ const ProductController = {
         }
 
     },
-    fetchAllProduct: async (req, res) => {
-        try {
-            const query =req.query;
-            const result = await ProductService.fetchAllProduct(query.limit , query.sort, query.type);
-            res.writeHead(200, {
-                'Content-Type': 'application/json'
-            });
-            res.status(200).end(JSON.stringify(result));
-        } catch (e) {
+    fetchAllProduct: [
+        CommonMiddleWares.apiQueryValidations,
+        CommonMiddleWares.apiQueryParamsExtract,
+        async (req, res) => {
+          try {
+            const { limit, page, sortParams, range } = req.params;
+            const result = await CommomDatabaseServies.queryAllWithModel(Product, limit, page, sortParams, range);
+            res.status(200).json(result);
+          } catch (e) {
             console.log(e);
             res.status(404).end("Not Found");
+          }
         }
-    },
+      ],
 
     deleteAllProduct: async (req, res) => {
         try {
