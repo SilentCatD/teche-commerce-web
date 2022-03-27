@@ -2,25 +2,49 @@ import Brand from './model.js';
 import BrandService from './service.js'
 import CommonMiddleWares from "../common/middleware.js";
 import CommomDatabaseServies from "../common/services.js"
+import { body, validationResult } from "express-validator";
 
 const BrandController = {
-    createBrand: async (req, res) => {
+    createBrand: [
+        body("brandName")
+        .exists()
+        .bail()
+        .not().isEmpty({ ignore_whitespace: true }).withMessage('field can\'t be emtpy')
+        .bail()
+        .isByteLength({ min: 3, max: 50 }).withMessage("character of field must be in range 3-50")
+        .trim(),
+        async (req, res) => {
         try {
             const {
                 brandName
             } = req.body;
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+              return res.status(400).json({ errors: errors.array() });
+            }
             let brandImg = []
             if (req.files) {
                 brandImg = req.files;
             }
-            console.log(req.files);
+            
+            if(brandImg.length > 1){
+                return res.status(400).end("only 1 image for each brand");
+            }
+            if(brandImg.length == 1){
+                const type = brandImg[0].mimetype;
+                if(!['image/png', 'image/jpeg'].includes(type)){
+                    return res.status(400).end("image must be of type png or jpeg");
+                }
+            }
+
+
             const id = await BrandService.createBrand(brandName, brandImg);
             res.status(201).end(`Brand created with id ${id}`);
         } catch (e) {
             console.log(e);
             res.status(402).end(`Can't create brand, something went wrong: ${e}`);
         }
-    },
+    }],
     fetchAllBrand: [
         CommonMiddleWares.apiQueryValidations,
         CommonMiddleWares.apiQueryParamsExtract,
