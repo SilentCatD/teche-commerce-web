@@ -19,7 +19,7 @@ function renderPagination() {
     pages.push(`<li class="page-item"><a class="page-link">Previous</a></li>`);
   }
   let generated = 0;
-  let curr = page - 2;
+  let curr = page - Math.floor(displayPage/2) ;
   while (generated < displayPage) {
     if (curr > totalPage) {
       break;
