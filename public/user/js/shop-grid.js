@@ -11,13 +11,16 @@ $(document).ready(async function () {
 });
 
 async function REinit() {
+    $('#pagination').empty();
+    $('#product-list').empty();
+
+
   let fetchResult = await shopController.fetchProduct(
     currentPage,
     item_per_page
   );
-  await shopController.renderProductList(fetchResult.data["items"]);
-  console.log(fetchResult.data["items"]);
-  console.log(fetchResult.data["total-pages"]);
+  console.log(fetchResult.data["total-items"]);
+  await shopController.renderProductList(fetchResult.data["items"],fetchResult.data["total-items"]);
   // let fetchLatestProduct = await shopController.fetchLatestProduct(total_slider_item);
   // await shopController.renderProductSlider(fetchLatestProduct.data['items'])
 
@@ -55,15 +58,15 @@ const shopController = {
     }
   },
   renderPaginationPage: async function (currentPage, lastPage) {
-    let size = 0;
-
     if (currentPage != 1) {
       $("#pagination").append(`<a href="#">◀</a>`);
     }
 
-    for (let i = currentPage - pagination_size / 2; i < currentPage; i++) {
+    let lost = 0;
+
+    for (let i = currentPage - Math.floor(pagination_size / 2); i < currentPage; i++) {
       if (i < 1) {
-        size++;
+        lost++;
         continue;
       }
       renderHTMLElement.renderPagination(i);
@@ -71,7 +74,7 @@ const shopController = {
 
     renderHTMLElement.renderPagination(currentPage);
 
-    for (let i = currentPage + 1; i <= currentPage + pagination_size / 2; i++) {
+    for (let i = currentPage + 1; i <= currentPage + Math.floor(currentPage / 2) +lost; i++) {
       if (i > lastPage) break;
       renderHTMLElement.renderPagination(i);
     }
@@ -80,15 +83,17 @@ const shopController = {
       $("#pagination").append(`<a href="#">▶</a>`);
     }
   },
-  renderProductList: async function (products) {
+  renderProductList: async function (products,totalItem) {
     products.forEach((product) => {
       $("#product-list").append(
         `<div class="col-lg-4 col-md-6 col-sm-6">
                 ${renderHTMLElement.renderProductItem(product)}
                 </div> 
                 `
-      );
+      )
     });
+    $('#total-items-found').text(`${totalItem}`)
+
   },
   renderProductSlider: async function (products) {
     let loop = products.length / item_per_slider;
@@ -141,6 +146,11 @@ const renderHTMLElement = {
     </a>`;
   },
   renderPagination(page) {
-    $("#pagination").append(`<a href="#">${page}</a>`);
+    $("#pagination").append(`<a href="#" id="pagination_${page}">${page}</a>`);
+    $(`#pagination_${page}`).on("click",function() {
+        currentPage = page;
+        console.log(page);
+        REinit();
+    })
   },
 };
