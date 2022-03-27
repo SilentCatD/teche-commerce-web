@@ -204,3 +204,7 @@ bindRowAction = ()=>{
     $('#page-modal').modal('show'); 
   });
 }
+
+setTableName = ()=>{
+  return "Brands"
+}

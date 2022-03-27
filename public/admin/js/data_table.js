@@ -67,6 +67,7 @@ async function tableLoadData() {
 }
 
 function renderHead() {
+  $('.table-name').text(setTableName());
   $(".table-fields thead").html(renderTableHead());
 }
 
@@ -113,6 +114,10 @@ class NotImplementedError extends Error {
     super(message);
     this.name = "NotImplementedError";
   }
+}
+
+function setTableName(){
+  throw new NotImplementedError();
 }
 
 function renderTableRow(item) {
