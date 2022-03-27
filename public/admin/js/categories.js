@@ -1,11 +1,11 @@
 $(document).ready(function () {
   $("#categorySubmit").click(async function (e) {
     e.preventDefault();
-    const input = validateCategoryNameInput();
+    const input = validateBrandNameInput();
     if (input === false) return;
     toggleBtnLoading(true);
     toggleFormInput(true);
-    const result = await createCategory(input);
+    const result = await createBrand(input);
     toggleBtnLoading(false);
     toggleFormInput(false);
     if (result) {
@@ -18,14 +18,14 @@ $(document).ready(function () {
 
   $("#inputCategoryName").on("input propertychange", function (e) {
     e.preventDefault();
-    validateCategoryNameInput();
+    validateBrandNameInput();
   });
 
 
 
 });
 
-async function createCategory(categoryName) {
+async function createBrand(categoryName) {
   try {
     let data = {};
     data.categoryName = categoryName;
@@ -64,7 +64,7 @@ function toggleBtnLoading(loading) {
   }
 }
 
-function validateCategoryNameInput() {
+function validateBrandNameInput() {
   const input = $("#inputCategoryName").val().trim();
   if (validator.isEmpty(input, { ignore_whitespace: true })) {
     $("#categoryErrorMsg").text("Category name can't be empty");

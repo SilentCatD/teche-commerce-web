@@ -8,33 +8,6 @@ const CategotyService = {
     createCategory: async (name) =>{
         return CommomDatabaseServies.createDocument(Category,{name:name});
     },
-    fetchAllCategory: async(page,limit, sort, type) =>{
-        let sortedParams = {};
-        if (type != 1 && type != -1) {
-            type = -1;
-        }
-        if (sort) {
-            sortedParams[sort] = type;
-        }
-
-        let pagingResult = await calculatePaging(page,limit,Category);
-        
-        const categories = await Category.find().limit(pagingResult.limit).sort(sortedParams).skip(pagingResult.skipItem);
-        const result = {};
-        
-        result.items = categories.map((category) => {
-            return {
-                id: category.id,
-                name: category.name,
-                productsHold: category.productsHold,
-                rankingPoints: category.rankingPoints
-            };
-        });
-        result.totalPage = pagingResult.totalPage;
-        result.totalItem = pagingResult.totalItem;
-
-        return result;
-    },
 
     deleteAllCategory: async() =>{
         CommomDatabaseServies.deleteCollection(Category,false);

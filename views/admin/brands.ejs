@@ -31,35 +31,46 @@
                         </form>
                     </div>
                     <div class="col-md-6 col-sm-12 text-md-end text-center">
-                        <button class="btn btn-primary form-collapse-btn" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                            Create New Brand<i
+                        <button class="btn btn-primary form-collapse-btn" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#collapseExample"
+                            aria-expanded="false" aria-controls="collapseExample">
+                            Create new Brand<i
                                 class="fa-solid fa-angle-up ms-2 form-collapse-btn-icon fa-rotate-180"></i>
                         </button>
                     </div>
                     <div class="col-md-8 col-sm-12 text-start">
                         <div class="collapse" id="collapseExample">
                             <div class="card card-body mt-4">
-                                <form>
+                                <form novalidate>
                                     <div class="mb-3">
-                                        <label for="inputBrandName" class="form-label">Brand name</label>
+                                        <label for="inputBrandName" class="form-label">Brand
+                                            name</label>
                                         <input type="text" class="form-control" id="inputBrandName"
-                                            aria-describedby="brandHelp">
-                                        <div id="categoryHelp" class="form-text">Enter the name of the new Brand
+                                            aria-describedby="brandHelp" autocomplete="off" required>
+                                        <div class="valid-feedback">Looks good!</div>
+                                        <div class="invalid-feedback" id="brandErrorMsg"></div>
+                                        <div id="brandHelp" class="form-text">Enter the name of the new
+                                            brand
                                         </div>
                                     </div>
-
                                     <div class="mb-5">
                                         <input class="form-control" type="file" id="formFile">
-
-                                        <div class="mt-3 img-holder">
+                                        <div class="valid-feedback">Looks good!</div>
+                                        <div class="invalid-feedback" id="brandImgErrorMsg"></div>
+                                        <div class="mt-3 d-none text-md-start text-center" id="img-holder">
+                                            <img style="max-width:300px;width:100%">
                                         </div>
-
                                     </div>
-                                    
                                     <div class="text-md-start text-center">
-                                        <button type="button" class="btn btn-primary w-50">Add</button>
+                                        <button type="submit" class="btn btn-primary w-50"
+                                            id="brandSubmit">
+                                            <span class="spinner-border spinner-border-sm d-none"
+                                                role="status" aria-hidden="true"
+                                                id="loading-spinner"></span>
+                                            <span id="btn-text">Add</span>
+                                        </button>
                                     </div>
+
                                 </form>
                             </div>
                         </div>
@@ -181,6 +192,8 @@
         <!-- JavaScript Libraries -->
         <%-include('partials/include_js.ejs') %> 
         <!-- MyScript -->
+        <script src="https://unpkg.com/validator@latest/validator.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="/admin/js/alert.js"></script>
         <script src="/admin/js/brands.js"></script>
 </body>
