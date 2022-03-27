@@ -10,6 +10,7 @@ function renderTable() {
     const item = items[row];
     $(".table-fields tbody:last-child").append(renderTableRow(item));
   }
+  bindRowAction();
 }
 
 function renderPagination() {
@@ -134,6 +135,8 @@ function renderTableHead(){
   throw new NotImplementedError();
 
 }
+
+function bindRowAction(){}
 
 async function getItemsMethods(limit, page){
   throw new NotImplementedError();
