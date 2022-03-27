@@ -103,40 +103,24 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="container">
-                                            <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
+                                            <input id="file-input" type="file" name="name" style="display: none;" accept="image/png,image/jpeg">
+                                            <div id="productImagesCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel"data-bs-interval="false">
                                                 <div class="carousel-indicators">
-                                                  <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                                                  <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                                                  <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                                                    <button type="button" data-bs-target="#productImagesCarousel" data-bs-slide-to="0" class="active"></button>
                                                 </div>
                                                 <div class="carousel-inner">
-                                                  <div class="carousel-item active">
-                                                    <div class="image-item"></div>
-                                                    <div class="carousel-caption">
-                                                        <button class="btn btn-danger rounded-circle m-2"><i class="fa-solid fa-trash-can"></i></button>
-                                                        <button class="btn btn-primary rounded-circle m-2"><i class="fa-solid fa-plus"></i></button>
+                                                    <div class="carousel-item active">
+                                                        <div class="image-item"></div>
+                                                        <div class="carousel-caption">
+                                                            <button class="add-image-btn btn btn-primary rounded-circle m-2"><i class="fa-solid fa-plus"></i></button>
+                                                        </div>
                                                     </div>
-                                                  </div>
-                                                  <div class="carousel-item">
-                                                    <div class="image-item"></div>
-                                                    <div class="carousel-caption">
-                                                        <button class="btn btn-danger rounded-circle m-2"><i class="fa-solid fa-trash-can"></i></button>
-                                                        <button class="btn btn-primary rounded-circle m-2"><i class="fa-solid fa-plus"></i></button>
-                                                      </div>
-                                                  </div>
-                                                  <div class="carousel-item">
-                                                    <div class="image-item"></div>
-                                                    <div class="carousel-caption">
-                                                      <button class="btn btn-danger rounded-circle m-2"><i class="fa-solid fa-trash-can"></i></button>
-                                                      <button class="btn btn-primary rounded-circle m-2"><i class="fa-solid fa-plus"></i></button>
-                                                    </div>
-                                                  </div>
                                                 </div>
-                                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+                                                <button class="carousel-control-prev" type="button" data-bs-target="#productImagesCarousel" data-bs-slide="prev">
                                                   <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                                   <span class="visually-hidden">Previous</span>
                                                 </button>
-                                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+                                                <button class="carousel-control-next" type="button" data-bs-target="#productImagesCarousel" data-bs-slide="next">
                                                   <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                                   <span class="visually-hidden">Next</span>
                                                 </button>
