@@ -1,4 +1,9 @@
 
+
+$(document).ready(function () {
+    $(".owl-carousel").owlCarousel();
+});
+
 getItemsMethods =  async (limit, page)=>{
     return axios({
       method: "get",
@@ -68,6 +73,6 @@ getItemsMethods =  async (limit, page)=>{
     });
   }
   
-  setTableName = ()=>{
+  setTableName = ()=>{  
     return "Products"
   }
