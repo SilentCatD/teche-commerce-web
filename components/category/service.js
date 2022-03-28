@@ -29,7 +29,15 @@ const CategotyService = {
         if(!category) return null;
         category.id = category._id;
         delete category._id;
-        return category;
+        console.log(category);
+        return {
+            id: category._id,
+            name: category.name,
+            productsHold: category.productsHold,
+            rankingPoints: category.rankingPoints,
+            createdAt: category.createdAt,
+            updatedAt: category.updatedAt       
+        };
     },
 
     modelQueryAll: async(range, limit, page, sortParams)=>{
