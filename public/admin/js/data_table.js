@@ -23,9 +23,10 @@ function renderPagination() {
   let curr = startAt;
   while (generated < displayPage) {
     if (curr > totalPage) {
+      startAt--;
       if(startAt<1) break;
       pages.splice(1, 0,
-        `<li class="page-item"><a class="page-link">${--startAt}</a></li>`
+        `<li class="page-item"><a class="page-link">${startAt}</a></li>`
       );
       generated++;
       continue;
