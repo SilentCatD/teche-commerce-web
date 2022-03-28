@@ -106,7 +106,9 @@ const ProductService = {
 
     fetchProduct: async (id) => {
         try {
-        const product = await Product.findById(mongoose.mongo.ObjectId(id));
+        const product = await Product.findById(mongoose.mongo.ObjectId(id))
+                                .populate('brand')
+                                .populate('category');
         if(product === null) throw new Error(`Product ${id} is not found`);
         let imageUrls = [];
         for (let i = 0; i < product.images.length; i++) {
@@ -115,19 +117,6 @@ const ProductService = {
         let status = 'sold-out';
         if (product.inStock > 0) {
             status = 'in-stock';
-        }
-        let brand = null;
-        try {
-            brand = await BrandService.fetchBrand(product.brand);
-        } catch (e) {
-            console.log(e);
-        }
-        let category = null;
-        try {
-            category = await CategotyService.fetchCategory(product.category);
-        }
-        catch (e) {
-            console.log(e);
         }
         let rateSum = 0;
         product.rates.forEach((element) => {

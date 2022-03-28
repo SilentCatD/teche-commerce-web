@@ -26,8 +26,8 @@ const productSchema = new mongoose.Schema({
         default: 0,
         min: 0
     },
-    brand: mongoose.SchemaTypes.ObjectId,
-    category: mongoose.SchemaTypes.ObjectId,
+    brand: {type: mongoose.SchemaTypes.ObjectId, ref:'Brand'},
+    category: {type: mongoose.SchemaTypes.ObjectId, ref:'Category'},
     buyCount: {
         type: Number,
         default: 0,
