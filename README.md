@@ -24,7 +24,6 @@
  - Test deleteProduct API
  - Change product.inStock to variants.inStock (I will change later, believe me)
 
-# Upcomming Features (will be update after i become Elden Lord)
- - Management all database
- - Friendly UI for admin
- - Refactor project structure
+# Upcomming Features 
+ - Edit product
+

@@ -22,9 +22,10 @@
 }
 
 #add-product-form{
-    transition: opacity 300ms ease-in-out, visibility 300ms ease-in-out;
+    transition: opacity 400ms ease-in-out, visibility 400ms ease-in-out;
 }
 #product-add-section.loading #add-product-form{
+    pointer-events: none;
     visibility: 0;
     opacity: 0;
 }

@@ -79,6 +79,7 @@ function validateBrandNameInput() {
   const input = $("#inputBrandName").val().trim();
   if (validator.isEmpty(input, { ignore_whitespace: true })) {
     $("#brandErrorMsg").text("Brand name can't be empty");
+    $("#inputBrandName").removeClass("is-valid");
     $("#inputBrandName").addClass("is-invalid");
     return false;
   }
@@ -88,6 +89,7 @@ function validateBrandNameInput() {
     $("#brandErrorMsg").text(
       `Brand name length must be between ${minChar}-${maxChar} characters`
     );
+    $("#inputBrandName").removeClass("is-valid");
     $("#inputBrandName").addClass("is-invalid");
     return false;
   }
