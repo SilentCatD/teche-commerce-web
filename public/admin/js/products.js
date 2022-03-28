@@ -162,6 +162,8 @@ function toggleBtnLoading(loading) {
 
 function toggleFormInput(valid) {
   if (valid) {
+    $(".rm-image-btn").prop("disabled", true);
+    $(".add-image-btn").prop("disabled", true);
     $("#productNameInput").prop("disabled", true);
     $("#formFile").prop("disabled", true);
     $("#productDescription").prop("disabled", true);
@@ -170,6 +172,8 @@ function toggleFormInput(valid) {
     $("#brandSelect").prop("disabled", true);
     $("#categorySelect").prop("disabled", true);
   } else {
+    $(".rm-image-btn").prop("disabled", false);
+    $(".add-image-btn").prop("disabled", false);
     $("#productNameInput").prop("disabled", false);
     $("#formFile").prop("disabled", false);
     $("#productDescription").prop("disabled", false);
@@ -382,7 +386,7 @@ function renderProductsCarousel() {
         <div class="carousel-item active">
             <div class="image-item carousel-holder"></div>
             <div class="carousel-caption">
-                <a data-img-index="0" class="add-image-btn btn btn-primary rounded-circle m-2"><i class="fa-solid fa-plus"></i></a>
+                <button type="button" data-img-index="0" class="add-image-btn btn btn-primary rounded-circle m-2"><i class="fa-solid fa-plus"></i></button>
             </div>
         </div> 
     `
@@ -396,8 +400,8 @@ function renderProductsCarousel() {
           <div class="carousel-item ${i == currentCarousel ? "active" : ""}">
               <div class="image-item"><img src="${src}"></div>
               <div class="carousel-caption">
-                  <a data-img-index="${i}" class="rm-image-btn btn btn-danger rounded-circle m-2"><i class="fa-solid fa-trash-can"></i></a>
-                  <a data-img-index="${i}" class="add-image-btn btn btn-primary rounded-circle m-2"><i class="fa-solid fa-plus"></i></a>
+                  <button type="button" data-img-index="${i}" class="rm-image-btn btn btn-danger rounded-circle m-2"><i class="fa-solid fa-trash-can"></i></button>
+                  <button type="button" data-img-index="${i}" class="add-image-btn btn btn-primary rounded-circle m-2"><i class="fa-solid fa-plus"></i></button>
               </div>
           </div> 
         `;
