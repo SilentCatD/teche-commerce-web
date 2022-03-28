@@ -91,13 +91,11 @@ const CommomDatabaseServies = {
   deleteCollection: async (model, haveImages) => {
     const docs = await model.find();
     if (haveImages) {
-      await Promise.all(
-        docs.map(async (doc) => {
-          for (let i = 0; i < doc.images.length; i++) {
-            await ImageService.deleteImage(doc.images[i].firebasePath);
-          }
-        })
-      );
+      await Promise.all(docs.map( async (doc)=>{
+        await Promise.all(doc.images.map( async (image)=>{
+          await ImageService.deleteImage(image.firebasePath);
+        }));
+      }));
     }
     await model.deleteMany();
   },

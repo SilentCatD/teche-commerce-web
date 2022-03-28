@@ -8,9 +8,9 @@ const BrandService = {
     // name: <String> Sname of the brand
     // img: <File> object represent the file
     let brandImg = [];
-    for (let i = 0; i < img.length; i++) {
-      let imageModel = await ImageService.createImage(img[i]);
-      brandImg.push(imageModel);
+    if(img.length > 0){
+      const imgId =  await ImageService.createImage(img[0]);
+      brandImg.push(imgId);
     }
     let brandDocObject = { name: name, images: brandImg };
     return CommomDatabaseServies.createDocument(Brand, brandDocObject);

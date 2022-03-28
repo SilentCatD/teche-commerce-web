@@ -35,3 +35,18 @@ GET  http://localhost:3000/test-api/gen-brand
 
 ###
 GET  http://localhost:3000/test-api/gen-product
+
+
+###
+
+POST http://127.0.0.1:3000/api/v1/product 
+# Content-Type: multipart/form-data
+
+{
+    "productName": "123",
+    "productDetails": "123123",
+    "productPrice": "12",
+    "productUnit": "123",
+    "productBrand": "6241b6d3590ab74cf48fc537",
+    "productCategory": "6241b6bd590ab74cf48fc52c"
+}

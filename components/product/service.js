@@ -5,39 +5,19 @@ import ImageService from "../image/service.js";
 import Product from "./model.js";
 import mongoose from "mongoose";
 import CommomDatabaseServies from "../common/services.js";
-import Brand from "../brand/model.js";
 
 const ProductService = {
-    createProduct: async (name, price, brandId, categoryId, details, imageFiles) => {
+    createProduct: async (name, price, unit, brandId, categoryId, details, imageFiles) => {
         let images = []
-        for (let i = 0; i < imageFiles.length; i++) {
-            let imageModel = await ImageService.createImage(imageFiles[i]);
-            images.push(imageModel);
-        }
-        let brand = null;
-        if (brandId) {
-            try {
-                await BrandService.fetchBrand(brandId);
-                brand = brandId;
-                await BrandService.editProductHolds(brandId, '+');
-            } catch (e) {
-                throw Error("Brand not existed");
-            }
-        }
-        let category = null;
-        if (categoryId) {
-            try {
-                await CategotyService.fetchCategory(categoryId);
-                category = categoryId;
-                await CategotyService.editProductHolds(categoryId, '+');
-            }
-            catch (e) {
-                throw Error("Category not existed");
-            }
-        }
+        images = await Promise.all(
+            imageFiles.map( async (imageFile)=>{
+                return await ImageService.createImage(imageFile);
+            })
+        );
+
         let productDocObj = {
-            name: name, price: price, brand: brand,
-            category: category, details: details, images: images,
+            name: name, price: price, brand: brandId, inStock: unit,
+            category: categoryId, details: details, images: images,
             rates: [0, 0, 0, 0, 0],
         };
         return CommomDatabaseServies.createDocument(Product,productDocObj);
