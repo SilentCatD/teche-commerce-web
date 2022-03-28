@@ -7,14 +7,283 @@ $(document).ready(function () {
     const result = validateProductsImg();
     if (result) {
       currentCarousel++;
-      if(currentCarousel>productsImages.length-1){
-          currentCarousel=productsImages.length-1;
+      if (currentCarousel > productsImages.length - 1) {
+        currentCarousel = productsImages.length - 1;
       }
       renderProductsCarousel();
     }
   });
+
+  $("#addProductAccordion").on("show.bs.collapse", async function (e) {
+    $("#product-add-section").addClass("loading");
+    await renderBrandsAndCategories();
+    $("#product-add-section").removeClass("loading");
+  });
+
+  $("#productSubmit").click(async function (e) {
+    e.preventDefault();
+    const name = validateProductNameInput();
+    const price = validateProductPriceInput();
+    const unit = validateUnitInput();
+    const brand = validateProductBrandSelect();
+    const category = validateProductCategorySelect();
+    const description = validateProductDescription();
+    if (
+      name === false ||
+      price === false ||
+      unit === false ||
+      brand === false ||
+      category === false ||
+      description === false
+    ) {
+      return;
+    }
+    toggleBtnLoading(true);
+    toggleFormInput(true);
+    const result = await createProduct(name, description, price, unit, brand, category);
+    toggleBtnLoading(false);
+    toggleFormInput(false);
+    if (result) {
+      console.log("hi");
+      displayAlert(true, "Product added");
+      clearAllInput();
+    } else {
+      displayAlert(false, "Something went wrong");
+    }
+  });
+
+  $("#productNameInput").on("input propertychange", function (e) {
+    e.preventDefault();
+    validateProductNameInput();
+  });
+
+  $("#productPriceInput").on("input propertychange", function (e) {
+    e.preventDefault();
+    validateProductPriceInput();
+  });
+
+  $("#productPriceInput").keydown(function (e) {
+    var invalidChars = ["-", "+", "e"];
+    if (invalidChars.includes(e.key)) {
+      e.preventDefault();
+    }
+  });
+
+  $("#productUnitInput").on("input propertychange", function (e) {
+    e.preventDefault();
+    validateUnitInput();
+  });
+
+  $("#productUnitInput").keydown(function (e) {
+    var invalidChars = ["-", "+", "e", "."];
+    if (invalidChars.includes(e.key)) {
+      e.preventDefault();
+    }
+  });
+
+  $("#brandSelect").change(function (e) {
+    e.preventDefault();
+    validateProductBrandSelect();
+  });
+
+  $("#categorySelect").change(function (e) {
+    e.preventDefault();
+    validateProductCategorySelect();
+  });
+
   bindCarousel();
 });
+
+async function createProduct(
+  productName,
+  productDetails,
+  productPrice,
+  productUnit,
+  productBrand,
+  productCategory
+) {
+  let formData = new FormData();
+  formData.append("productName", productName);
+  formData.append("productDetails", productDetails);
+  formData.append("productPrice", productPrice);
+  formData.append("productUnit", productUnit);
+  formData.append("productBrand", productBrand);
+  formData.append("productCategory", productCategory);
+  productsImages.forEach((file) => {
+    formData.append("images", file);
+  });
+  try {
+    let response = await axios({
+      method: "post",
+      url: "/api/v1/product",
+      data: formData,
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    console.log(response);
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+function clearAllInput() {
+  $("#productNameInput").val("");
+  $("#formFile").val("");
+  $("#productDescription").val("");
+  $("#productPriceInput").val("");
+  $("#productUnitInput").val("");
+  $("#brandSelect").val("default");
+  $("#categorySelect").val("default");
+
+  $("#productNameInput").removeClass("is-valid");
+  $("#productPriceInput").removeClass("is-valid");
+  $("#productUnitInput").removeClass("is-valid");
+  $("#brandSelect").removeClass("is-valid");
+  $("#categorySelect").removeClass("is-valid");
+  currentCarousel = 0;
+  productsImages = [];
+  renderProductsCarousel();
+}
+
+function toggleBtnLoading(loading) {
+  if (loading) {
+    $("#productSubmit").prop("disabled", true);
+    $("#productSubmit").toggleClass("btn-primary btn-secondary");
+    $("#btn-text").text("Adding...");
+    $("#loading-spinner").toggleClass("d-none");
+  } else {
+    $("#productSubmit").toggleClass("btn-primary btn-secondary");
+    $("#btn-text").text("Add");
+    $("#loading-spinner").toggleClass("d-none");
+    $("#productSubmit").prop("disabled", false);
+  }
+}
+
+function toggleFormInput(valid) {
+  if (valid) {
+    $("#productNameInput").prop("disabled", true);
+    $("#formFile").prop("disabled", true);
+    $("#productDescription").prop("disabled", true);
+    $("#productPriceInput").prop("disabled", true);
+    $("#productUnitInput").prop("disabled", true);
+    $("#brandSelect").prop("disabled", true);
+    $("#categorySelect").prop("disabled", true);
+  } else {
+    $("#productNameInput").prop("disabled", false);
+    $("#formFile").prop("disabled", false);
+    $("#productDescription").prop("disabled", false);
+    $("#productPriceInput").prop("disabled", false);
+    $("#productUnitInput").prop("disabled", false);
+    $("#brandSelect").prop("disabled", false);
+    $("#categorySelect").prop("disabled", false);
+  }
+}
+
+function validateProductDescription() {
+  const input = $("#productDescription").val();
+  return input;
+}
+
+function validateProductBrandSelect() {
+  const selected = $("#brandSelect").val().trim();
+  if (selected == "default") {
+    $("#productBrandErrorMsg").text("Please choose a brand for this product");
+    $("#brandSelect").removeClass("is-valid");
+    $("#brandSelect").addClass("is-invalid");
+    return false;
+  }
+  $("#brandSelect").removeClass("is-invalid");
+  $("#brandSelect").addClass("is-valid");
+  return selected;
+}
+
+function validateProductCategorySelect() {
+  const selected = $("#categorySelect").val().trim();
+  if (selected == "default") {
+    $("#productCategoryErrorMsg").text(
+      "Please choose a brand for this product"
+    );
+    $("#categorySelect").removeClass("is-valid");
+    $("#categorySelect").addClass("is-invalid");
+    return false;
+  }
+  $("#categorySelect").removeClass("is-invalid");
+  $("#categorySelect").addClass("is-valid");
+  return selected;
+}
+
+function validateUnitInput() {
+  const input = $("#productUnitInput").val().trim();
+  if (validator.isEmpty(input, { ignore_whitespace: true })) {
+    $("#productUnitErrorMsg").text(
+      "Product unit can't be empty or contain special character"
+    );
+    $("#productUnitInput").removeClass("is-valid");
+    $("#productUnitInput").addClass("is-invalid");
+    return false;
+  }
+  if (!validator.isNumeric(input, { no_symbols: true })) {
+    $("#productUnitErrorMsg").text("Product unit must contain only number");
+    $("#productUnitInput").removeClass("is-valid");
+    $("#productUnitInput").addClass("is-invalid");
+    return false;
+  }
+
+  if (!validator.isInt(input)) {
+    $("#productUnitErrorMsg").text("Product unit must be an integer");
+    $("#productUnitInput").removeClass("is-valid");
+    $("#productUnitInput").addClass("is-invalid");
+    return false;
+  }
+  $("#productUnitInput").removeClass("is-invalid");
+  $("#productUnitInput").addClass("is-valid");
+  return input;
+}
+
+function validateProductPriceInput() {
+  const input = $("#productPriceInput").val().trim();
+  if (validator.isEmpty(input, { ignore_whitespace: true })) {
+    $("#productPriceErrorMsg").text(
+      "Product price can't be empty or contain special character"
+    );
+    $("#productPriceInput").removeClass("is-valid");
+    $("#productPriceInput").addClass("is-invalid");
+    return false;
+  }
+  if (!validator.isNumeric(input, { no_symbols: false })) {
+    $("#productPriceErrorMsg").text("Product price must contain only number");
+    $("#productPriceInput").removeClass("is-valid");
+    $("#productPriceInput").addClass("is-invalid");
+    return false;
+  }
+  $("#productPriceInput").removeClass("is-invalid");
+  $("#productPriceInput").addClass("is-valid");
+  return input;
+}
+
+function validateProductNameInput() {
+  const input = $("#productNameInput").val().trim();
+  if (validator.isEmpty(input, { ignore_whitespace: true })) {
+    $("#productNameErrorMsg").text("Product name can't be empty");
+    $("#productNameInput").removeClass("is-valid");
+    $("#productNameInput").addClass("is-invalid");
+    return false;
+  }
+  const minChar = 3;
+  const maxChar = 50;
+  if (!validator.isByteLength(input, { min: minChar, max: maxChar })) {
+    $("#productNameErrorMsg").text(
+      `Product name length must be between ${minChar}-${maxChar} characters`
+    );
+    $("#productNameInput").removeClass("is-valid");
+    $("#productNameInput").addClass("is-invalid");
+    return false;
+  }
+  $("#productNameInput").removeClass("is-invalid");
+  $("#productNameInput").addClass("is-valid");
+  return input;
+}
 
 function bindCarousel() {
   $(".add-image-btn")
@@ -29,46 +298,44 @@ function bindCarousel() {
       e.preventDefault();
       removeProductImages(this);
     });
+}
 
-  $("#addProductAccordion").on('show.bs.collapse',async function (e) {
-    $('#product-add-section').addClass('loading');
-    await renderBrandsAndCategories();
-    $('#product-add-section').removeClass('loading');
+async function renderBrandsAndCategories() {
+  const brands = await fetchSelectData("/api/v1/brand");
+  const categories = await fetchSelectData("/api/v1/category");
+
+  const brandOptions = [];
+  const categoryOptions = [];
+  brandOptions.push(`<option value="default" selected>Choose a brand</option>`);
+  categoryOptions.push(
+    `<option value="default" selected>Choose a category</option>`
+  );
+
+  brands.forEach((brand) => {
+    brandOptions.push(`<option value="${brand.value}">${brand.text}</option>`);
   });
+
+  categories.forEach((category) => {
+    categoryOptions.push(
+      `<option value="${category.value}">${category.text}</option>`
+    );
+  });
+
+  $("#brandSelect").html(brandOptions.join("\n"));
+  $("#categorySelect").html(categoryOptions.join("\n"));
 }
 
-async function renderBrandsAndCategories(){
-    const brands =  await fetchSelectData('/api/v1/brand');
-    const categories = await fetchSelectData('/api/v1/category');
-
-    const brandOptions = [];
-    const categoryOptions = [];
-    brandOptions.push(`<option value="default" selected>Choose a brand</option>`);
-    categoryOptions.push(`<option value="default" selected>Choose a category</option>`);
-
-    brands.forEach(brand => {
-      brandOptions.push(`<option value="${brand.value}">${brand.text}</option>`);
-    });
-
-    categories.forEach((category)=>{
-      categoryOptions.push(`<option value="${category.value}">${category.text}</option>`);
-    });
-
-    $('#brandSelect').html(brandOptions.join('\n'));
-    $('#categorySelect').html(categoryOptions.join('\n'));
-}
-
-async function fetchSelectData(url){
-  let res = await  axios({
+async function fetchSelectData(url) {
+  let res = await axios({
     method: "get",
     url: url,
   });
-  return res.data.items.map((item=>{
+  return res.data.items.map((item) => {
     return {
       value: item._id,
-      text: item.name
-    }
-  }));
+      text: item.name,
+    };
+  });
 }
 
 function addProductImages(el) {
@@ -115,7 +382,7 @@ function renderProductsCarousel() {
         <div class="carousel-item active">
             <div class="image-item carousel-holder"></div>
             <div class="carousel-caption">
-                <button data-img-index="0" class="add-image-btn btn btn-primary rounded-circle m-2"><i class="fa-solid fa-plus"></i></button>
+                <a data-img-index="0" class="add-image-btn btn btn-primary rounded-circle m-2"><i class="fa-solid fa-plus"></i></a>
             </div>
         </div> 
     `
@@ -129,8 +396,8 @@ function renderProductsCarousel() {
           <div class="carousel-item ${i == currentCarousel ? "active" : ""}">
               <div class="image-item"><img src="${src}"></div>
               <div class="carousel-caption">
-                  <button data-img-index="${i}" class="rm-image-btn btn btn-danger rounded-circle m-2"><i class="fa-solid fa-trash-can"></i></button>
-                  <button data-img-index="${i}" class="add-image-btn btn btn-primary rounded-circle m-2"><i class="fa-solid fa-plus"></i></button>
+                  <a data-img-index="${i}" class="rm-image-btn btn btn-danger rounded-circle m-2"><i class="fa-solid fa-trash-can"></i></a>
+                  <a data-img-index="${i}" class="add-image-btn btn btn-primary rounded-circle m-2"><i class="fa-solid fa-plus"></i></a>
               </div>
           </div> 
         `;

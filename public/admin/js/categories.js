@@ -68,6 +68,7 @@ function validateBrandNameInput() {
   const input = $("#inputCategoryName").val().trim();
   if (validator.isEmpty(input, { ignore_whitespace: true })) {
     $("#categoryErrorMsg").text("Category name can't be empty");
+    $("#inputCategoryName").removeClass("is-valid");
     $("#inputCategoryName").addClass("is-invalid");
     return false;
   }
@@ -77,6 +78,7 @@ function validateBrandNameInput() {
     $("#categoryErrorMsg").text(
       `Category name length must be between ${minChar}-${maxChar} characters`
     );
+    $("#inputCategoryName").removeClass("is-valid");
     $("#inputCategoryName").addClass("is-invalid");
     return false;
   }
