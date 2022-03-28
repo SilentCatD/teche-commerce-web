@@ -1,8 +1,7 @@
 let pageConfiguration = {
   currentPage: 1,
   totalPage: -1,
-  
-  items: null,
+
   totalItems: -1,
   itemInPage: -1,
 
@@ -13,10 +12,7 @@ let pageConfiguration = {
 };
 
 $(document).ready(async function () {
-  $("#header__shop").addClass("active");
-  await REinit();
-  window.history.pushState(pageConfiguration,`Shop Page 1`,`?page=1`);
-
+await REinit();
 });
 
 async function REinit() {
@@ -25,15 +21,18 @@ async function REinit() {
   await FetchProduct();
 
   // await fetchLatestProduct()
-  
-  await renderCompenent.renderPaginationPage(
-    pageConfiguration);
 
-  $(`#pagination_${pageConfiguration.currentPage}`).css({"color":"blue","border-color":"blue"});
+  await renderCompenent.renderPaginationPage(pageConfiguration);
+
+  $(`#pagination_${pageConfiguration.currentPage}`).css({
+    color: "blue",
+    "border-color": "blue",
+  });
 }
 
 const API_CALL = {
   fetchProduct: async (page, limit) => {
+    
     try {
       let query = `limit=${limit}&page=${page}`;
       let request = {
@@ -44,7 +43,7 @@ const API_CALL = {
       return res;
     } catch (e) {
       console.log(e);
-    }
+    } 
   },
   fetchLatestProduct: async (limit) => {
     try {
@@ -64,18 +63,15 @@ const API_CALL = {
 const renderCompenent = {
   renderPaginationPage: async function (pageConfiguration) {
     if (pageConfiguration.currentPage != 1) {
-      $("#pagination").append(`<a id='move_left_page'>◀</a>`);
-      $("#move_left_page").on("click", function () {
-        window.history.pushState(pageConfiguration,`Shop Page ${pageConfiguration.currentPage}`,`?page=${pageConfiguration.currentPage}`);
-        pageConfiguration.currentPage = pageConfiguration.currentPage - 1;
-        REinit();
-      });
+      renderHTMLElement.renderPaginationLeft();
     }
 
     let lost = 0;
 
     for (
-      let i = pageConfiguration.currentPage - Math.floor(pageConfiguration.pagination_size / 2);
+      let i =
+        pageConfiguration.currentPage -
+        Math.floor(pageConfiguration.pagination_size / 2);
       i < pageConfiguration.currentPage;
       i++
     ) {
@@ -90,7 +86,10 @@ const renderCompenent = {
 
     for (
       let i = pageConfiguration.currentPage + 1;
-      i <= pageConfiguration.currentPage + Math.floor(pageConfiguration.pagination_size / 2) + lost;
+      i <=
+      pageConfiguration.currentPage +
+        Math.floor(pageConfiguration.pagination_size / 2) +
+        lost;
       i++
     ) {
       if (i > pageConfiguration.totalPage) break;
@@ -98,12 +97,7 @@ const renderCompenent = {
     }
 
     if (pageConfiguration.currentPage != pageConfiguration.totalPage) {
-      $("#pagination").append(`<a id='move_right_page'>▶</a>`);
-      $("#move_right_page").on("click", function () {
-        window.history.pushState(pageConfiguration,`Shop Page ${pageConfiguration.currentPage}`,`?page=${pageConfiguration.currentPage}`);
-        pageConfiguration.currentPage = pageConfiguration.currentPage + 1;
-        REinit();
-      });
+      renderHTMLElement.renderPaginationRight();
     }
   },
   renderProductList: async function (products) {
@@ -169,35 +163,38 @@ const renderHTMLElement = {
   renderPagination(page) {
     $("#pagination").append(`<a  id="pagination_${page}">${page}</a>`);
     $(`#pagination_${page}`).on("click", function () {
-     pageConfiguration.currentPage = page;
-     window.history.pushState(pageConfiguration,`Shop Page ${page}`,`?page=${page}`);
-    REinit();
+      pageConfiguration.currentPage = page;
+      REinit();
     });
   },
+  renderPaginationLeft(){
+    $("#pagination").append(`<a id='move_left_page'>◀</a>`);
+    $("#move_left_page").on("click", function () {
+      pageConfiguration.currentPage = pageConfiguration.currentPage - 1;
+      REinit();
+    });
+  }, 
+  renderPaginationRight(){
+    $("#pagination").append(`<a id='move_right_page'>▶</a>`);
+    $("#move_right_page").on("click", function () {
+      pageConfiguration.currentPage = pageConfiguration.currentPage + 1;
+      REinit();
+    });
+  }
 };
 async function FetchProduct() {
   let fetchResult = await API_CALL.fetchProduct(
-    pageConfiguration.currentPage, pageConfiguration.item_per_page
+    pageConfiguration.currentPage,
+    pageConfiguration.item_per_page
   );
   await renderCompenent.renderProductList(fetchResult.data["items"]);
-  
-  pageConfiguration.currentPage = fetchResult.data['current-page'];
-  pageConfiguration.totalPage = fetchResult.data["total-pages"];
-  pageConfiguration.totalItems = fetchResult.data['total-items'];
 
+  pageConfiguration.currentPage = fetchResult.data["current-page"];
+  pageConfiguration.totalPage = fetchResult.data["total-pages"];
+  pageConfiguration.totalItems = fetchResult.data["total-items"];
 }
 
 function clearPage() {
   $("#pagination").empty();
   $("#product-list").empty();
-}
-
-
-window.onpopstate = function(event) {
-  console.log("fuck");
-  if(event.state){
-    pageConfiguration = event.state;
-    document.title = event.title;
-    REinit();
-}
 }

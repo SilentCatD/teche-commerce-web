@@ -1,10 +1,5 @@
 
-import {hello} from './test-module.mjs';
-
-let a = hello();
-
 $(document).ready(async function () {
-    console.log(a);
     await REinit();
   });
   
@@ -13,7 +8,7 @@ $(document).ready(async function () {
     
     const productId = searchParams.get('id');
     const fetchResult = await detailController.fetchProduct(productId);
-
+    console.log(fetchResult)
     await detailController.renderProduct(fetchResult.data);
     console.log(fetchResult);
   }
@@ -46,8 +41,9 @@ const renderHTML = {
         for(let i = 0 ; i < product.rates.length; i++) {
             numberOfReview += product.rates[i];
         }
-        $(".product__details__review").text(`(${numberOfReview} reviews)`);
-        $(".product__details__price").text(product.price);
+        console.log(numberOfReview);
+        $(".product__details__review").text(`(${numberOfReview} rasdasdadseviews)`);
+        $(".product__details__price").text(`$${product.price}`);
         $(".product__details__desc").text(product.details);
         if(product.inStock <= 0 ) {
             $(".product__details__avail").text("In Stock");
