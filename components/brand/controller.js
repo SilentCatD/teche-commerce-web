@@ -110,7 +110,6 @@ const BrandController = {
       const { id } = req.params;
       let brandImages = undefined;
       if (req.files.length > 0) {
-        console.log(req.files);
         brandImages = req.files;
       }
       await BrandService.editBrand(id, brandName, brandImages);

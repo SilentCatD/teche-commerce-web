@@ -336,7 +336,7 @@ async function fetchSelectData(url) {
   });
   return res.data.items.map((item) => {
     return {
-      value: item._id,
+      value: item.id,
       text: item.name,
     };
   });
@@ -456,7 +456,6 @@ renderTableHead = () => {
 };
 
 renderTableRow = (item) => {
-  console.log(item);
   return `<tr>
     <td class="align-middle">${item.id}</td>
     <td class="align-middle">${item.name}</td>

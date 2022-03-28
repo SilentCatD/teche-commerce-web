@@ -27,9 +27,6 @@ const CategotyService = {
 
     returnData: (category)=>{
         if(!category) return null;
-        category.id = category._id;
-        delete category._id;
-        console.log(category);
         return {
             id: category._id,
             name: category.name,
