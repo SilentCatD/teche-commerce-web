@@ -19,10 +19,15 @@ function renderPagination() {
     pages.push(`<li class="page-item"><a class="page-link">Previous</a></li>`);
   }
   let generated = 0;
-  let curr = page - Math.floor(displayPage/2) ;
+  let startAt = page - Math.floor(displayPage/2);
+  let curr = startAt;
   while (generated < displayPage) {
     if (curr > totalPage) {
-      break;
+      pages.splice(1, 0,
+        `<li class="page-item"><a class="page-link">${--startAt}</a></li>`
+      );
+      generated++;
+      continue;
     }
     if (curr > 0) {
       if (curr == page) {
