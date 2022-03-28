@@ -54,6 +54,7 @@ const BrandController = {
         const { limit, page, sortParams, range } = req.params;
         const result = await CommomDatabaseServies.queryAllWithModel(
           Brand,
+          BrandService,
           limit,
           page,
           sortParams,
@@ -66,6 +67,8 @@ const BrandController = {
       }
     },
   ],
+
+
   fetchBrand: async (req, res) => {
     try {
       const { id } = req.params;

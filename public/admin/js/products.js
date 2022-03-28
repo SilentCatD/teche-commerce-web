@@ -443,10 +443,12 @@ initialPage = () => {
 renderTableHead = () => {
   return `<tr>
     <th scope="col">ID</th>
+    <th scope="col">Product Name</th>
+    <th scope="col">Image</th>
+    <th scope="col">Price</th>
+    <th scope="col">Status</th>
     <th scope="col">Brand Name</th>
-    <th scope="col">Brand Image</th>
-    <th scope="col">Number of products</th>
-    <th scope="col">Ranking Points</th>
+    <th scope="col">Category Name </th>
     <th scope="col">Created At</th>
     <th scope="col">&nbsp;</th>
     </tr>
@@ -456,15 +458,17 @@ renderTableHead = () => {
 renderTableRow = (item) => {
   console.log(item);
   return `<tr>
-    <td class="align-middle">${item._id}</td>
+    <td class="align-middle">${item.id}</td>
     <td class="align-middle">${item.name}</td>
     <td class="align-middle">${
       item.images.length > 0
-        ? `<img src=${item.images[0].firebaseUrl} style="max-width:100px;max-height:100px; object-fit: contain;">`
+        ? `<img src=${item.images[0]} style="max-width:100px;max-height:100px; object-fit: contain;">`
         : "Not avalable"
     }</td>
-    <td class="align-middle">${item.productsHold}</td>
-    <td class="align-middle">${item.rankingPoints}</td>
+    <td class="align-middle">${item.price}</td>
+    <td class="align-middle">${item.status}</td>
+    <td class="align-middle">${item.brand? item.brand.name: 'not available'}</td>
+    <td class="align-middle">${item.category? item.category.name: 'not available'}</td>
     <td class="align-middle">${item.createdAt}</td>
     <td class="align-middle">
     <div class="dropdown position-static">

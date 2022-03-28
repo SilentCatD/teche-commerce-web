@@ -19,16 +19,28 @@ const CategotyService = {
         if(category === null) {
             throw new Error(`Category ${id} is not existed`);
         }
-        return {
-            id: category.id,
-            name: category.name,
-            productsHold: category.productsHold,
-            rankingPoints: category.rankingPoints
-        };
+        return CategotyService.returnData(category);
     }catch (e) {
         throw e;
     }
     },
+
+    returnData: (category)=>{
+        if(!category) return null;
+        category.id = category._id;
+        delete category._id;
+        return category;
+    },
+
+    modelQueryAll: async(range, limit, page, sortParams)=>{
+        const brands = await Category
+        .find(range)
+        .skip(limit * page - limit)
+        .limit(limit)
+        .sort(sortParams);
+        return brands.map((brand)=>{return CategotyService.returnData(brand)});
+    },
+    
 
     deleteCategory: async (id) =>{
         CommomDatabaseServies.deleteDocument(Category,id,false);

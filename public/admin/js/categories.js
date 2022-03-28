@@ -130,7 +130,7 @@ renderTableHead = () =>{
 
 renderTableRow = (item)=>{
   return `<tr>
-  <td class="align-middle">${item._id}</td>
+  <td class="align-middle">${item.id}</td>
   <td class="align-middle">${item.name}</td>
   <td class="align-middle">${item.productsHold}</td>
   <td class="align-middle">${item.rankingPoints}</td>

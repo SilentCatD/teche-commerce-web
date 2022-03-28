@@ -43,77 +43,25 @@ const ProductService = {
         return CommomDatabaseServies.createDocument(Product,productDocObj);
     },
 
-    // this can be update multi params sort but i am lazy
-    fetchAllProduct: async (limit, sort, type) => {
-        let sortedParams = {};
-        if (type != 1 && type != -1) {
-            type = -1;
-        }
-        if (sort) {
-            sortedParams[sort] = type;
-        }
-        limit = isInt(limit) ? limit : null;
-        const results = await Product.find().limit(limit).sort(sortedParams);
-        return await Promise.all(results.map(async (product) => {
-            let imageUrls = [];
-            for (let i = 0; i < product.images.length; i++) {
-                imageUrls.push(product.images[i].firebaseUrl);
-            }
-            let status = 'sold-out';
-            if (product.inStock > 0) {
-                status = 'in-stock';
-            }
-            let brand = null;
-            try {
-                brand = await BrandService.fetchBrand(product.brand);
-            } catch (e) {
-                console.log(e);
-            }
-            let category = null;
-            try {
-                category = await CategotyService.fetchCategory(product.category);
-            }
-            catch (e) {
-                console.log(e);
-            }
-            let rateSum = 0;
-            product.rates.forEach((element) => {
-                rateSum += element;
-            });
-
-            return {
-                id: product.id,
-                name: product.name,
-                price: product.price,
-                rateAverage: product.rateAverage,
-                rateCount: rateSum,
-                rates: product.rates,
-                images: imageUrls,
-                details: product.details,
-                status: status,
-                brand: brand,
-                category: category,
-                buyCount: product.buyCount,
-                viewCount: product.viewCount
-            };
-        }));
-    },
 
     // Mising edit product,category holds
     deleteAllProduct: async () => {
         CommomDatabaseServies.deleteCollection(Product,true);
     },
 
+    modelQueryAll: async(range, limit, page, sortParams)=>{
+        const products = await Product
+        .find(range)
+        .populate("brand")
+        .populate("category")
+        .skip(limit * page - limit)
+        .limit(limit)
+        .sort(sortParams);
+        return products.map((product)=>{return ProductService.returnData(product)});
+    },
 
-    fetchProduct: async (id) => {
-        try {
-        const product = await Product.findById(mongoose.mongo.ObjectId(id))
-                                .populate({
-                                    path:"brand",
-                                    model:"Brand"}
-                                  )
-                                .populate('category');
-        if(product === null) throw new Error(`Product ${id} is not found`);
+    returnData: (product)=>{
+        if(!product) return null;
         let imageUrls = [];
         for (let i = 0; i < product.images.length; i++) {
             imageUrls.push(product.images[i].firebaseUrl);
@@ -126,6 +74,7 @@ const ProductService = {
         product.rates.forEach((element) => {
             rateSum += element;
         });
+        
         return {
             id: product.id,
             name: product.name,
@@ -136,11 +85,22 @@ const ProductService = {
             images: imageUrls,
             details: product.details,
             status: status,
-            brand: product.brand,
-            category: product.category,
+            brand: BrandService.returnData(product.brand),
+            category: CategotyService.returnData(product.category),
             buyCount: product.buyCount,
-            viewCount: product.viewCount
+            viewCount: product.viewCount,
+            createdAt: product.createdAt,
+            updatedAt: product.updatedAt
         };
+    },
+
+    fetchProduct: async (id) => {
+        try {
+        const product = await Product.findById(mongoose.mongo.ObjectId(id))
+                                .populate("brand")
+                                .populate('category');
+        if(product === null) throw new Error(`Product ${id} is not found`);
+       return ProductService.returnData(product);
     } catch (e) {
         throw e;
     }

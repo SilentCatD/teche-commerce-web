@@ -174,9 +174,9 @@ renderTableHead = () =>{
 
 renderTableRow = (item)=>{
   return `<tr>
-  <td class="align-middle">${item._id}</td>
+  <td class="align-middle">${item.id}</td>
   <td class="align-middle">${item.name}</td>
-  <td class="align-middle">${item.images.length > 0 ? `<img src=${item.images[0].firebaseUrl} style="max-width:100px;max-height:100px; object-fit: contain;">` : 'Not avalable'}</td>
+  <td class="align-middle">${item.image  ? `<img src=${item.image} style="max-width:100px;max-height:100px; object-fit: contain;">` : 'Not avalable'}</td>
   <td class="align-middle">${item.productsHold}</td>
   <td class="align-middle">${item.rankingPoints}</td>
   <td class="align-middle">${item.createdAt}</td>

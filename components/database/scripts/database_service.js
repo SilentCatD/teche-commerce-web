@@ -29,9 +29,7 @@ class Database {
 
     async upLoadImg(file) {
         // file<File>: image file to upload
-        // return firebase path and file download url
-        console.log(file);
-        
+        // return firebase path and file download url        
         const fileExt = file.originalname.split('.').pop();
         const firebasePath = `/images/${uuidv4()+'.'+fileExt}`;
         const data = file.buffer;

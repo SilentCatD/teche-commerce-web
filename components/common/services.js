@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import ImageService from "../image/service.js"
+import ImageService from "../image/service.js";
 
 const CommomDatabaseServies = {
   createDocument: async (model, object) => {
@@ -101,20 +101,16 @@ const CommomDatabaseServies = {
     }
     await model.deleteMany();
   },
-  queryAllWithModel: async (model, limit, page, sortParams, range) => {
+  queryAllWithModel: async (model, modelService, limit, page, sortParams, range) => {
     const totalCount = await model.countDocuments(range);
     let totalPages = Math.ceil(totalCount / limit);
-    if(totalPages==0){
-      totalPages=1;
+    if (totalPages == 0) {
+      totalPages = 1;
     }
-    if(page && page> totalPages){
+    if (page && page > totalPages) {
       page = totalPages;
     }
-    const items = await model
-      .find(range)
-      .skip(limit * page - limit)
-      .limit(limit)
-      .sort(sortParams);
+    const items = await modelService.modelQueryAll(range, limit, page, sortParams);
     const result = {
       ...(limit && { "total-pages": totalPages }),
       ...(limit && { "current-page": page ? page : 1 }),

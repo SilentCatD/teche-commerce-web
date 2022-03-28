@@ -1,17 +1,20 @@
 import CategotyService from "./service.js";
 import { body, validationResult } from "express-validator";
 import CommonMiddleWares from "../common/middleware.js";
-import CommomDatabaseServies from "../common/services.js"
-import Category from './model.js'
+import CommomDatabaseServies from "../common/services.js";
+import Category from "./model.js";
 
 const CategoryController = {
   createCategory: [
     body("categoryName")
       .exists()
       .bail()
-      .not().isEmpty({ ignore_whitespace: true }).withMessage('field can\'t be emtpy')
+      .not()
+      .isEmpty({ ignore_whitespace: true })
+      .withMessage("field can't be emtpy")
       .bail()
-      .isByteLength({ min: 3, max: 50 }).withMessage("character of field must be in range 3-50")
+      .isByteLength({ min: 3, max: 50 })
+      .withMessage("character of field must be in range 3-50")
       .trim(),
     async (req, res) => {
       try {
@@ -35,13 +38,20 @@ const CategoryController = {
     async (req, res) => {
       try {
         const { limit, page, sortParams, range } = req.params;
-        const result = await CommomDatabaseServies.queryAllWithModel(Category, limit, page, sortParams, range);
+        const result = await CommomDatabaseServies.queryAllWithModel(
+          Category,
+          CategotyService,
+          limit,
+          page,
+          sortParams,
+          range
+        );
         res.status(200).json(result);
       } catch (e) {
         console.log(e);
         res.status(404).end("Not Found");
       }
-    }
+    },
   ],
   fetchCategory: async (req, res) => {
     try {
