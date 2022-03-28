@@ -13,11 +13,7 @@ app.use(express.json());
 
 
 app.use(express.static( __dirname  + '/public',  {index: false}));
-
 app.use(router);
-app.get("/",(req, res, next) =>{
-  res.redirect("/user");
-})
 
 app.listen(process.env.PORT || 3000, async ()=> {
   await database.instance.connect();
