@@ -133,8 +133,8 @@ const ProductService = {
             images: imageUrls,
             details: product.details,
             status: status,
-            brand: brand,
-            category: category,
+            brand: product.brand,
+            category: product.category,
             buyCount: product.buyCount,
             viewCount: product.viewCount
         };
