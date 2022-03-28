@@ -13,7 +13,6 @@ const ImageService = {
     },
     deleteImage: async(imgPath)=>{
         await database.instance.deleteImg(imgPath);
-        console.log("Delete fucking image"); // this is easter eggs
     },
 };
 

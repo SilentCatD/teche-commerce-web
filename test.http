@@ -16,6 +16,16 @@ DELETE   http://localhost:3000/api/v1/brand/
 
 
 ###
+DELETE   http://localhost:3000/api/v1/category/
+
+
+
+###
+DELETE   http://localhost:3000/api/v1/product/
+
+
+
+###
 GET  http://localhost:3000/test-api/get-cat
 
 
