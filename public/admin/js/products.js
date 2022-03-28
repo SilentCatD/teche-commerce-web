@@ -424,7 +424,7 @@ function renderProductsCarousel() {
 getItemsMethods = async (limit, page) => {
   return axios({
     method: "get",
-    url: `/api/v1/brand?limit=${limit}&page=${page}`,
+    url: `/api/v1/product?limit=${limit}&page=${page}`,
   });
 };
 
@@ -454,6 +454,7 @@ renderTableHead = () => {
 };
 
 renderTableRow = (item) => {
+  console.log(item);
   return `<tr>
     <td class="align-middle">${item._id}</td>
     <td class="align-middle">${item.name}</td>
