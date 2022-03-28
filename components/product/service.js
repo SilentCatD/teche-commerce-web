@@ -5,6 +5,7 @@ import ImageService from "../image/service.js";
 import Product from "./model.js";
 import mongoose from "mongoose";
 import CommomDatabaseServies from "../common/services.js";
+import Brand from "../brand/model.js";
 
 const ProductService = {
     createProduct: async (name, price, brandId, categoryId, details, imageFiles) => {
@@ -107,7 +108,10 @@ const ProductService = {
     fetchProduct: async (id) => {
         try {
         const product = await Product.findById(mongoose.mongo.ObjectId(id))
-                                .populate('brand')
+                                .populate({
+                                    path:"brand",
+                                    model:"Brand"}
+                                  )
                                 .populate('category');
         if(product === null) throw new Error(`Product ${id} is not found`);
         let imageUrls = [];
@@ -122,7 +126,6 @@ const ProductService = {
         product.rates.forEach((element) => {
             rateSum += element;
         });
-
         return {
             id: product.id,
             name: product.name,
