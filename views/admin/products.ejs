@@ -105,22 +105,22 @@
                                         <div class="container">
                                             <input id="file-input" type="file" name="name" style="display: none;" accept="image/png,image/jpeg">
                                             <div id="productImagesCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel"data-bs-interval="false">
-                                                <div class="carousel-indicators">
-                                                    <button type="button" data-bs-target="#productImagesCarousel" data-bs-slide-to="0" class="active"></button>
+                                                <div class="carousel-indicators d-none">
+                                                    <!-- <button type="button" data-bs-target="#productImagesCarousel" data-bs-slide-to="0" class="active"></button> -->
                                                 </div>
                                                 <div class="carousel-inner">
                                                     <div class="carousel-item active">
-                                                        <div class="image-item"></div>
+                                                        <div class="image-item carousel-holder"></div>
                                                         <div class="carousel-caption">
-                                                            <button class="add-image-btn btn btn-primary rounded-circle m-2"><i class="fa-solid fa-plus"></i></button>
+                                                            <button data-img-index="0" class="add-image-btn btn btn-primary rounded-circle m-2"><i class="fa-solid fa-plus"></i></button>
                                                         </div>
-                                                    </div>
+                                                    </div>   
                                                 </div>
-                                                <button class="carousel-control-prev" type="button" data-bs-target="#productImagesCarousel" data-bs-slide="prev">
+                                                <button class="carousel-control-prev d-none" type="button" data-bs-target="#productImagesCarousel" data-bs-slide="prev">
                                                   <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                                   <span class="visually-hidden">Previous</span>
                                                 </button>
-                                                <button class="carousel-control-next" type="button" data-bs-target="#productImagesCarousel" data-bs-slide="next">
+                                                <button class="carousel-control-next d-none" type="button" data-bs-target="#productImagesCarousel" data-bs-slide="next">
                                                   <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                                   <span class="visually-hidden">Next</span>
                                                 </button>

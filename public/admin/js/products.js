@@ -1,10 +1,9 @@
 let productsImages = [];
-
+let currentCarousel;
 $(document).ready(function () {
   $(".owl-carousel").owlCarousel();
   $("#file-input").change(function (e) {
     e.preventDefault();
-    console.log('changed');
     const result = validateProductsImg();
     if (result) {
       renderProductsCarousel();
@@ -14,43 +13,97 @@ $(document).ready(function () {
 });
 
 function bindCarousel() {
-  $(".add-image-btn").click(function (e) {
-    e.preventDefault();
-    $("#file-input").trigger("click");
-  });
+  $(".add-image-btn")
+    .unbind("click")
+    .click(function (e) {
+      e.preventDefault();
+      addProductImages(this);
+    });
+  $(".rm-image-btn")
+    .unbind("click")
+    .click(function (e) {
+      e.preventDefault();
+      removeProductImages(this);
+    });
+}
+
+function addProductImages(el) {
+console.log(el);
+  const index = $(el).data("img-index");
+  console.log(index);
+  currentCarousel = index;
+  $("#file-input").trigger("click");
+}
+
+function removeProductImages(el) {
+  const index = $(el).data("img-index");
+  currentCarousel = index-1;
+  if(currentCarousel<=0) currentCarousel = 0;
+  productsImages.splice(index, 1);
+  renderProductsCarousel();
 }
 
 function validateProductsImg() {
   const file = $("#file-input").prop("files")[0];
+  $("#file-input").val("");
   if (!file) return false;
   const mineType = file.type;
   const accept_types = ["image/jpeg", "image/png"];
   if (!accept_types.includes(mineType)) {
     return false;
   }
-  productsImages.push(file);
+  productsImages.splice(currentCarousel+1, 0, file);
   return true;
 }
 
 function renderProductsCarousel() {
-console.log(productsImages.length);
-  if (productsImages.length == 0) {
+  if (productsImages.length == 0 || productsImages.length == 1) {
+    $("#productImagesCarousel .carousel-indicators").addClass("d-none");
+    $("#productImagesCarousel .carousel-control-prev").addClass("d-none");
+    $("#productImagesCarousel .carousel-control-next").addClass("d-none");
   } else {
+    $("#productImagesCarousel .carousel-indicators").removeClass("d-none");
+    $("#productImagesCarousel .carousel-control-prev").removeClass("d-none");
+    $("#productImagesCarousel .carousel-control-next").removeClass("d-none");
+  }
+  if (productsImages.length == 0) {
+    $("#productImagesCarousel .carousel-indicators").html('');
+    $("#productImagesCarousel .carousel-inner").html(
+      `
+        <div class="carousel-item active">
+            <div class="image-item carousel-holder"></div>
+            <div class="carousel-caption">
+                <button data-img-index="0" class="add-image-btn btn btn-primary rounded-circle m-2"><i class="fa-solid fa-plus"></i></button>
+            </div>
+        </div> 
+    `
+    );
+  } else {
+    const carouselItems = [];
+    const carouselIndicators = [];
     for (let i = 0; i < productsImages.length; i++) {
       const src = URL.createObjectURL(productsImages[i]);
-      $("#productImagesCarousel .carousel-indicators").append(
-        `<button type="button" data-bs-target="#productImagesCarousel" data-bs-slide-to="${i+1}"></button>`
-      );
-      $("#productImagesCarousel .carousel-inner").append(`
-        <div class="carousel-item">
-            <div class="image-item"><img src="${src}"></div>
-            <div class="carousel-caption">
-                <button class="add-image-btn btn btn-danger rounded-circle m-2"><i class="fa-solid fa-trash-can"></i></button>
-                <button class="add-image-btn btn btn-primary rounded-circle m-2"><i class="fa-solid fa-plus"></i></button>
-            </div>
-        </div>
-        `);
+      const carouselItem = `
+          <div class="carousel-item ${i == currentCarousel ? "active" : ""}">
+              <div class="image-item"><img src="${src}"></div>
+              <div class="carousel-caption">
+                  <button data-img-index="${i}" class="rm-image-btn btn btn-danger rounded-circle m-2"><i class="fa-solid fa-trash-can"></i></button>
+                  <button data-img-index="${i}" class="add-image-btn btn btn-primary rounded-circle m-2"><i class="fa-solid fa-plus"></i></button>
+              </div>
+          </div> 
+        `;
+      const indicator = `
+        <button type="button" data-bs-target="#productImagesCarousel" data-bs-slide-to="${i}" ${
+        i == currentCarousel ? 'class="active"' : ""
+      }"></button>
+        `;
+      carouselItems.push(carouselItem);
+      carouselIndicators.push(indicator);
     }
+    $("#productImagesCarousel .carousel-inner").html(carouselItems.join("\n"));
+    $("#productImagesCarousel .carousel-indicators").html(
+      carouselIndicators.join("\n")
+    );
   }
   bindCarousel();
 }
