@@ -22,8 +22,9 @@ webPageRouter.get('/contact', async (req, res)=>{
 });
 
 webPageRouter.get('/details/:id', async (req, res)=>{
+    const {id} = req.params;
+    console.log(id);
     const params = {title: "eTech Contact"};
-    res.render('user/shop-details',params);
 });
 
 
