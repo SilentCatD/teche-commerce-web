@@ -1,37 +1,39 @@
-const item_per_page = 6;
-const total_slider_item = 9;
-const item_per_slider = 3;
-const pagination_size = 3;
+let pageConfiguration = {
+  currentPage: 1,
+  totalPage: -1,
+  
+  items: null,
+  totalItems: -1,
+  itemInPage: -1,
 
-let currentPage = 1;
-let totalPages;
+  item_per_page: 6,
+  total_slider_item: 9,
+  item_per_slider: 3,
+  pagination_size: 3,
+};
 
 $(document).ready(async function () {
+  $("#header__shop").addClass("active");
   await REinit();
+  window.history.pushState(pageConfiguration,`Shop Page 1`,`?page=1`);
+
 });
 
 async function REinit() {
-    $('#pagination').empty();
-    $('#product-list').empty();
+  clearPage();
 
+  await FetchProduct();
 
-  let fetchResult = await shopController.fetchProduct(
-    currentPage,
-    item_per_page
-  );
-  console.log(fetchResult.data["total-items"]);
-  await shopController.renderProductList(fetchResult.data["items"],fetchResult.data["total-items"]);
-  // let fetchLatestProduct = await shopController.fetchLatestProduct(total_slider_item);
-  // await shopController.renderProductSlider(fetchLatestProduct.data['items'])
+  // await fetchLatestProduct()
+  
+  await renderCompenent.renderPaginationPage(
+    pageConfiguration);
 
-  await shopController.renderPaginationPage(
-    currentPage,
-    fetchResult.data["total-pages"]
-  );
+  $(`#pagination_${pageConfiguration.currentPage}`).css({"color":"blue","border-color":"blue"});
 }
 
-const shopController = {
-  fetchProduct: async function (page, limit) {
+const API_CALL = {
+  fetchProduct: async (page, limit) => {
     try {
       let query = `limit=${limit}&page=${page}`;
       let request = {
@@ -44,7 +46,7 @@ const shopController = {
       console.log(e);
     }
   },
-  fetchLatestProduct: async function (limit) {
+  fetchLatestProduct: async (limit) => {
     try {
       let query = `limit=${limit}&sort=createAt`;
       let request = {
@@ -57,14 +59,26 @@ const shopController = {
       console.log(e);
     }
   },
-  renderPaginationPage: async function (currentPage, lastPage) {
-    if (currentPage != 1) {
-      $("#pagination").append(`<a href="#">◀</a>`);
+};
+
+const renderCompenent = {
+  renderPaginationPage: async function (pageConfiguration) {
+    if (pageConfiguration.currentPage != 1) {
+      $("#pagination").append(`<a id='move_left_page'>◀</a>`);
+      $("#move_left_page").on("click", function () {
+        window.history.pushState(pageConfiguration,`Shop Page ${pageConfiguration.currentPage}`,`?page=${pageConfiguration.currentPage}`);
+        pageConfiguration.currentPage = pageConfiguration.currentPage - 1;
+        REinit();
+      });
     }
 
     let lost = 0;
 
-    for (let i = currentPage - Math.floor(pagination_size / 2); i < currentPage; i++) {
+    for (
+      let i = pageConfiguration.currentPage - Math.floor(pageConfiguration.pagination_size / 2);
+      i < pageConfiguration.currentPage;
+      i++
+    ) {
       if (i < 1) {
         lost++;
         continue;
@@ -72,28 +86,31 @@ const shopController = {
       renderHTMLElement.renderPagination(i);
     }
 
-    renderHTMLElement.renderPagination(currentPage);
+    renderHTMLElement.renderPagination(pageConfiguration.currentPage);
 
-    for (let i = currentPage + 1; i <= currentPage + Math.floor(currentPage / 2) +lost; i++) {
-      if (i > lastPage) break;
+    for (
+      let i = pageConfiguration.currentPage + 1;
+      i <= pageConfiguration.currentPage + Math.floor(pageConfiguration.pagination_size / 2) + lost;
+      i++
+    ) {
+      if (i > pageConfiguration.totalPage) break;
       renderHTMLElement.renderPagination(i);
     }
 
-    if (currentPage != lastPage) {
-      $("#pagination").append(`<a href="#">▶</a>`);
+    if (pageConfiguration.currentPage != pageConfiguration.totalPage) {
+      $("#pagination").append(`<a id='move_right_page'>▶</a>`);
+      $("#move_right_page").on("click", function () {
+        window.history.pushState(pageConfiguration,`Shop Page ${pageConfiguration.currentPage}`,`?page=${pageConfiguration.currentPage}`);
+        pageConfiguration.currentPage = pageConfiguration.currentPage + 1;
+        REinit();
+      });
     }
   },
-  renderProductList: async function (products,totalItem) {
+  renderProductList: async function (products) {
     products.forEach((product) => {
-      $("#product-list").append(
-        `<div class="col-lg-4 col-md-6 col-sm-6">
-                ${renderHTMLElement.renderProductItem(product)}
-                </div> 
-                `
-      )
+      renderHTMLElement.renderProductItem(product);
     });
-    $('#total-items-found').text(`${totalItem}`)
-
+    $("#total-items-found").text(`${products.length}`);
   },
   renderProductSlider: async function (products) {
     let loop = products.length / item_per_slider;
@@ -118,21 +135,25 @@ const shopController = {
 
 const renderHTMLElement = {
   renderProductItem: (product) => {
-    return `<div class="product__item">
-        <div class="product__item__pic set-bg" data-setbg=${product.images[0].firebaseUrl}
-        style="background-image: url(${product.images[0].firebaseUrl});"
-            >
-            <ul class="product__item__pic__hover">
-                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-            </ul>
-        </div>
-        <div class="product__item__text">
-            <h6><a href="detail?id=${product._id}">${product.name}</a></h6>
-            <h5>$${product.price}</h5>
-        </div>
-    </div>`;
+    $("#product-list").append(
+      `<div class="col-lg-4 col-md-6 col-sm-6">
+      <div class="product__item">
+      <div class="product__item__pic set-bg" data-setbg=${product.images[0].firebaseUrl}
+      style="background-image: url(${product.images[0].firebaseUrl});"
+          >
+          <ul class="product__item__pic__hover">
+              <li><a href="#"><i class="fa fa-heart"></i></a></li>
+              <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+              <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+          </ul>
+      </div>
+      <div class="product__item__text">
+          <h6><a href="detail?id=${product._id}">${product.name}</a></h6>
+          <h5>$${product.price}</h5>
+      </div>
+  </div>
+</div> `
+    );
   },
   renderSliderItem(product) {
     return `<a href="#" class="latest-product__item">
@@ -146,11 +167,37 @@ const renderHTMLElement = {
     </a>`;
   },
   renderPagination(page) {
-    $("#pagination").append(`<a href="#" id="pagination_${page}">${page}</a>`);
-    $(`#pagination_${page}`).on("click",function() {
-        currentPage = page;
-        console.log(page);
-        REinit();
-    })
+    $("#pagination").append(`<a  id="pagination_${page}">${page}</a>`);
+    $(`#pagination_${page}`).on("click", function () {
+     pageConfiguration.currentPage = page;
+     window.history.pushState(pageConfiguration,`Shop Page ${page}`,`?page=${page}`);
+    REinit();
+    });
   },
 };
+async function FetchProduct() {
+  let fetchResult = await API_CALL.fetchProduct(
+    pageConfiguration.currentPage, pageConfiguration.item_per_page
+  );
+  await renderCompenent.renderProductList(fetchResult.data["items"]);
+  
+  pageConfiguration.currentPage = fetchResult.data['current-page'];
+  pageConfiguration.totalPage = fetchResult.data["total-pages"];
+  pageConfiguration.totalItems = fetchResult.data['total-items'];
+
+}
+
+function clearPage() {
+  $("#pagination").empty();
+  $("#product-list").empty();
+}
+
+
+window.onpopstate = function(event) {
+  console.log("fuck");
+  if(event.state){
+    pageConfiguration = event.state;
+    document.title = event.title;
+    REinit();
+}
+}

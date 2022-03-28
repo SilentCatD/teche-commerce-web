@@ -1,5 +1,10 @@
 
+import {hello} from './test-module.mjs';
+
+let a = hello();
+
 $(document).ready(async function () {
+    console.log(a);
     await REinit();
   });
   

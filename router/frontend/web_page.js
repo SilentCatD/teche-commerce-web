@@ -1,5 +1,6 @@
 import express from "express";
 import __dirname from "../../dirname.js";
+import ProductService from "../../components/product/service.js"
 
 const webPageRouter = new express.Router();
 
@@ -15,6 +16,8 @@ webPageRouter.get('/index', async (req, res)=>{
 
 
 webPageRouter.get('/shop', async (req, res)=>{
+    // const result = ProductService.fetchAllProduct(9,-1,'createAt');
+    // console.log(result);
     const params = {title: "eTech Shop"};
     res.render('user/shop-grid',params);
 });

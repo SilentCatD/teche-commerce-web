@@ -1,24 +1,27 @@
 
 // product test
-DELETE  http://localhost:3000/api/v1/product/
+GET  http://localhost:3000/api/v1/product/
 
 
 // Brand test
 ###
-DELETE  http://localhost:3000/api/v1/brand/
+GET  http://localhost:3000/api/v1/brand/
 
 ###
 
-DELETE  http://localhost:3000/api/v1/category/
-
-###
-
-GET http://localhost:3000/api/v1/category?hi=1
+GET http://localhost:3000/api/v1/category?page=2&limit=4
 
 ###
 DELETE   http://localhost:3000/api/v1/brand/
 
 
 ###
-GET  http://localhost:3000/test-api/get-cat?page=5&limit=2
+GET  http://localhost:3000/test-api/get-cat
 
+
+
+###
+GET  http://localhost:3000/test-api/gen-brand
+
+###
+GET  http://localhost:3000/test-api/gen-product
