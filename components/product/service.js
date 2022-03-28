@@ -20,13 +20,13 @@ const ProductService = {
             category: categoryId, details: details, images: images,
             rates: [0, 0, 0, 0, 0],
         };
-        return CommomDatabaseServies.createDocument(Product,productDocObj);
+        return await CommomDatabaseServies.createDocument(Product,productDocObj);
     },
 
 
     // Mising edit product,category holds
     deleteAllProduct: async () => {
-        CommomDatabaseServies.deleteCollection(Product,true);
+        await CommomDatabaseServies.deleteCollection(Product,true);
     },
 
     modelQueryAll: async(range, limit, page, sortParams)=>{
@@ -87,7 +87,7 @@ const ProductService = {
     },
 
     deleteProduct: async (id) => {
-        CommomDatabaseServies.deleteDocument(Product,id,true);
+        await CommomDatabaseServies.deleteDocument(Product,id,true);
     },
 
     rateProduct: async (id, rate) => {

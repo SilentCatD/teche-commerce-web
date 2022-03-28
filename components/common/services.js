@@ -77,14 +77,15 @@ const CommomDatabaseServies = {
     try {
       const doc = await model.findById(mongoose.Types.ObjectId(id));
       if (doc === null)
-        throw new Error(`${model.collection.collectionName} ${id} found`);
+        throw new Error(`${model.collection.collectionName} ${id} not found`);
       if (haveImages) {
-        for (let i = 0; i < doc.images.length; i++) {
-          await ImageService.deleteImage(doc.images[i].firebasePath);
-        }
+        await Promise.all(doc.images.map( async (image)=>{
+          await ImageService.deleteImage(image.firebasePath);
+        }));
       }
       await model.deleteOne({ _id: doc.id });
     } catch (e) {
+      console.log(e);
       throw e;
     }
   },

@@ -13,11 +13,11 @@ const BrandService = {
       brandImg.push(imgId);
     }
     let brandDocObject = { name: name, images: brandImg };
-    return CommomDatabaseServies.createDocument(Brand, brandDocObject);
+    return await CommomDatabaseServies.createDocument(Brand, brandDocObject);
   },
 
   deleteAllBrand: async () => {
-    CommomDatabaseServies.deleteCollection(Brand, true);
+    await CommomDatabaseServies.deleteCollection(Brand, true);
   },
   returnData: (brand) => {
     if(!brand) return null;
@@ -57,16 +57,16 @@ const BrandService = {
   },
 
   deleteBrand: async (id) => {
-    CommomDatabaseServies.deleteDocument(Brand, id, true);
+    await CommomDatabaseServies.deleteDocument(Brand, id, true);
   },
 
   editProductHolds: async (id, op) => {
     // editProductHolds(id, '+') => plus 1
-    CommomDatabaseServies.editProductHolds(Brand, id, op);
+    await CommomDatabaseServies.editProductHolds(Brand, id, op);
   },
   editrankingPoints: async (id, op) => {
     // editrankingPoints(id, '+') => plus 1
-    CommomDatabaseServies.editRankingPoints(Brand, id, op);
+    await CommomDatabaseServies.editRankingPoints(Brand, id, op);
   },
 
   editBrand: async (id, name, image) => {
