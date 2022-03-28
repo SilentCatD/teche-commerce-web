@@ -55,7 +55,12 @@ class Database {
   async deleteImg(firebasePath) {
     // firebasePath<String>: path to file in firebase
     const fileRef = ref(this.#storage, firebasePath);
-    await deleteObject(fileRef);
+    try{
+        await deleteObject(fileRef);
+    }
+    catch(e){
+        console.log(e);
+    }
   }
 }
 
