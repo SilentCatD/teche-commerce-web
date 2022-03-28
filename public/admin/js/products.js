@@ -6,6 +6,10 @@ $(document).ready(function () {
     e.preventDefault();
     const result = validateProductsImg();
     if (result) {
+      currentCarousel++;
+      if(currentCarousel>productsImages.length-1){
+          currentCarousel=productsImages.length-1;
+      }
       renderProductsCarousel();
     }
   });
@@ -25,20 +29,58 @@ function bindCarousel() {
       e.preventDefault();
       removeProductImages(this);
     });
+
+  $("#addProductAccordion").on('show.bs.collapse',async function (e) {
+    $('#product-add-section').addClass('loading');
+    await renderBrandsAndCategories();
+    $('#product-add-section').removeClass('loading');
+  });
+}
+
+async function renderBrandsAndCategories(){
+    const brands =  await fetchSelectData('/api/v1/brand');
+    const categories = await fetchSelectData('/api/v1/category');
+
+    const brandOptions = [];
+    const categoryOptions = [];
+    brandOptions.push(`<option value="default" selected>Choose a brand</option>`);
+    categoryOptions.push(`<option value="default" selected>Choose a category</option>`);
+
+    brands.forEach(brand => {
+      brandOptions.push(`<option value="${brand.value}">${brand.text}</option>`);
+    });
+
+    categories.forEach((category)=>{
+      categoryOptions.push(`<option value="${category.value}">${category.text}</option>`);
+    });
+
+    $('#brandSelect').html(brandOptions.join('\n'));
+    $('#categorySelect').html(categoryOptions.join('\n'));
+}
+
+async function fetchSelectData(url){
+  let res = await  axios({
+    method: "get",
+    url: url,
+  });
+  return res.data.items.map((item=>{
+    return {
+      value: item._id,
+      text: item.name
+    }
+  }));
 }
 
 function addProductImages(el) {
-console.log(el);
   const index = $(el).data("img-index");
-  console.log(index);
   currentCarousel = index;
   $("#file-input").trigger("click");
 }
 
 function removeProductImages(el) {
   const index = $(el).data("img-index");
-  currentCarousel = index-1;
-  if(currentCarousel<=0) currentCarousel = 0;
+  currentCarousel = index - 1;
+  if (currentCarousel <= 0) currentCarousel = 0;
   productsImages.splice(index, 1);
   renderProductsCarousel();
 }
@@ -52,7 +94,7 @@ function validateProductsImg() {
   if (!accept_types.includes(mineType)) {
     return false;
   }
-  productsImages.splice(currentCarousel+1, 0, file);
+  productsImages.splice(currentCarousel + 1, 0, file);
   return true;
 }
 
@@ -67,7 +109,7 @@ function renderProductsCarousel() {
     $("#productImagesCarousel .carousel-control-next").removeClass("d-none");
   }
   if (productsImages.length == 0) {
-    $("#productImagesCarousel .carousel-indicators").html('');
+    $("#productImagesCarousel .carousel-indicators").html("");
     $("#productImagesCarousel .carousel-inner").html(
       `
         <div class="carousel-item active">

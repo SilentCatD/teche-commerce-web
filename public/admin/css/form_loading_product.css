@@ -1,0 +1,35 @@
+#add-product-spinner{
+    background-color: aliceblue;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    visibility: 0;
+    opacity: 0;
+    transition: opacity 300ms ease-in-out, visibility 300ms ease-in-out;
+}
+
+#product-add-section{
+    position: relative;
+}
+
+#product-add-section.loading #add-product-spinner{
+    visibility: 1;
+    opacity: 1;
+}
+
+#add-product-form{
+    transition: opacity 300ms ease-in-out, visibility 300ms ease-in-out;
+}
+#product-add-section.loading #add-product-form{
+    visibility: 0;
+    opacity: 0;
+}
+
+
+
+
+
