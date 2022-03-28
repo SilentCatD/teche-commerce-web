@@ -9,8 +9,7 @@ $(document).ready(async function () {
     const productId = searchParams.get('id');
     const fetchResult = await detailController.fetchProduct(productId);
     console.log(fetchResult)
-    await detailController.renderProduct(fetchResult.data);
-    console.log(fetchResult);
+    // await detailController.renderProduct(fetchResult);
   }
 
 const detailController = {
