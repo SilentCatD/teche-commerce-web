@@ -106,7 +106,7 @@ const renderCompenent = {
       if(product.images.length==0) {
         renderHTMLElement.renderProductItem(product,"https://pbs.twimg.com/media/EpYWByzUUAAvuZh.jpg");
       } else {
-        renderHTMLElement.renderProductItem(product,product.images[0].firebaseUrl);
+        renderHTMLElement.renderProductItem(product,product.images[0]);
       }
     });
     $("#total-items-found").text(`${products.length}`);
@@ -147,7 +147,7 @@ const renderHTMLElement = {
           </ul>
       </div>
       <div class="product__item__text">
-          <h6><a href="detail?id=${product._id}">${product.name}</a></h6>
+          <h6><a href="details/${product.id}">${product.name}</a></h6>
           <h5>$${product.price}</h5>
       </div>
   </div>

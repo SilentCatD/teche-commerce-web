@@ -1,6 +1,17 @@
 let images = [];
 
 $(document).ready(function () {
+  $("#brandDelete").click(async function () {
+    const id = $(this).data('id');
+    $("#brandDelete").removeData("id");
+    if(await deleteBrand(id)) {
+      displayAlert(true, "Brand Deleted");
+    } else {
+      displayAlert(false, "Something fuckup");
+    }
+    $("#page-modal").modal("hide");
+    $(".table-load-trigger").click();
+  });
   $("#brandSubmit").click(async function (e) {
     e.preventDefault();
     const input = validateBrandNameInput();
@@ -33,16 +44,30 @@ $(document).ready(function () {
 async function createBrand(brandName, imgFile) {
   try {
     let formData = new FormData();
-    if(imgFile){
-        formData.append("images", imgFile);
+    if (imgFile) {
+      formData.append("images", imgFile);
     }
     formData.append("brandName", brandName);
     let res = await axios({
-        method: "post",
-        url: "/api/v1/brand",
-        data: formData,
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      method: "post",
+      url: "/api/v1/brand",
+      data: formData,
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    console.log(res);
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+async function deleteBrand(brandId) {
+  try {
+    let res = await axios({
+      method: "delete",
+      url: `/api/v1/brand/${brandId}`,
+    });
     console.log(res);
     return true;
   } catch (e) {
@@ -102,7 +127,7 @@ function validateBrandImg() {
   const file = $("#formFile").prop("files")[0];
   if (!file) return;
   const mineType = file.type;
-  const accept_types = ['image/jpeg', 'image/png'];
+  const accept_types = ["image/jpeg", "image/png"];
   if (!accept_types.includes(mineType)) {
     $("#brandImgErrorMsg").text(`File type must be either .jpeg or .png`);
     $("#formFile").addClass("is-invalid");
@@ -123,42 +148,37 @@ function clearAllInput() {
   displayImage(false);
 }
 
-function displayImage(file){
-    if(file ===false){
-        $('#img-holder img').attr('src', '');
-        $('#img-holder').addClass('d-none');
-    }else{
-        const src = URL.createObjectURL(file);
-        $('#img-holder img').attr('src', src);
-        $('#img-holder').removeClass('d-none');
-    }
+function displayImage(file) {
+  if (file === false) {
+    $("#img-holder img").attr("src", "");
+    $("#img-holder").addClass("d-none");
+  } else {
+    const src = URL.createObjectURL(file);
+    $("#img-holder img").attr("src", src);
+    $("#img-holder").removeClass("d-none");
+  }
 }
 
-
-
-
-
-getItemsMethods =  async (limit, page)=>{
+getItemsMethods = async (limit, page) => {
   return axios({
     method: "get",
     url: `/api/v1/brand?limit=${limit}&page=${page}`,
   });
-}
+};
 
-
-setLimit = ()=>{
+setLimit = () => {
   return 12;
-}
+};
 
-  
-setDisplayPage = ()=>{
+setDisplayPage = () => {
   return 5;
-}
+};
 
+initialPage = () => {
+  return 1;
+};
 
-initialPage = ()=>{return 1};
-
-renderTableHead = () =>{
+renderTableHead = () => {
   return `<tr>
   <th scope="col">ID</th>
   <th scope="col">Brand Name</th>
@@ -169,14 +189,17 @@ renderTableHead = () =>{
   <th scope="col">&nbsp;</th>
   </tr>
   `;
-}
+};
 
-
-renderTableRow = (item)=>{
+renderTableRow = (item) => {
   return `<tr>
   <td class="align-middle">${item.id}</td>
   <td class="align-middle">${item.name}</td>
-  <td class="align-middle">${item.image  ? `<img src=${item.image} style="max-width:100px;max-height:100px; object-fit: contain;">` : 'Not avalable'}</td>
+  <td class="align-middle">${
+    item.image
+      ? `<img src=${item.image} style="max-width:100px;max-height:100px; object-fit: contain;">`
+      : "Not avalable"
+  }</td>
   <td class="align-middle">${item.productsHold}</td>
   <td class="align-middle">${item.rankingPoints}</td>
   <td class="align-middle">${item.createdAt}</td>
@@ -186,27 +209,33 @@ renderTableRow = (item)=>{
         Manage
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-        <li><button class="manage-btn dropdown-item btn"  data-id='${item._id}' data-op='remove'>Edit</button></li>
+        <li><button class="manage-btn manage-btn-edit dropdown-item btn"  data-id='${
+          item.id
+        }'>Edit</button></li>
         <li class="dropdown-divider"></li>
-        <li><button class="manage-btn dropdown-item text-danger btn" data-id='${item._id}' data-op="edit">Remove</button></li>
+        <li><button class="manage-btn manage-btn-delete dropdown-item text-danger btn" data-id='${
+          item.id
+        }'>Remove</button></li>
       </ul>
     </div>
 </td>
 </tr>
 `;
-}
+};
 
-
-bindRowAction = ()=>{
-  $('.manage-btn').click(function (e) { 
+bindRowAction = () => {
+  $(".manage-btn-delete").click(function (e) {
     e.preventDefault();
-    const id = $(this).attr('data-id');
-    const op = $(this).attr('data-op');
-    // call func here
-    $('#page-modal').modal('show'); 
-  });
-}
+    const id = $(this).data("id");
+    
+    console.log(id);
+    $("#brandDelete").data("id", id);
 
-setTableName = ()=>{
-  return "Brands"
-}
+    // call func here
+    $("#page-modal").modal("show");
+  });
+};
+
+setTableName = () => {
+  return "Brands";
+};

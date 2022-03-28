@@ -2,9 +2,13 @@
 <html lang="zxx">
 
     <head>
-        <%= title%> 
+        <title><%=title%></title>
         <%-include('partials/head') %>
     </head>
+    <script>
+        const product = <%-JSON.stringify(product)%>
+    </script>
+    
 
 <body>
     <!-- Page Preloder -->
@@ -35,35 +39,29 @@
                     <div class="product__details__pic">
                         <div class="product__details__pic__item">
                             <img class="product__details__pic__item--large"
-                                src="https://salt.tikicdn.com/ts/product/dc/2a/f2/93e32642db37b0f015faafb05ed8923c.jpg" alt="">
+                                src="<%-product.images[0]%>" alt="">
                         </div>
                         <div class="product__details__pic__slider owl-carousel">
+                            <% for(var j=0; j<product.images.length; j++) { %>
+                                <img data-imgbigurl="<%- product.images[j] %>"
+                                src="<%- product.images[j] %>" alt="">
+                            <%}%>
                             <img data-imgbigurl="https://macmall.vn/uploads/macbook_air_m1_gold_1619700203.png"
                                 src="https://macmall.vn/uploads/macbook_air_m1_gold_1619700203.png" alt="">
-                            <img data-imgbigurl="https://salt.tikicdn.com/ts/product/dc/2a/f2/93e32642db37b0f015faafb05ed8923c.jpg"
-                                src="https://salt.tikicdn.com/ts/product/dc/2a/f2/93e32642db37b0f015faafb05ed8923c.jpg" alt="">
-                            <img data-imgbigurl="https://image.cellphones.com.vn/358x/media/catalog/product/m/a/macbook-pro-mpxu2-3_3.jpg"
-                                src="https://image.cellphones.com.vn/358x/media/catalog/product/m/a/macbook-pro-mpxu2-3_3.jpg" alt="">
-                            <img data-imgbigurl="img/product/details/product-details-4.jpg"
-                                src="img/product/details/thumb-4.jpg" alt="">
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <div class="product__details__text">
-                        <h3  class="product__details__name">Macbook Pro Chetah</h3>
+                        <h3  class="product__details__name"><%-product.name%> </h3>
                         <div class="product__details__rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star-half-o"></i>
-                            <span id="product__details__review">(18 reviews)</span>
+                            <div class="product__details__rating__star d-inline">
+
+                            </div>
+                            <span id="product__details__review">(<%-product.rateCount%> reviews)</span>
                         </div>
-                        <div class="product__details__price">$50.00</div>
-                        <p class="product__details__desc"">Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Vestibulum ac diam sit amet quam
-                            vehicula elementum sed sit amet dui. Sed porttitor lectus nibh. Vestibulum ac diam sit amet
-                            quam vehicula elementum sed sit amet dui. Proin eget tortor risus.</p>
+                        <div class="product__details__price"><%-product.price%></div>
+                        <p class="product__details__desc""><%-product.details%></p>
                         <div class="product__details__quantity">
                             <div class="quantity">
                                 <div class="pro-qty">
@@ -75,7 +73,9 @@
                         <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
                         <ul>
                             <li><b>Availability</b> <span id="product__details__avail">In Stock</span></li>
-                            <li id="product__details__brand"><b>Brand</b> <span>Apple</span></li>
+                            <li><b>Brand</b> <span id="product__details__brand"><%-product.brand.name%></span></li>
+                            <li><b>Category</b> <span id="product__details__category"><%-product.category.name%></span></li>
+
 
                             <li><b>Share on</b>
                                 <div class="share">

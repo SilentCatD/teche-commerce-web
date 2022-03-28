@@ -1,31 +1,22 @@
 
 $(document).ready(async function () {
+// display rating
+  product.rateAverage = 3.6;
+  let ratingValue = product.rateAverage, rounded = (product.rateAverage | 0);
+
+  for (let j = 0; j < 5 ; j++) {
+    $(".product__details__rating__star").append('<i class="fa '+ ((j < rounded) ? "fa-star" : ((((ratingValue - j) > 0) && ((ratingValue - j) < 1)) ? "fa-star-half-o" : "fa-star-o")) +'" aria-hidden="true"></i>');
+  }  
     await REinit();
+
   });
   
   async function REinit() {
-    const searchParams = new URLSearchParams(window.location.search)
+    console.log(product)
     
-    const productId = searchParams.get('id');
-    const fetchResult = await detailController.fetchProduct(productId);
-    console.log(fetchResult)
-    // await detailController.renderProduct(fetchResult);
   }
 
 const detailController = {
-    fetchProduct: async(productId) =>{
-            try {
-              let request = {
-                method: "get",
-                url: `/api/v1/product/${productId}`,
-              };
-              let res = await axios(request);
-              return res;
-            } catch (e) {
-              console.log(e);
-            }
-          
-    },
     renderProduct: async(product) => {
         renderHTML.renderProductDetail(product);
     }
@@ -34,24 +25,6 @@ const detailController = {
 
 const renderHTML = {
     renderProductDetail: (product) => {
-        $(".product__details__name").text(product.name);
-
-        let numberOfReview = 0;
-        for(let i = 0 ; i < product.rates.length; i++) {
-            numberOfReview += product.rates[i];
-        }
-        console.log(numberOfReview);
-        $(".product__details__review").text(`(${numberOfReview} rasdasdadseviews)`);
-        $(".product__details__price").text(`$${product.price}`);
-        $(".product__details__desc").text(product.details);
-        if(product.inStock <= 0 ) {
-            $(".product__details__avail").text("In Stock");
-
-        } else {
-            $(".product__details__avail").text("Out Stock");
-        }
-        $(".product__details__brand").text("Woof")
-
 
     },
     renderComment: {

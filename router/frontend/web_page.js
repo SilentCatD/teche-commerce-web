@@ -1,6 +1,7 @@
 import axios from "axios";
 import express from "express";
 import __dirname from "../../dirname.js";
+import ProductService from "../../components/product/service.js";
 
 const webPageRouter = new express.Router();
 
@@ -22,12 +23,14 @@ webPageRouter.get('/contact', async (req, res)=>{
     res.render('user/contact',params);
 });
 
+
 webPageRouter.get('/details/:id', async (req, res)=>{
     const {id} = req.params;
+    console.log(id);
     try{
-        const product = await axios.get(`/api/v1/product/${id}`);
+        const product = await ProductService.fetchProduct(id);
         const params = {title: "eTech Contact", product: product};
-        res.render('/user', params);
+        res.render('user/shop-details',params);
     }
     catch(e){
         console.log(e);
