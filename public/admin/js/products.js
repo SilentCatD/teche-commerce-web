@@ -490,13 +490,13 @@ renderTableRow = (item) => {
         Manage
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-        <li><button class="manage-btn-edit dropdown-item btn"  data-id='${
+        <li><a href="/admin/edit-product/${item.id}" class="manage-btn-edit dropdown-item btn"  data-id='${
           item.id
-        }'>Edit</button></li>
+        }'>Edit</a></li>
         <li class="dropdown-divider"></li>
-        <li><button class="manage-btn-delete dropdown-item text-danger btn" data-id='${
+        <li><a class="manage-btn-delete dropdown-item text-danger btn" data-id='${
           item.id
-        }'>Remove</button></li>
+        }'>Remove</a></li>
       </ul>
     </div>
 </td>
