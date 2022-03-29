@@ -28,7 +28,7 @@ const CategotyService = {
     returnData: (category)=>{
         if(!category) return null;
         return {
-            id: category._id,
+            id: category.id,
             name: category.name,
             productsHold: category.productsHold,
             rankingPoints: category.rankingPoints,

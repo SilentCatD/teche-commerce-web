@@ -1,7 +1,6 @@
 let productsImages = [];
 let currentCarousel;
 $(document).ready(function () {
-  $(".owl-carousel").owlCarousel();
   $("#file-input").change(function (e) {
     e.preventDefault();
     const result = validateProductsImg();

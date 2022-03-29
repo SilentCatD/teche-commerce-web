@@ -104,9 +104,11 @@ $(".table-load-trigger").click(async function (e) {
 
   $(this).prop("disabled", true);
   $(this).toggleClass("btn-primary btn-secondary");
+  $(".table-load-trigger i").toggleClass("fa-spin");
   await tableLoadData();
   $(this).prop("disabled", false);
   $(this).toggleClass("btn-primary btn-secondary");
+  $(".table-load-trigger i").toggleClass("fa-spin");
 });
 
 $(document).ready(async function () {

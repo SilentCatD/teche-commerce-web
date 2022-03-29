@@ -78,6 +78,7 @@ const ProductService = {
       images: imageUrls,
       details: product.details,
       status: status,
+      unit: product.inStock,
       brand: BrandService.returnData(product.brand),
       category: CategotyService.returnData(product.category),
       buyCount: product.buyCount,

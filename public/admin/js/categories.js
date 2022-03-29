@@ -104,7 +104,7 @@ getItemsMethods =  async (limit, page)=>{
 
 
 setLimit = ()=>{
-  return 1;
+  return 12;
 }
 
   
