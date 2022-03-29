@@ -58,7 +58,7 @@ const CommonMiddleWares = {
         req.params.page = page;
         req.params.limit = limit;
         next();
-    }
+    },
 };
 
 

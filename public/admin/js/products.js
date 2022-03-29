@@ -475,13 +475,11 @@ renderTableRow = (item) => {
           Manage
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-          <li><button class="manage-btn dropdown-item btn"  data-id='${
-            item._id
-          }' data-op='remove'>Edit</button></li>
+          <li><a href="/admin/edit-product/${item.id}" class="manage-btn product-edit dropdown-item btn">Edit</a></li>
           <li class="dropdown-divider"></li>
-          <li><button class="manage-btn dropdown-item text-danger btn" data-id='${
-            item._id
-          }' data-op="edit">Remove</button></li>
+          <li><a class="manage-btn product-remove dropdown-item text-danger btn" data-id='${
+            item.id
+          }'>Remove</a></li>
         </ul>
       </div>
   </td>
@@ -490,13 +488,7 @@ renderTableRow = (item) => {
 };
 
 bindRowAction = () => {
-  $(".manage-btn").click(function (e) {
-    e.preventDefault();
-    const id = $(this).attr("data-id");
-    const op = $(this).attr("data-op");
-    // call func here
-    $("#page-modal").modal("show");
-  });
+ 
 };
 
 setTableName = () => {
