@@ -492,7 +492,7 @@ renderTableRow = (item) => {
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
         <li><button class="manage-btn-edit dropdown-item btn"  data-id='${
           item.id
-        }' data-op='remove'>Edit</button></li>
+        }'>Edit</button></li>
         <li class="dropdown-divider"></li>
         <li><button class="manage-btn-delete dropdown-item text-danger btn" data-id='${
           item.id
