@@ -1,15 +1,6 @@
 $(document).ready(function () {
-  $("#categoryDelete").click(async function () {
-    const id = $(this).data('id');
-    $("#categoryDelete").removeData("id");
-    if(await deleteCategory(id)) {
-      displayAlert(true, "Category Deleted");
-    } else {
-      displayAlert(false, "Something fuckup");
-    }
-    $("#page-modal").modal("hide");
-    $(".table-load-trigger").click();
-  });
+  deleteDocumentOnClick("Category",deleteCategory);
+
   $("#categorySubmit").click(async function (e) {
     e.preventDefault();
     const input = validateBrandNameInput();
@@ -35,6 +26,7 @@ $(document).ready(function () {
 
 
 });
+
 
 async function createBrand(categoryName) {
   try {
@@ -164,9 +156,9 @@ renderTableRow = (item)=>{
         Manage
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-        <li><button class="manage-btn-edit dropdown-item btn"  data-id='${item.id}' data-op='remove'>Edit</button></li>
+        <li><button class="manage-btn-edit dropdown-item btn"  data-id='${item.id}'>Edit</button></li>
         <li class="dropdown-divider"></li>
-        <li><button class="manage-btn-delete dropdown-item text-danger btn" data-id='${item.id}' data-op="edit">Remove</button></li>
+        <li><button class="manage-btn-delete dropdown-item text-danger btn" data-id='${item.id}'>Remove</button></li>
       </ul>
     </div>
 </td>
@@ -175,19 +167,18 @@ renderTableRow = (item)=>{
 }
 
 
-bindRowAction = ()=>{
-  $('.manage-btn-delete').click(function (e) { 
+bindRowAction = () => {
+  $(".manage-btn-delete").click(function (e) {
     e.preventDefault();
-    const id = $(this).attr('data-id');
+    const id = $(this).data("id");
+    
+    $("#documentDelete").data("id", id);
+
     // call func here
-
-    console.log(id);
-    $("#categoryDelete").data("id", id);
-
-    $('#page-modal').modal('show'); 
-
+    $("#page-modal").modal("show");
   });
-}
+};
+
 
 setTableName = ()=>{
   return "Categories";

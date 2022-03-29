@@ -1,18 +1,6 @@
 let productsImages = [];
 let currentCarousel;
 $(document).ready(function () {
-  $("#productDelete").click(async function () {
-    const id = $("#productDelete").data('id');
-    console.log(id);
-    $("#productDelete").removeData("id");
-    if(await deleteProduct(id)) {
-      displayAlert(true, "Product Deleted");
-    } else {
-      displayAlert(false, "Something fuckup");
-    }
-    $("#page-modal").modal("hide");
-    $(".table-load-trigger").click();
-  });
   $(".owl-carousel").owlCarousel();
   $("#file-input").change(function (e) {
     e.preventDefault();
@@ -104,6 +92,7 @@ $(document).ready(function () {
   });
 
   bindCarousel();
+  deleteDocumentOnClick("Product",deleteProduct);
 });
 
 async function createProduct(
@@ -368,6 +357,7 @@ async function deleteProduct(id){
   }
 }
 
+
 function addProductImages(el) {
   const index = $(el).data("img-index");
   currentCarousel = index;
@@ -486,12 +476,14 @@ renderTableRow = (item) => {
   <td class="align-middle">${item.id}</td>
   <td class="align-middle">${item.name}</td>
   <td class="align-middle">${
-    item.image
-      ? `<img src=${item.image} style="max-width:100px;max-height:100px; object-fit: contain;">`
+    item.images.length > 0
+      ? `<img src=${item.images[0]} style="max-width:100px;max-height:100px; object-fit: contain;">`
       : "Not avalable"
   }</td>
-  <td class="align-middle">${item.productsHold}</td>
-  <td class="align-middle">${item.rankingPoints}</td>
+  <td class="align-middle">${item.price}</td>
+  <td class="align-middle">${item.status}</td>
+  <td class="align-middle">${item.brand? item.brand.name: 'not available'}</td>
+  <td class="align-middle">${item.category? item.category.name: 'not available'}</td>
   <td class="align-middle">${item.createdAt}</td>
   <td class="align-middle">
   <div class="dropdown position-static">
@@ -499,11 +491,11 @@ renderTableRow = (item) => {
         Manage
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-        <li><button class="manage-btn manage-btn-edit dropdown-item btn"  data-id='${
+        <li><button class="manage-btn-edit dropdown-item btn"  data-id='${
           item.id
-        }'>Edit</button></li>
+        }' data-op='remove'>Edit</button></li>
         <li class="dropdown-divider"></li>
-        <li><button class="manage-btn manage-btn-delete dropdown-item text-danger btn" data-id='${
+        <li><button class="manage-btn-delete dropdown-item text-danger btn" data-id='${
           item.id
         }'>Remove</button></li>
       </ul>
@@ -518,7 +510,8 @@ bindRowAction = () => {
     e.preventDefault();
     const id = $(this).data("id");
     
-    $("#productDelete").data("id", id);
+    $("#documentDelete").data("id", id);
+
     // call func here
     $("#page-modal").modal("show");
   });

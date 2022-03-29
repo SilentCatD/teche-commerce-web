@@ -1,17 +1,7 @@
 let images = [];
 
 $(document).ready(function () {
-  $("#brandDelete").click(async function () {
-    const id = $("#brandDelete").data('id');
-    $("#brandDelete").removeData("id");
-    if(await deleteBrand(id)) {
-      displayAlert(true, "Brand Deleted");
-    } else {
-      displayAlert(false, "Something fuckup");
-    }
-    $("#page-modal").modal("hide");
-    $(".table-load-trigger").click();
-  });
+  deleteDocumentOnClick("Brand",deleteBrand);
   $("#brandSubmit").click(async function (e) {
     e.preventDefault();
     const input = validateBrandNameInput();
@@ -40,6 +30,7 @@ $(document).ready(function () {
     validateBrandImg();
   });
 });
+
 
 async function createBrand(brandName, imgFile) {
   try {
@@ -228,7 +219,7 @@ bindRowAction = () => {
     e.preventDefault();
     const id = $(this).data("id");
     
-    $("#brandDelete").data("id", id);
+    $("#documentDelete").data("id", id);
 
     // call func here
     $("#page-modal").modal("show");
