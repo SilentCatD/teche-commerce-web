@@ -120,15 +120,6 @@ async function urlToFile(url) {
 
 async function editProduct(name, description, price, unit, brand, category) {
   try {
-    // console.log(
-    //   name,
-    //   description,
-    //   price,
-    //   unit,
-    //   brand,
-    //   category,
-    //   productsImages
-    // );
     let formData = new FormData();
     formData.append("productName", name);
     formData.append("productDetails", description);
