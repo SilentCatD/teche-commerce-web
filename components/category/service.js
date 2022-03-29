@@ -10,7 +10,7 @@ const CategotyService = {
     },
 
     deleteAllCategory: async() =>{
-        CommomDatabaseServies.deleteCollection(Category,false);
+        await CommomDatabaseServies.deleteCollection(Category,false);
     },
 
     fetchCategory: async(id) => {
@@ -48,15 +48,14 @@ const CategotyService = {
     
 
     deleteCategory: async (id) =>{
-        CommomDatabaseServies.deleteDocument(Category,id,false);
+       await CommomDatabaseServies.deleteDocument(Category,id,false);
     },
 
     editProductHolds: async (id, op) => {
-        CommomDatabaseServies.editProductHolds(Category,id,op);
+        await CommomDatabaseServies.editProductHolds(Category,id,op);
     },
     editrankingPoints: async (id, op) => {
-        // editrankingPoints(id, '+') => plus 1
-        CommomDatabaseServies.editRankingPoints(Category,id,op);
+        await CommomDatabaseServies.editRankingPoints(Category,id,op);
     },
 
     editCategory: async (id, name)=>{

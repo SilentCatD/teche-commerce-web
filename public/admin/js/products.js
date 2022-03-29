@@ -91,6 +91,7 @@ $(document).ready(function () {
   });
 
   bindCarousel();
+  deleteDocumentOnClick("Product",deleteProduct);
 });
 
 async function createProduct(
@@ -341,6 +342,21 @@ async function fetchSelectData(url) {
   });
 }
 
+async function deleteProduct(id){
+  try {
+    let res = await axios({
+      method: "delete",
+      url: `/api/v1/product/${id}`,
+    });
+    console.log(res);
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
+
 function addProductImages(el) {
   const index = $(el).data("img-index");
   currentCarousel = index;
@@ -456,38 +472,48 @@ renderTableHead = () => {
 
 renderTableRow = (item) => {
   return `<tr>
-    <td class="align-middle">${item.id}</td>
-    <td class="align-middle">${item.name}</td>
-    <td class="align-middle">${
-      item.images.length > 0
-        ? `<img src=${item.images[0]} style="max-width:100px;max-height:100px; object-fit: contain;">`
-        : "Not avalable"
-    }</td>
-    <td class="align-middle">${item.price}</td>
-    <td class="align-middle">${item.status}</td>
-    <td class="align-middle">${item.brand? item.brand.name: 'not available'}</td>
-    <td class="align-middle">${item.category? item.category.name: 'not available'}</td>
-    <td class="align-middle">${item.createdAt}</td>
-    <td class="align-middle">
-    <div class="dropdown position-static">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-          Manage
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-          <li><a href="/admin/edit-product/${item.id}" class="manage-btn product-edit dropdown-item btn">Edit</a></li>
-          <li class="dropdown-divider"></li>
-          <li><a class="manage-btn product-remove dropdown-item text-danger btn" data-id='${
-            item.id
-          }'>Remove</a></li>
-        </ul>
-      </div>
-  </td>
-  </tr>
-  `;
+  <td class="align-middle">${item.id}</td>
+  <td class="align-middle">${item.name}</td>
+  <td class="align-middle">${
+    item.images.length > 0
+      ? `<img src=${item.images[0]} style="max-width:100px;max-height:100px; object-fit: contain;">`
+      : "Not avalable"
+  }</td>
+  <td class="align-middle">${item.price}</td>
+  <td class="align-middle">${item.status}</td>
+  <td class="align-middle">${item.brand? item.brand.name: 'not available'}</td>
+  <td class="align-middle">${item.category? item.category.name: 'not available'}</td>
+  <td class="align-middle">${item.createdAt}</td>
+  <td class="align-middle">
+  <div class="dropdown position-static">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+        Manage
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        <li><button class="manage-btn-edit dropdown-item btn"  data-id='${
+          item.id
+        }' data-op='remove'>Edit</button></li>
+        <li class="dropdown-divider"></li>
+        <li><button class="manage-btn-delete dropdown-item text-danger btn" data-id='${
+          item.id
+        }'>Remove</button></li>
+      </ul>
+    </div>
+</td>
+</tr>
+`;
 };
 
 bindRowAction = () => {
- 
+  $(".manage-btn-delete").click(function (e) {
+    e.preventDefault();
+    const id = $(this).data("id");
+    
+    $("#documentDelete").data("id", id);
+
+    // call func here
+    $("#page-modal").modal("show");
+  });
 };
 
 setTableName = () => {

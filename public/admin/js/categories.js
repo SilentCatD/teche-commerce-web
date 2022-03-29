@@ -1,4 +1,6 @@
 $(document).ready(function () {
+  deleteDocumentOnClick("Category",deleteCategory);
+
   $("#categorySubmit").click(async function (e) {
     e.preventDefault();
     const input = validateBrandNameInput();
@@ -24,6 +26,7 @@ $(document).ready(function () {
 
 
 });
+
 
 async function createBrand(categoryName) {
   try {
@@ -93,7 +96,19 @@ function clearAllInput() {
 }
 
 
-
+async function deleteCategory(categoryId) {
+  try {
+    let res = await axios({
+      method: "delete",
+      url: `/api/v1/category/${categoryId}`,
+    });
+    console.log(res);
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
 
 getItemsMethods =  async (limit, page)=>{
   return axios({
@@ -141,9 +156,9 @@ renderTableRow = (item)=>{
         Manage
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-        <li><button class="manage-btn dropdown-item btn"  data-id='${item._id}' data-op='remove'>Edit</button></li>
+        <li><button class="manage-btn-edit dropdown-item btn"  data-id='${item.id}'>Edit</button></li>
         <li class="dropdown-divider"></li>
-        <li><button class="manage-btn dropdown-item text-danger btn" data-id='${item._id}' data-op="edit">Remove</button></li>
+        <li><button class="manage-btn-delete dropdown-item text-danger btn" data-id='${item.id}'>Remove</button></li>
       </ul>
     </div>
 </td>
@@ -152,15 +167,18 @@ renderTableRow = (item)=>{
 }
 
 
-bindRowAction = ()=>{
-  $('.manage-btn').click(function (e) { 
+bindRowAction = () => {
+  $(".manage-btn-delete").click(function (e) {
     e.preventDefault();
-    const id = $(this).attr('data-id');
-    const op = $(this).attr('data-op');
+    const id = $(this).data("id");
+    
+    $("#documentDelete").data("id", id);
+
     // call func here
-    $('#page-modal').modal('show'); 
+    $("#page-modal").modal("show");
   });
-}
+};
+
 
 setTableName = ()=>{
   return "Categories";

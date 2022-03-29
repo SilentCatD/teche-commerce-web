@@ -7,23 +7,7 @@
 
 
 <body>
-    <div class="modal fade" tabindex="-1" id="page-modal">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Modal title</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <p>Modal body text goes here.</p>
-            </div>
-            <div class="modal-footer">
-                <button id="brandDelete" type="button" class="btn btn-danger">Remove</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-          </div>
-        </div>
-    </div>      
+    <%- include('partials/page-model')%>
 
     <div class="container-xxl position-relative bg-white d-flex p-0">
         <!-- Spinner Start -->
@@ -112,6 +96,7 @@
         <script src="https://unpkg.com/validator@latest/validator.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="/admin/js/alert.js"></script>
+        <script src="/admin/js/modal.js"></script>
         <script src="/admin/js/data_table.js"></script>
         <script src="/admin/js/brands.js"></script>
 </body>
