@@ -13,6 +13,7 @@ $(document).ready(function () {
     toggleBtnLoading(false);
     toggleFormInput(false);
     if (result) {
+      triggerReloadBtn();
       displayAlert(true, "Brand added");
       clearAllInput();
     } else {
@@ -137,6 +138,10 @@ function clearAllInput() {
   $("#inputBrandName").removeClass("is-valid");
   $("#formFile").removeClass("is-valid");
   displayImage(false);
+}
+
+function triggerReloadBtn() {
+  $(".table-load-trigger").trigger("click");
 }
 
 function displayImage(file) {

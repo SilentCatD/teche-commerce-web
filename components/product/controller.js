@@ -9,66 +9,7 @@ import Category from "../category/model.js";
 
 const ProductController = {
   createProduct: [
-    body("productName")
-      .exists()
-      .bail()
-      .not()
-      .isEmpty({ ignore_whitespace: true })
-      .withMessage("field can't be emtpy")
-      .bail()
-      .isByteLength({ min: 3, max: 50 })
-      .withMessage("character of field must be in range 3-50")
-      .trim(),
-    body("productPrice")
-      .exists()
-      .bail()
-      .not()
-      .isEmpty({ ignore_whitespace: true })
-      .withMessage("field can't be empty")
-      .bail()
-      .isNumeric()
-      .withMessage("field must be numeric value")
-      .toFloat(),
-    body("productUnit")
-      .exists()
-      .bail()
-      .not()
-      .isEmpty({ ignore_whitespace: true })
-      .withMessage("field can't be empty")
-      .bail()
-      .isInt()
-      .withMessage("field must be integer")
-      .toInt(),
-    body("productBrand")
-      .exists()
-      .bail()
-      .not()
-      .isEmpty({ ignore_whitespace: true })
-      .withMessage("field can't be empty")
-      .bail()
-      .trim()
-      .custom(async (id) => {
-        const exist = await Brand.exists({ _id: id });
-        if (!exist) {
-          throw new Error("brand not exist");
-        }
-        return true;
-      }),
-    body("productCategory")
-      .exists()
-      .bail()
-      .not()
-      .isEmpty({ ignore_whitespace: true })
-      .withMessage("field can't be empty")
-      .bail()
-      .trim()
-      .custom(async (id) => {
-        const exist = await Category.exists({ _id: id });
-        if (!exist) {
-          throw new Error("category not exist");
-        }
-        return true;
-      }),
+    CommonMiddleWares.productCreateAndEditValidations,
     async (req, res) => {
       try {
         const errors = validationResult(req);
@@ -159,36 +100,40 @@ const ProductController = {
       res.status(404).end("Product can not delete");
     }
   },
-  editProduct: async (req, res) => {
+  editProduct: [
+    CommonMiddleWares.productCreateAndEditValidations,
+    async (req, res) => {
     try {
       const {
         productName,
         productDetails,
         productBrand,
         productCategory,
+        productUnit,
         productPrice,
       } = req.body;
-      const { id } = req.params;
-      let productImages = undefined;
-      if (req.files.length > 0) {
-        console.log(req.files);
-        productImages = req.files;
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
       }
+      const { id } = req.params;
+      const imagesFiles = req.files;
       await ProductService.editProduct(
         id,
         productName,
         productPrice,
+        productUnit,
         productBrand,
         productCategory,
         productDetails,
-        productImages
+        imagesFiles,
       );
       res.status(200).end("Edit Product successfully");
     } catch (e) {
       console.log(e);
       res.status(404).end(e.message);
     }
-  },
+  }],
 };
 
 export default ProductController;

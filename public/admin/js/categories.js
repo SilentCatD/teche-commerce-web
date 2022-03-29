@@ -11,6 +11,7 @@ $(document).ready(function () {
     toggleBtnLoading(false);
     toggleFormInput(false);
     if (result) {
+      triggerReloadBtn();
       displayAlert(true, "Category added");
       clearAllInput();
     } else {
@@ -27,6 +28,9 @@ $(document).ready(function () {
 
 });
 
+function triggerReloadBtn() {
+  $(".table-load-trigger").trigger("click");
+}
 
 async function createBrand(categoryName) {
   try {

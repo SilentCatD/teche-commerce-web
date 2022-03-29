@@ -33,6 +33,8 @@ const ProductService = {
       images: images,
       rates: [0, 0, 0, 0, 0],
     };
+    await BrandService.editProductHolds(brandId, '+');
+    await CategotyService.editProductHolds(categoryId, '+');
     return await CommomDatabaseServies.createDocument(Product, productDocObj);
   },
 
@@ -139,64 +141,42 @@ const ProductService = {
     id,
     name,
     price,
+    unit,
     brandId,
     categoryId,
     details,
-    imageFiles
+    imageFiles,
   ) => {
-    // imageFiles undeinfed => not edit
     const session = await Product.startSession();
     session.startTransaction();
     try {
       const product = await Product.findById(
         mongoose.Types.ObjectId(id)
-      ).session(session);
-      if (product === null) throw new Error(`Product ${id} is not found`);
-      if (name) {
-        product.name = name;
+      ).populate('brand').populate('category').session(session);
+      product.name = name;
+      product.price = price;
+      product.details = details;
+      product.inStock = unit;
+ 
+      if(product.brand){
+        await BrandService.editProductHolds(product.brand, '-'); 
       }
-      if (price) {
-        product.price = price;
-      }
-      if (details) {
-        product.details = details;
-      }
-      if (brandId) {
-        try {
-          await BrandService.fetchBrand(brandId);
-          await BrandService.editProductHolds(brandId, "+");
-        } catch (e) {
-          throw Error("Brand not existed");
-        }
-        if (product.brand) {
-          await BrandService.editProductHolds(product.brand, "-");
-        }
-        product.brand = brandId;
-      }
+      product.brand = brandId;
+      await BrandService.editProductHolds(brandId, '+'); 
 
-      if (categoryId) {
-        try {
-          await CategotyService.fetchCategory(categoryId);
-          await CategotyService.editProductHolds(categoryId, "+");
-        } catch (e) {
-          throw Error("Category not existed");
-        }
-        if (product.category) {
-          await CategotyService.editProductHolds(product.category, "-");
-        }
-        product.category = categoryId;
+      if(product.category){
+        await CategotyService.editProductHolds(product.category, '-'); 
       }
-      if (imageFiles !== undefined) {
-        let images = [];
-        for (let i = 0; i < imageFiles.length; i++) {
-          let imageModel = await ImageService.createImage(imageFiles[i]);
-          images.push(imageModel);
-        }
-        for (let i = 0; i < product.images.length; i++) {
-          await ImageService.deleteImage(product.images[i].firebasePath);
-        }
-        product.images = images;
-      }
+      product.category = categoryId;
+      await CategotyService.editProductHolds(categoryId, '+'); 
+
+      await Promise.all(product.images.map( async (image)=>{
+        await ImageService.deleteImage(image.firebasePath);
+      }));
+
+      product.images = await Promise.all(imageFiles.map( async (image)=>{
+        return await ImageService.createImage(image);  
+      }));
       await product.save();
       await session.commitTransaction();
     } catch (e) {

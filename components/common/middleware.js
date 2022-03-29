@@ -1,6 +1,71 @@
-import { query , validationResult} from 'express-validator';
+import { query , validationResult, body} from 'express-validator';
+import Brand from '../brand/model.js';
+import Category from '../category/model.js';
 
 const CommonMiddleWares = {
+    productCreateAndEditValidations:[
+        body("productName")
+        .exists()
+        .bail()
+        .not()
+        .isEmpty({ ignore_whitespace: true })
+        .withMessage("field can't be emtpy")
+        .bail()
+        .isByteLength({ min: 3, max: 50 })
+        .withMessage("character of field must be in range 3-50")
+        .trim(),
+      body("productPrice")
+        .exists()
+        .bail()
+        .not()
+        .isEmpty({ ignore_whitespace: true })
+        .withMessage("field can't be empty")
+        .bail()
+        .isNumeric()
+        .withMessage("field must be numeric value")
+        .toFloat(),
+      body("productUnit")
+        .exists()
+        .bail()
+        .not()
+        .isEmpty({ ignore_whitespace: true })
+        .withMessage("field can't be empty")
+        .bail()
+        .isInt()
+        .withMessage("field must be integer")
+        .toInt(),
+      body("productBrand")
+        .exists()
+        .bail()
+        .not()
+        .isEmpty({ ignore_whitespace: true })
+        .withMessage("field can't be empty")
+        .bail()
+        .trim()
+        .custom(async (id) => {
+          const exist = await Brand.exists({ _id: id });
+          if (!exist) {
+            throw new Error("brand not exist");
+          }
+          return true;
+        }),
+      body("productCategory")
+        .exists()
+        .bail()
+        .not()
+        .isEmpty({ ignore_whitespace: true })
+        .withMessage("field can't be empty")
+        .bail()
+        .trim()
+        .custom(async (id) => {
+          const exist = await Category.exists({ _id: id });
+          if (!exist) {
+            throw new Error("category not exist");
+          }
+          return true;
+        }),
+    ],
+
     apiQueryValidations: [
         query("page")
             .if(query("page").exists())

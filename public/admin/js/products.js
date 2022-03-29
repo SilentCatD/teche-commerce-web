@@ -43,7 +43,7 @@ $(document).ready(function () {
     toggleBtnLoading(false);
     toggleFormInput(false);
     if (result) {
-      console.log("hi");
+      triggerReloadBtn();
       displayAlert(true, "Product added");
       clearAllInput();
     } else {
@@ -94,6 +94,11 @@ $(document).ready(function () {
   deleteDocumentOnClick("Product",deleteProduct);
 });
 
+
+function triggerReloadBtn() {
+  $(".table-load-trigger").trigger("click");
+}
+
 async function createProduct(
   productName,
   productDetails,
@@ -119,10 +124,8 @@ async function createProduct(
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     });
-    console.log(response);
     return true;
   } catch (e) {
-    console.log(e);
     return false;
   }
 }

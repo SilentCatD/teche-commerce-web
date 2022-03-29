@@ -111,18 +111,46 @@ function triggerReloadBtn() {
   $(".reload-trigger").trigger("click");
 }
 
+async function urlToFile(url) {
+  const res = await fetch(url, {mode: 'cors'});
+  const blob = await res.blob();
+  const file = new File([blob], "file-name.png", { type: "image/png" });
+  return file;
+}
+
 async function editProduct(name, description, price, unit, brand, category) {
   try {
-    await new Promise((r) => setTimeout(r, 2000));
-    console.log(
-      name,
-      description,
-      price,
-      unit,
-      brand,
-      category,
-      productsImages
-    );
+    // console.log(
+    //   name,
+    //   description,
+    //   price,
+    //   unit,
+    //   brand,
+    //   category,
+    //   productsImages
+    // );
+    let formData = new FormData();
+    formData.append("productName", name);
+    formData.append("productDetails", description);
+    formData.append("productPrice", price);
+    formData.append("productUnit", unit);
+    formData.append("productBrand", brand);
+    formData.append("productCategory", category);
+    for (let i = 0; i < productsImages.length; i++) {
+      if(productsImages[i] instanceof File){ 
+
+      }else{
+        productsImages[i] = await urlToFile(productsImages[i]);
+      }
+      formData.append("images", productsImages[i]);
+    }
+    const res = await axios({
+      method: "put",
+      url: `/api/v1/product/${product.id}`,
+      data: formData,
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    console.log(res.data);
     return true;
   } catch (e) {
     return false;
@@ -267,7 +295,6 @@ function renderProduct(product, brands, categories) {
   $("#productPriceInput").val(product.price);
   $("#productUnitInput").val(product.unit);
   productsImages = product.images;
-  console.log(product);
 
   const brandsEls = [];
   const categoriesEls = [];
