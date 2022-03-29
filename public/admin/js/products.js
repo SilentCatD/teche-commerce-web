@@ -1,6 +1,18 @@
 let productsImages = [];
 let currentCarousel;
 $(document).ready(function () {
+  $("#productDelete").click(async function () {
+    const id = $("#productDelete").data('id');
+    console.log(id);
+    $("#productDelete").removeData("id");
+    if(await deleteProduct(id)) {
+      displayAlert(true, "Product Deleted");
+    } else {
+      displayAlert(false, "Something fuckup");
+    }
+    $("#page-modal").modal("hide");
+    $(".table-load-trigger").click();
+  });
   $(".owl-carousel").owlCarousel();
   $("#file-input").change(function (e) {
     e.preventDefault();
@@ -342,6 +354,20 @@ async function fetchSelectData(url) {
   });
 }
 
+async function deleteProduct(id){
+  try {
+    let res = await axios({
+      method: "delete",
+      url: `/api/v1/product/${id}`,
+    });
+    console.log(res);
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
+
 function addProductImages(el) {
   const index = $(el).data("img-index");
   currentCarousel = index;
@@ -475,12 +501,12 @@ renderTableRow = (item) => {
           Manage
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-          <li><button class="manage-btn dropdown-item btn"  data-id='${
-            item._id
+          <li><button class="manage-btn-edit dropdown-item btn"  data-id='${
+            item.id
           }' data-op='remove'>Edit</button></li>
           <li class="dropdown-divider"></li>
-          <li><button class="manage-btn dropdown-item text-danger btn" data-id='${
-            item._id
+          <li><button class="manage-btn-delete dropdown-item text-danger btn" data-id='${
+            item.id
           }' data-op="edit">Remove</button></li>
         </ul>
       </div>
@@ -490,10 +516,11 @@ renderTableRow = (item) => {
 };
 
 bindRowAction = () => {
-  $(".manage-btn").click(function (e) {
+  $(".manage-btn-delete").click(function (e) {
     e.preventDefault();
-    const id = $(this).attr("data-id");
-    const op = $(this).attr("data-op");
+    const id = $(this).data("id");
+    
+    $("#productDelete").data("id", id);
     // call func here
     $("#page-modal").modal("show");
   });

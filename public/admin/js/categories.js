@@ -1,4 +1,15 @@
 $(document).ready(function () {
+  $("#categoryDelete").click(async function () {
+    const id = $(this).data('id');
+    $("#categoryDelete").removeData("id");
+    if(await deleteCategory(id)) {
+      displayAlert(true, "Category Deleted");
+    } else {
+      displayAlert(false, "Something fuckup");
+    }
+    $("#page-modal").modal("hide");
+    $(".table-load-trigger").click();
+  });
   $("#categorySubmit").click(async function (e) {
     e.preventDefault();
     const input = validateBrandNameInput();
@@ -93,7 +104,19 @@ function clearAllInput() {
 }
 
 
-
+async function deleteCategory(categoryId) {
+  try {
+    let res = await axios({
+      method: "delete",
+      url: `/api/v1/category/${categoryId}`,
+    });
+    console.log(res);
+    return true;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+}
 
 getItemsMethods =  async (limit, page)=>{
   return axios({
@@ -104,7 +127,7 @@ getItemsMethods =  async (limit, page)=>{
 
 
 setLimit = ()=>{
-  return 1;
+  return 10;
 }
 
   
@@ -141,9 +164,9 @@ renderTableRow = (item)=>{
         Manage
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-        <li><button class="manage-btn dropdown-item btn"  data-id='${item._id}' data-op='remove'>Edit</button></li>
+        <li><button class="manage-btn-edit dropdown-item btn"  data-id='${item.id}' data-op='remove'>Edit</button></li>
         <li class="dropdown-divider"></li>
-        <li><button class="manage-btn dropdown-item text-danger btn" data-id='${item._id}' data-op="edit">Remove</button></li>
+        <li><button class="manage-btn-delete dropdown-item text-danger btn" data-id='${item.id}' data-op="edit">Remove</button></li>
       </ul>
     </div>
 </td>
@@ -153,12 +176,16 @@ renderTableRow = (item)=>{
 
 
 bindRowAction = ()=>{
-  $('.manage-btn').click(function (e) { 
+  $('.manage-btn-delete').click(function (e) { 
     e.preventDefault();
     const id = $(this).attr('data-id');
-    const op = $(this).attr('data-op');
     // call func here
+
+    console.log(id);
+    $("#categoryDelete").data("id", id);
+
     $('#page-modal').modal('show'); 
+
   });
 }
 

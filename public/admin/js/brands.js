@@ -2,7 +2,7 @@ let images = [];
 
 $(document).ready(function () {
   $("#brandDelete").click(async function () {
-    const id = $(this).data('id');
+    const id = $("#brandDelete").data('id');
     $("#brandDelete").removeData("id");
     if(await deleteBrand(id)) {
       displayAlert(true, "Brand Deleted");
@@ -228,7 +228,6 @@ bindRowAction = () => {
     e.preventDefault();
     const id = $(this).data("id");
     
-    console.log(id);
     $("#brandDelete").data("id", id);
 
     // call func here
