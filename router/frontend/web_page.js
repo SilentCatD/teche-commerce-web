@@ -6,20 +6,25 @@ import ProductService from "../../components/product/service.js";
 const webPageRouter = new express.Router();
 
 webPageRouter.get('/', async (req, res)=>{
-    const params = {title: "eTech Home"};
+    const params = {title: "Teche Home"};
     res.render('user/index',params);
 });
 
 
 webPageRouter.get('/shop', async (req, res)=>{
-    // const result = ProductService.fetchAllProduct(9,-1,'createAt');
-    // console.log(result);
-    const params = {title: "eTech Shop"};
-    res.render('user/shop-grid',params);
+    try{
+        const products = await ProductService.modelQueryAll(null,9,1,'createAt');
+        const params = {title: "Teche Shop", products: products};
+        res.render('user/shop-grid',params);
+    }
+    catch(e){
+        console.log(e);
+        res.status(404).send();
+    }
 });
 
 webPageRouter.get('/contact', async (req, res)=>{
-    const params = {title: "eTech Contact"};
+    const params = {title: "Teche Contact"};
     res.render('user/contact',params);
 });
 
@@ -29,7 +34,7 @@ webPageRouter.get('/details/:id', async (req, res)=>{
     console.log(id);
     try{
         const product = await ProductService.fetchProduct(id);
-        const params = {title: "eTech Contact", product: product};
+        const params = {title: `Teche ${product.name}`, product: product};
         res.render('user/shop-details',params);
     }
     catch(e){

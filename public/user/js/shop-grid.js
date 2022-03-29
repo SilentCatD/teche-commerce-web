@@ -1,18 +1,21 @@
 let pageConfiguration = {
   currentPage: 1,
   totalPage: -1,
+  reRenderPagination: true,
 
   totalItems: -1,
   itemInPage: -1,
 
-  item_per_page: 3,
+  item_per_page: 12,
+  pagination_size: 5,
+
   total_slider_item: 9,
   item_per_slider: 3,
-  pagination_size: 5,
 };
 
 $(document).ready(async function () {
   await REinit();
+  setBreadCrumb("Shop",null);
   window.history.replaceState(pageConfiguration,"","");
 });
 
@@ -22,8 +25,7 @@ async function REinit() {
   await FetchProduct();
 
   // await fetchLatestProduct()
-
-  await renderCompenent.renderPaginationPage(pageConfiguration);
+    await renderCompenent.renderPaginationPage(pageConfiguration);
 
   $(`#pagination_${pageConfiguration.currentPage}`).css({
     color: "blue",
@@ -66,20 +68,18 @@ const renderCompenent = {
     if (pageConfiguration.currentPage != 1) {
       renderHTMLElement.renderPaginationLeft();
     }
-
     let lost = 0;
-
     for (
       let i =
         pageConfiguration.currentPage -
-        Math.floor(pageConfiguration.pagination_size / 2);
+        Math.floor((pageConfiguration.pagination_size - 1) / 2);
       i < pageConfiguration.currentPage;
       i++
     ) {
       if (i < 1) {
         lost++;
         continue;
-      }
+      } else
       renderHTMLElement.renderPagination(i);
     }
 
@@ -89,7 +89,7 @@ const renderCompenent = {
       let i = pageConfiguration.currentPage + 1;
       i <=
       pageConfiguration.currentPage +
-        Math.floor(pageConfiguration.pagination_size / 2) +
+        Math.floor((pageConfiguration.pagination_size - 1) / 2) +
         lost;
       i++
     ) {
@@ -178,8 +178,8 @@ const renderHTMLElement = {
   renderPaginationLeft(){
     $("#pagination").append(`<a id='move_left_page'>◀</a>`);
     $("#move_left_page").on("click", function () {
-      window.history.replace(
-        pageConfiguration
+      window.history.pushState(
+        pageConfiguration,"",""
       );
       pageConfiguration.currentPage = pageConfiguration.currentPage - 1;
       REinit();
