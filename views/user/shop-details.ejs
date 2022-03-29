@@ -28,7 +28,7 @@
     <!-- Hero Section End -->
 
     <!-- Breadcrumb Section Begin -->
-    <%- include('items/breadcrumb',{pageName:"Contact Us"}) %>
+    <%- include('items/breadcrumb')%>
     <!-- Breadcrumb Section End -->
 
     <!-- Product Details Section Begin -->
@@ -42,26 +42,24 @@
                                 src="<%-product.images[0]%>" alt="">
                         </div>
                         <div class="product__details__pic__slider owl-carousel">
-                            <% for(var j=0; j<product.images.length; j++) { %>
+                            <% for(let j=0; j<product.images.length; j++) { %>
                                 <img data-imgbigurl="<%- product.images[j] %>"
                                 src="<%- product.images[j] %>" alt="">
                             <%}%>
-                            <img data-imgbigurl="https://macmall.vn/uploads/macbook_air_m1_gold_1619700203.png"
-                                src="https://macmall.vn/uploads/macbook_air_m1_gold_1619700203.png" alt="">
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <div class="product__details__text">
-                        <h3  class="product__details__name"><%-product.name%> </h3>
+                        <h3  class="product__details__name"></h3>
                         <div class="product__details__rating">
                             <div class="product__details__rating__star d-inline">
 
                             </div>
-                            <span id="product__details__review">(<%-product.rateCount%> reviews)</span>
+                            <span class="product__details__review"></span>
                         </div>
-                        <div class="product__details__price"><%-product.price%></div>
-                        <p class="product__details__desc""><%-product.details%></p>
+                        <div class="product__details__price"></div>
+                        <p class="product__details__desc"></p>
                         <div class="product__details__quantity">
                             <div class="quantity">
                                 <div class="pro-qty">
@@ -72,9 +70,9 @@
                         <a href="#" class="primary-btn">ADD TO CARD</a>
                         <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
                         <ul>
-                            <li><b>Availability</b> <span id="product__details__avail">In Stock</span></li>
-                            <li><b>Brand</b> <span id="product__details__brand"><%-product.brand.name%></span></li>
-                            <li><b>Category</b> <span id="product__details__category"><%-product.category.name%></span></li>
+                            <li><b>Availability</b> <span id="product__details__avail"></span></li>
+                            <li><b>Brand</b> <span id="product__details__brand"></span></li>
+                            <li><b>Category</b> <span id="product__details__category"></span></li>
 
 
                             <li><b>Share on</b>
@@ -547,7 +545,8 @@
 
     <!-- Footer Section Begin -->
     <%- include("partials/footer") %>
-    <script type="module" src="/user/js/detail.js"></script>
+    <script src="/user/js/breadcrumb.js"></script>
+    <script src="/user/js/detail.js"></script>
 
     <!-- Footer Section End -->
 

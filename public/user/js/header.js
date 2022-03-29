@@ -1,7 +1,12 @@
-import {whereAmI} from "/user/js/test-module.mjs";
 
 $(document).ready(async function () {
-    console.log(whereAmI());
-    $(`#header__${whereAmI()}`).addClass("active");
+  const currentURL = window.location.href;
+  const lastSegment = currentURL.split("/").pop();
+
+  if(lastSegment.length > 0 ) {
+  $(`#header__${lastSegment}`).addClass("active");
+  }
+  else   $(`#header__index`).addClass("active");
+
   });
   
