@@ -483,36 +483,34 @@ renderTableHead = () => {
 
 renderTableRow = (item) => {
   return `<tr>
-    <td class="align-middle">${item.id}</td>
-    <td class="align-middle">${item.name}</td>
-    <td class="align-middle">${
-      item.images.length > 0
-        ? `<img src=${item.images[0]} style="max-width:100px;max-height:100px; object-fit: contain;">`
-        : "Not avalable"
-    }</td>
-    <td class="align-middle">${item.price}</td>
-    <td class="align-middle">${item.status}</td>
-    <td class="align-middle">${item.brand? item.brand.name: 'not available'}</td>
-    <td class="align-middle">${item.category? item.category.name: 'not available'}</td>
-    <td class="align-middle">${item.createdAt}</td>
-    <td class="align-middle">
-    <div class="dropdown position-static">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-          Manage
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-          <li><button class="manage-btn-edit dropdown-item btn"  data-id='${
-            item.id
-          }' data-op='remove'>Edit</button></li>
-          <li class="dropdown-divider"></li>
-          <li><button class="manage-btn-delete dropdown-item text-danger btn" data-id='${
-            item.id
-          }' data-op="edit">Remove</button></li>
-        </ul>
-      </div>
-  </td>
-  </tr>
-  `;
+  <td class="align-middle">${item.id}</td>
+  <td class="align-middle">${item.name}</td>
+  <td class="align-middle">${
+    item.image
+      ? `<img src=${item.image} style="max-width:100px;max-height:100px; object-fit: contain;">`
+      : "Not avalable"
+  }</td>
+  <td class="align-middle">${item.productsHold}</td>
+  <td class="align-middle">${item.rankingPoints}</td>
+  <td class="align-middle">${item.createdAt}</td>
+  <td class="align-middle">
+  <div class="dropdown position-static">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+        Manage
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        <li><button class="manage-btn manage-btn-edit dropdown-item btn"  data-id='${
+          item.id
+        }'>Edit</button></li>
+        <li class="dropdown-divider"></li>
+        <li><button class="manage-btn manage-btn-delete dropdown-item text-danger btn" data-id='${
+          item.id
+        }'>Remove</button></li>
+      </ul>
+    </div>
+</td>
+</tr>
+`;
 };
 
 bindRowAction = () => {
