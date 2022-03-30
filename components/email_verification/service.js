@@ -15,7 +15,7 @@ const EmailVerificationService = {
       from: `"TechEcommerce" <${process.env.SERVICE_MAIL}>`, // sender address
       to: `${email}`, // list of receivers
       subject: "ACCOUNT VERIFICATION", // Subject line
-      text: "Click the link bellow to activate your email", // plain text body
+      text: "Click the link bellow to activate your email, this link will expire after 7 days", // plain text body
       html: `<b>Click this shit: ${process.env.HOST_URL}/api/v1/auth/active/${hash}</b>`, // html body
     });
   },
