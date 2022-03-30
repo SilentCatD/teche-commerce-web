@@ -13,7 +13,6 @@
   "author": "It's was me",
   "license": "ISC",
   "devDependencies": {
-    "@faker-js/faker": "^6.0.0",
     "nodemon": "^2.0.15"
   },
   "dependencies": {
