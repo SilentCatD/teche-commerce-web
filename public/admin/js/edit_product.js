@@ -114,7 +114,7 @@ function triggerReloadBtn() {
 async function urlToFile(url) {
   const res = await fetch(url, {mode: 'cors'});
   const blob = await res.blob();
-  const file = new File([blob], "file-name.png", { type: "image/png" });
+  const file = new File([blob], "file-name", { type: "image/jpeg" });
   return file;
 }
 
