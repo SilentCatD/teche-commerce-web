@@ -16,7 +16,7 @@ const unactivatedAccountSchema = new mongoose.Schema({
     }
 }, {autoCreate: false});
 
-// unactivatedAccountSchema.index({createdAt: 1},{expires: "7d"}); //auto delete after 7d, nhưng giờ chưa viết hàm gởi lại email kích hoạt
+unactivatedAccountSchema.index({createdAt: 1},{expires: "7d"});
 
 const UnactivatedAccount = mongoose.model('UnactivatedAccount',unactivatedAccountSchema);
 

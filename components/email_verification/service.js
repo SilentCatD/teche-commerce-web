@@ -1,13 +1,15 @@
 import cryptoRandomString from "crypto-random-string";
 import transporter from "../../config/mail_transporter.js";
+import User from "../user/model.js";
 import UserService from "../user/service.js";
 import UnactivatedAccount from "./model.js";
 
 
 const EmailVerificationService = {
-  sendVerificationEmail: async (email, userId) => {
+  sendVerificationEmail: async (email) => {
+    const user = await User.findOne({email: email});
     const hash = cryptoRandomString({ length: 128, type: "url-safe" });
-    const account = new UnactivatedAccount({userId: userId, hash: hash});
+    const account = new UnactivatedAccount({userId: user.id, hash: hash});
     await account.save();
     await transporter.sendMail({
       from: `"TechEcommerce" <${process.env.SERVICE_MAIL}>`, // sender address
@@ -20,9 +22,6 @@ const EmailVerificationService = {
 
   activateUserAccount: async (hash) => {
     const na_account = await UnactivatedAccount.findOne({hash: hash});
-    if(!na_account){
-        throw new Error("Unactivated entries not found");
-    }
     const userId = na_account.userId;
     await UserService.activeUserAccount(userId);
     await na_account.remove();
