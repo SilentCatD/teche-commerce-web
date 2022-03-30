@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(express.static( __dirname  + '/public',  {index: false}));
 app.use(router);
 
-app.listen(3000, async ()=> {
+app.listen(process.env.PORT || 5000, async ()=> {
   await database.instance.connect();
   console.log(`Server is running at: ${process.env.HOST_URL}`);
 });
