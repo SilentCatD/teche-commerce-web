@@ -8,7 +8,7 @@ import {
 } from "firebase/storage";
 import firebaseConfig from "../../../config/firebase_config.js";
 import mongoose from "mongoose";
-import { v4 as uuidv4 } from "uuid";
+import {randomUUID} from 'crypto';
 import Sharp from "sharp";
 
 class Database {
@@ -38,7 +38,7 @@ class Database {
     // file<File>: image file to upload
     // return firebase path and file download url
     const fileExt = 'jpeg';
-    const firebasePath = `/images/${uuidv4() + "." + fileExt}`;
+    const firebasePath = `/images/${randomUUID() + "." + fileExt}`;
     const storageRef = ref(this.#storage, firebasePath);
     const metadata = {
       contentType: 'image/jpeg',
