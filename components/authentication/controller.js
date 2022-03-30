@@ -60,7 +60,7 @@ const AuthenticationController = {
       .custom(async (email) => {
         const user = await User.findOne({ email: email });
         if (!user) {
-          throw new Error("email not registerd")
+          throw new Error("email not registered")
         }
         if (!user.active) {
           throw new Error("account not activated")
