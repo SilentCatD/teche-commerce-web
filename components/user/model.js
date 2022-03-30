@@ -5,6 +5,10 @@ const userSchema = new mongoose.Schema({
    hash: String,
    salt: String,
    role: String, // 'user', 'admin'
+   active: {
+      type: Boolean,
+      default: false,
+   },
 }, { autoCreate: false });
 
 const User = mongoose.model('User',userSchema);

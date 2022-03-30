@@ -1,11 +1,11 @@
 import express from "express";
 import AuthenticationController from "../../../../components/authentication/controller.js";
-import AuthorizationController from "../../../../components/authorization/controller.js";
+import EmailVerificationController from "../../../../components/email_verification/controller.js";
 const authRouter = express.Router();
 
 authRouter.route('/login').get(AuthenticationController.login);
 authRouter.route('/register').post(AuthenticationController.registerUser);
-authRouter.route('/register-admin').post(AuthorizationController.verifyAccessToken, AuthorizationController.isAdmin, AuthenticationController.registerAdmin);
-authRouter.report('/logout').post(AuthorizationController.verifyRefreshToken, AuthenticationController.logout);
-
+authRouter.route('/register-admin').post(AuthenticationController.registerAdmin);
+authRouter.route('/logout').post(AuthenticationController.logout);
+authRouter.route('/active/:hash').get(EmailVerificationController.verifyEmail);
 export default authRouter;

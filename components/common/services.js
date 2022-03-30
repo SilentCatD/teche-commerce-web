@@ -41,7 +41,7 @@ const CommomDatabaseServies = {
     }
   },
 
-  editrankingPoints: async (model, id, op) => {
+  editRankingPoints: async (model, id, op) => {
     const session = await model.startSession();
     session.startTransaction();
     try {

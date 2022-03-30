@@ -1,6 +1,7 @@
 import { query , validationResult, body} from 'express-validator';
 import Brand from '../brand/model.js';
 import Category from '../category/model.js';
+import User from '../user/model.js'
 
 const CommonMiddleWares = {
     productCreateAndEditValidations:[
@@ -124,6 +125,36 @@ const CommonMiddleWares = {
         req.params.limit = limit;
         next();
     },
+
+    accountRegisterRequirement: [
+      body("email")
+      .exists()
+      .not()
+      .isEmpty()
+      .withMessage("field can't be empty")
+      .bail()
+      .isEmail()
+      .withMessage("invalid email format")
+      .bail()
+      .trim()
+      .custom(async (email) => {
+        const user = await User.findOne({ email: email });
+        if (user) {
+          throw new Error("email already registerd");
+        }
+        return true;
+      }),
+    body("password")
+      .exists()
+      .bail()
+      .not()
+      .isEmpty()
+      .withMessage("field can't be empty")
+      .bail()
+      .trim()
+      .isStrongPassword({minSymbols: 0})
+      .withMessage("password not strong enough"),
+    ],
 };
 
 

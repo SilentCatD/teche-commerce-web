@@ -1,91 +1,99 @@
 import accessTokenExpiraion from "../../config/access_token_expire.js";
-import { PUB_KEY } from "../../utils/cert/key_pair.js";
-import User from '../user/model.js';
 import AuthoriztionService from "./service.js";
-import jsonwebtoken from "jsonwebtoken";
-const { TokenExpiredError } = jsonwebtoken;
-import mongoose from "mongoose";
+import passport from "passport";
+
+const accessTokenVerify = [
+  passport.authenticate("jwt", { session: false }),
+  async (req, res, next) => {
+    const tokenType = req.authInfo.type;
+    if (tokenType != "access-token") {
+      return res
+        .status(400)
+        .json({ success: false, msg: "invalid access-token" });
+    }
+    next();
+  },
+];
+
+const refreshTokenVerify = [
+  passport.authenticate("jwt", { session: false }),
+  async (req, res, next) => {
+    try {
+      const tokenType = req.authInfo.type;
+      const tokenId = req.authInfo.id;
+      if (!tokenId) {
+        throw new Error("invalid token id");
+      }
+      if (tokenType != "refresh-token") {
+        throw new Error("invalid token type");
+      }
+      const token = await AuthoriztionService.validateRefreshToken(tokenId);
+      if (!token) {
+        throw new Error("invalid refresh-token (revoked)");
+      }
+      next();
+    } catch (e) {
+      return res.status(400).json({ success: false, msg: e.message });
+    }
+  },
+];
 
 const AuthorizationController = {
-    verifyAccessToken: async (req, res, next) => {
-        const authHeader = req.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')['1'];
-        if (!token) {
-            return res.status(401).end('unauthorized');
-        }
-        jsonwebtoken.verify(token, PUB_KEY, { algorithms: 'RS256' }, async (err, data) => {
-            if (err) {
-                if (err instanceof TokenExpiredError) {
-                    return res.status(401).end('token expired');
-                }
-                return res.status(401).end('invalid token');
-            };
-            const type = data.type;
-            if (!type || type != 'access-token') {
-                return res.status(401).end('invalid token');
-            }
-            try {
-                const user = await User.findById(mongoose.Types.ObjectId(data.sub));
-                // maybe check suspended status here?
-                if (!user) {
-                    return res.status(401).end('user not found');
-                }
-                req.body.user = user;
-                next();
-            } catch (e) {
-                return res.status(401).end('unauthorized');
-            }
+  getNewAccessToken: [
+    refreshTokenVerify,
+    async (req, res) => {
+      const expiredIn = accessTokenExpiraion;
+      try {
+
+        const newAccessToken = AuthoriztionService.issueAccessToken(
+          req.user.id,
+          expiredIn
+        );
+        return res.status(200).json({
+          accessToken: newAccessToken,
+          expiresIn: expiredIn,
         });
+      } catch (e) {
+        return res.status(500).send("something went wrong");
+      }
     },
+  ],
 
-    verifyRefreshToken: async (req, res, next) => {
-        const refreshToken = req.body.token;
-        if (!refreshToken) {
-            return res.status(401).end('unauthorized');
-        }
-        jsonwebtoken.verify(refreshToken, PUB_KEY, { algorithms: 'RS256', ignoreExpiration: true }, async (err, data) => {
-            if (err) {
-                return res.status(401).end('invalid token');
-            };
-            const tokenId = data.id;
-            if (!AuthoriztionService.validateRefreshToken(tokenId)) {
-                return res.status(403).end('forbidden');
-            }
-            const type = data.type;
-            if (!type || type != 'refresh-token') {
-                return res.status(401).end('invalid token');
-            }
-            req.body.userId = data.sub;
-            next();
-        });
-    },
+  isValidAccount: [
+    // miễn là có account và đã active
+    accessTokenVerify,
+  ],
 
-    getNewAccessToken: async (req, res) => {
-        // use verifyRefreshToken before this 
-        const expiredIn = accessTokenExpiraion;
-        try {
-            const { userId } = req.body
-            if (!userId) {
-                throw Error('NO user Id to make new token');
-            }
-            const newAccessToken = AuthoriztionService.issueAccessToken(userId, expiredIn);
-            res.status(200).json({
-                accessToken: newAccessToken,
-                expiresIn: expiredIn
-            });
-        } catch (e) {
-            res.status(500).send('something went wrong');
-        }
-    },
+  isValidRefreshToken: [
+    // dùng để logout
+    refreshTokenVerify,
+  ],
 
-    isAdmin: async (req, res, next) => {
-        const user = req.body.user;
-        if(user && user.role=='admin'){
-            next();
-            return;
-        }
-        res.status(403).send('forbidden');
+  isUser: [
+    // phải là account user
+    accessTokenVerify,
+    async (req, res, next) => {
+      const role = req.user.role;
+      console.log(req.user.role);
+      if (role == "user") {
+        return next();
+      }
+      res.status(403).send("forbidden");
     },
+  ],
+
+  isAdmin: [
+    // phải là account admin
+    accessTokenVerify,
+    async (req, res, next) => {
+      const role = req.user.role;
+      console.log(req.user.role);
+      if (role == "admin") {
+        return next();
+      }
+      res.status(403).send("forbidden");
+    },
+  ],
 };
 
 export default AuthorizationController;
