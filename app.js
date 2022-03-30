@@ -20,9 +20,10 @@ app.use(express.json());
 app.use(express.static( __dirname  + '/public',  {index: false}));
 app.use(router);
 
-app.listen(process.env.PORT || 5000, async ()=> {
+const appInstance  = app.listen(process.env.PORT || 5000, 'localhost',async ()=> {
   await database.instance.connect();
-  console.log(`Server is running at: ${process.env.HOST_URL}`);
+  var host = appInstance.address().address;
+  var port = appInstance.address().port;
+  console.log(`Server is running at:  http://${host}:${port}`);
 });
-
 
