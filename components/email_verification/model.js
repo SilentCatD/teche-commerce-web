@@ -9,11 +9,18 @@ const unactivatedAccountSchema = new mongoose.Schema({
     hash:{
         type: String,
         required: true,
+    },
+    createdAt: {
+        type: Date,
+        default: new Date()
     }
 }, {autoCreate: false});
 
+// unactivatedAccountSchema.index({createdAt: 1},{expires: "7d"}); //auto delete after 7d, nhưng giờ chưa viết hàm gởi lại email kích hoạt
 
 const UnactivatedAccount = mongoose.model('UnactivatedAccount',unactivatedAccountSchema);
+
+
 
 export default UnactivatedAccount;
 

@@ -22,7 +22,7 @@ const AuthenticationController = {
         password,
         "user"
       );
-      EmailVerificationService.sendVerificationEmail(email, newUser._id); // DON'T AWAIT THIS
+      EmailVerificationService.sendVerificationEmail(email, newUser.id); // DON'T AWAIT THIS
       res.json({
         success: true,
         user: newUser,
@@ -67,11 +67,11 @@ const AuthenticationController = {
         .json({ success: false, msg: "you entered the wrong password" });
     }
     const accessToken = AuthoriztionService.issueAccessToken(
-      user._id,
+      user.id,
       accessTokenExpiraion
     );
     const refreshToken = await AuthoriztionService.issueRefreshToken(
-      user._id
+      user.id
     );
     return res.status(200).json({
       success: true,
@@ -86,7 +86,7 @@ const AuthenticationController = {
     async (req, res) => {
       const tokenId = req.authInfo.id;
       await AuthoriztionService.revokeRefreshToken(tokenId);
-      res.send(200);
+      res.status(200).end(200);
     },
   ],
 };

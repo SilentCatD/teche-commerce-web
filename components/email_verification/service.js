@@ -21,7 +21,7 @@ const EmailVerificationService = {
   activateUserAccount: async (hash) => {
     const na_account = await UnactivatedAccount.findOne({hash: hash});
     if(!na_account){
-        throw new Error("Unactivated account not found");
+        throw new Error("Unactivated entries not found");
     }
     const userId = na_account.userId;
     await UserService.activeUserAccount(userId);
