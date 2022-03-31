@@ -1,23 +1,12 @@
+import API_CALL from "./utils/api-call.js";
+import authentication from "./utils/auth.js";
 
-const API_CALL_1 = {
-    loginRequest: async (email, password) => {
-      try {
-        const request = {
-          method: "post",
-          url: `/api/v1/auth/login`,
-          data: {
-              email: email,
-              password: password
-          }
-        };
-        let res = await axios(request);
-        return res;
-      } catch (e) {
-        return e.response;
-    } 
-    },
-  };
+
+$(document).ready(async function () {
   
+    });
+
+
 
 $("#login").bind("click", async () => {
     $("#error").text("");
@@ -51,9 +40,43 @@ $("#login").bind("click", async () => {
         const jwtToken = authentication.getJwtToken();
         if(jwtToken) {
           // step4: redirect to customer previous page (i dunnu how)
-          console.log("Yes token have been save");
+          console.log("Token save in local storage");
+          const host = window.location.host;
+          window.location.href = `http://${host}/`; 
+
         }
     }
+});
+
+
+$("#refresh").bind("click", async () => {
+  $("#error").text("");
+
+  const response = await API_CALL.newTokenRequest();
+  console.log(response);
+  if(response.status === 500) {
+      // something fuckup validtor in backend
+      $(".text-danger").text("Server fuckup");
+  } else if(response.status === 400) {
+      // wrong password 
+      $(".text-danger").text(response.data.msg);
+  } else if(response.status === 200) {
+       // what the hell is this (data.success)
+
+      // step 1: extract jwt token (acess token and refresh token)
+      const accessToken = response.data.accessToken;
+
+      // step 2: save some where (seasionStorage)
+      authentication.setJwtToken(accessToken);
+
+
+      // step 3: redirect homePage customer or admin 
+      const jwtToken = authentication.getJwtToken();
+      if(jwtToken) {
+        // step4: redirect to customer previous page (i dunnu how)
+        console.log("Token save in storage seasion");
+      }
+  }
 });
 
 
@@ -64,9 +87,6 @@ $("#useremail").on("input propertychange", function (e) {
   });
 
 
-  $("#userpwd").on("input propertychange", function (e) {
-    e.preventDefault();
-  });
 
 function validateUserEmail() {
     let email = $("#useremail").val().trim();
