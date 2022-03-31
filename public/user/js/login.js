@@ -1,4 +1,5 @@
-const API_CALL = {
+
+const API_CALL_1 = {
     loginRequest: async (email, password) => {
       try {
         const request = {
@@ -10,7 +11,7 @@ const API_CALL = {
           }
         };
         let res = await axios(request);
-        return res.response;
+        return res;
       } catch (e) {
         return e.response;
     } 
@@ -27,9 +28,31 @@ $("#login").bind("click", async () => {
     const response = await API_CALL.loginRequest(email,password);
     console.log(response);
     if(response.status === 400) {
+        // something fuckup validtor in backend
         $(".text-danger").text(response.data.errors[0].msg);
     } else if(response.status === 403) {
+        // wrong password 
         $(".text-danger").text(response.data.msg);
+    } else if(response.status === 200) {
+        // success login, now real stuff begin
+        authentication.sayHello();
+
+         // what the hell is this (data.success)
+
+        // step 1: extract jwt token (acess token and refresh token)
+        const accessToken = response.data.accessToken;
+        const refreshToken = response.data.refreshToken;
+
+        // step 2: save some where (seasionStorage)
+        authentication.setJwtToken(accessToken);
+        authentication.setRefreshToken(refreshToken);
+
+        // step 3: redirect homePage customer or admin 
+        const jwtToken = authentication.getJwtToken();
+        if(jwtToken) {
+          // step4: redirect to customer previous page (i dunnu how)
+          console.log("Yes token have been save");
+        }
     }
 });
 
