@@ -44,7 +44,11 @@
                     </div>
                     <div class="mt-sm-0 mt-3"><a href="/memoryshit">Forgot password?</a></div>
                 </div>
-                <div class="my-3"> <input type="button" value="Login" class="btn btn-primary" id="login"></input></div>
+                <div class="my-3">
+                     <input type="button" value="Login" class="btn btn-primary" id="login"></input>
+                     <input type="button" value="Refresh" class="btn btn-primary" id="refresh"></input>
+
+                    </div>
                 <div class="mb-3"> <span class="text-light-white">Don't have an account?</span> <a href="/signup">Sign Up</a>
                 </div>
             </div>
@@ -60,9 +64,7 @@
     <!-- Js Plugins -->
     <%-include('partials/script') %>
     <script src="https://unpkg.com/validator@latest/validator.min.js"></script>
-    <script src="/user/js/utils/auth.js"></script>
-    <script src="/user/js/utils/api-call.js"></script>
-    <script src="/user/js/login.js"></script>
+    <script type="module" src="/user/js/login.js"></script>
 
 
 
