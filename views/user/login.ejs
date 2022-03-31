@@ -24,11 +24,11 @@
 <body>
     <div class="wrapper">
         <div class="card">
-            <form action="#" class="d-flex flex-column" method="">
+            <div  class="d-flex flex-column"">
                 <div class="h3 text-center text-white">Login</div>
                 <div class="d-flex align-items-center input-field my-3 mb-4"> 
                     <span class="far fa-user p-2"></span>
-                    <input type="text" placeholder="Username" required class="form-control" id="username"> 
+                    <input type="text" placeholder="Email" required class="form-control" id="useremail"> 
                 </div>
                 <div class="d-flex align-items-center input-field mb-4"> 
                     <span class="fas fa-lock p-2"></span> 
@@ -39,13 +39,15 @@
                       </span> 
                 </div>
                 <div class="d-sm-flex align-items-sm-center justify-content-sm-between">
-                    <div class="d-flex align-items-center"></div>
+                    <div class="d-flex align-items-center">
+                        <p class="text-danger text-break" id="error"></p>
+                    </div>
                     <div class="mt-sm-0 mt-3"><a href="/memoryshit">Forgot password?</a></div>
                 </div>
-                <div class="my-3"> <input type="submit" value="Login" class="btn btn-primary"></input></div>
+                <div class="my-3"> <input type="button" value="Login" class="btn btn-primary" id="login"></input></div>
                 <div class="mb-3"> <span class="text-light-white">Don't have an account?</span> <a href="/signup">Sign Up</a>
                 </div>
-            </form>
+            </div>
             <div class="position-relative border-bottom my-3 line"> <span class="connect">or connect with</span> </div>
             <div class="text-center py-3 connections"> <a href="https://wwww.facebook.com" target="_blank" class="px-2">
                     <img src="https://www.dpreview.com/files/p/articles/4698742202/facebook.jpeg" alt=""> </a> <a
@@ -56,15 +58,11 @@
     </div>
 
     <!-- Js Plugins -->
-    <script src="/user/js/jquery-3.3.1.min.js"></script>
-    <script src="/user/js/bootstrap.min.js"></script>
-    <script src="/user/js/jquery.nice-select.min.js"></script>
-    <script src="/user/js/jquery-ui.min.js"></script>
-    <script src="/user/js/jquery.slicknav.js"></script>
-    <script src="/user/js/mixitup.min.js"></script>
-    <script src="/user/js/owl.carousel.min.js"></script>
-    <script src="/user/js/main.js"></script>
+    <%-include('partials/script') %>
+    <script src="https://unpkg.com/validator@latest/validator.min.js"></script>
     <script src="/user/js/authenticate.js"></script>
+
+
 
 
 </body>
