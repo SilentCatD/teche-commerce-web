@@ -8,7 +8,9 @@ authRouter.route('/login').post(AuthenticationController.login); // email, passw
 authRouter.route('/register').post(AuthenticationController.registerUser); // email, passowrd
 authRouter.route('/register-admin').post(AuthenticationController.registerAdmin); // email, password
 authRouter.route('/logout').get(AuthenticationController.logout); // refresh
-authRouter.route('/active/:hash').get(EmailVerificationController.verifyEmail); // active account link
 authRouter.route('/token').get(AuthorizationController.getNewAccessToken); // refresh
-authRouter.route('/resend-activate-mail').get(EmailVerificationController.resendActivationEmail); // email
+authRouter.route('/resend-activate-email').post(EmailVerificationController.resendActivationEmail); // email
+authRouter.route('/active/:hash').put(EmailVerificationController.verifyEmail); // active account hash
+authRouter.route('/send-reset-password-email').post(EmailVerificationController.sendResetPasswordEmail); // email
+authRouter.route('/reset-password/:hash').put();
 export default authRouter;

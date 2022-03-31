@@ -2,6 +2,17 @@ import AuthenticationService from "../authentication/service.js";
 import User from "./model.js";
 
 const UserService = {
+
+  resetUserPassword: async(userId, password)=>{
+    const saltHash = AuthenticationService.genPassword(password);
+    const salt = saltHash.salt;
+    const hash = saltHash.hash;
+    const user = await User.findById(userId);
+    user.hash = hash;
+    user.salt = salt;
+    await user.save();
+  },
+
   createUserWithRole: async (email, password, role) => {
     const saltHash = AuthenticationService.genPassword(password);
     const salt = saltHash.salt;
