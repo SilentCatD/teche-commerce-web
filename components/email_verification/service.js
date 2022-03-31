@@ -25,6 +25,7 @@ const EmailVerificationService = {
     const userId = na_account.userId;
     await UserService.activeUserAccount(userId);
     await na_account.remove();
+    await UnactivatedAccount.deleteMany({userId: userId});
   },
 };
 

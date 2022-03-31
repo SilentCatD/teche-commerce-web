@@ -1,4 +1,6 @@
 import { param, validationResult , body} from "express-validator";
+import User from "../user/model.js";
+import UnactivatedAccount from "./model.js";
 import EmailVerificationService from "./service.js";
 
 const EmailVerificationController = {
@@ -45,6 +47,13 @@ const EmailVerificationController = {
         const na_account = await UnactivatedAccount.findOne({ hash: hash });
         if (!na_account) {
           throw new Error("account entries not found");
+        }
+        const user = await User.findById(na_account.userId);
+        if(!user){
+          throw new Error("account not exist in database");
+        }
+        if(user.active){
+          throw new Error("account already been activated");
         }
         return true;
       }),
