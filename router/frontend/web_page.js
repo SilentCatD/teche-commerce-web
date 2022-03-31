@@ -5,6 +5,18 @@ import ProductService from "../../components/product/service.js";
 
 const webPageRouter = new express.Router();
 
+
+// For Login (actually we just need login)
+webPageRouter.get("/login",async (req, res) => {
+    res.render('user/login');
+});
+webPageRouter.get("/signup",async (req, res) => {
+    res.render('user/signup');
+});
+
+
+// ohter shiting route
+
 webPageRouter.get('/', async (req, res)=>{
     const params = {title: "Teche Home"};
     res.render('user/index',params);

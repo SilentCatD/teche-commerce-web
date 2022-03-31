@@ -1,0 +1,4 @@
+.latest-product__item__pic img {
+    width:110px;
+    object-fit: contain;
+}
