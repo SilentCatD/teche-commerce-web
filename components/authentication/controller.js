@@ -102,7 +102,7 @@ const AuthenticationController = {
     async (req, res) => {
       const tokenId = req.authInfo.id;
       await AuthoriztionService.revokeRefreshToken(tokenId);
-      res.status(200).end("logged out");
+      res.status(200).json({msg: "you entered the wrong password" });
     },
   ],
 };

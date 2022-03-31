@@ -8,7 +8,7 @@ const accessTokenVerify = [
     const tokenType = req.authInfo.type;
     if (tokenType != "access-token") {
       return res
-        .status(400)
+        .status(403)
         .json({ success: false, msg: "invalid access-token" });
     }
     next();
@@ -33,7 +33,7 @@ const refreshTokenVerify = [
       }
       next();
     } catch (e) {
-      return res.status(400).json({ success: false, msg: e.message });
+      return res.status(403).json({ success: false, msg: e.message });
     }
   },
 ];
@@ -78,7 +78,7 @@ const AuthorizationController = {
       if (role == "user") {
         return next();
       }
-      res.status(403).send("forbidden");
+      res.status(403).json({ success: false, msg: "forbidden" });
     },
   ],
 
@@ -91,7 +91,7 @@ const AuthorizationController = {
       if (role == "admin") {
         return next();
       }
-      res.status(403).send("forbidden");
+      res.status(403).json({ success: false, msg: "forbidden" });
     },
   ],
 };
