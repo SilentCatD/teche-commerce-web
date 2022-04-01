@@ -1,10 +1,9 @@
-import axios from "axios";
 import express from "express";
 import __dirname from "../../dirname.js";
 import ProductService from "../../components/product/service.js";
+import EmailVerificationService from "../../components/email_verification/service.js";
 
-const webPageRouter = new express.Router();
-
+const webPageRouter = express.Router();
 
 // For Login (actually we just need login)
 webPageRouter.get("/login",async (req, res) => {
@@ -54,6 +53,19 @@ webPageRouter.get('/details/:id', async (req, res)=>{
         res.status(404).send();
     }
 });
+
+webPageRouter.get('/active/:hash', async (req, res)=>{
+    const {hash} = req.params;
+    const routeParams = {
+        hash: hash
+    }
+    if(await EmailVerificationService.verifyHashActiveEmail(hash)){
+        return res.render('user/active', routeParams);
+    }
+    return res.status(404).end();
+});
+
+
 
 
 export default webPageRouter;

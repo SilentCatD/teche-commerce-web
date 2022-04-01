@@ -7,6 +7,23 @@ import {UnactivatedAccount, ResetPasswordRequest} from "./model.js";
 
 const EmailVerificationService = {
 
+  verifyHasResetPwd: async (hash)=>{
+    const request = await ResetPasswordRequest.findOne({hash: hash});
+    if(request){
+      return true;
+    }
+    return false;
+  },
+
+  verifyHashActiveEmail: async (hash)=>{
+    const na_account = await UnactivatedAccount.findOne({hash: hash});
+    if(na_account){
+      return true;
+    }
+    return false;
+
+  },
+
   sendResetPasswordEmail: async (email) => {
     const user = await User.findOne({email: email});
     const hash = cryptoRandomString({ length: 128, type: "url-safe" });
@@ -26,13 +43,14 @@ const EmailVerificationService = {
     const hash = cryptoRandomString({ length: 128, type: "url-safe" });
     const account = new UnactivatedAccount({userId: user.id, hash: hash});
     await account.save();
-    await transporter.sendMail({
+    let res = await transporter.sendMail({
       from: `"TechEcommerce" <${process.env.SERVICE_MAIL}>`, // sender address
       to: `${email}`, // list of receivers
       subject: "ACCOUNT VERIFICATION", // Subject line
       text: "Click the link bellow to activate your email, this link will expire after 7 days", // plain text body
-      html: `<b>Click this shit: ${process.env.HOST_URL}/api/v1/auth/active/${hash}</b>`, // html body, should send link to html front end, this is direct api link
+      html: `<b>Click this shit: ${process.env.HOST_URL}/active/${hash}</b>`, // html body, should send link to html front end, this is direct api link
     });
+    console.log(res);
   },
 
   activateUserAccount: async (hash) => {

@@ -1,6 +1,5 @@
 import Category from "./model.js";
 import mongoose from "mongoose";
-import calculatePaging from "../../utils/calculatePaging.js";
 import CommomDatabaseServies from "../common/services.js";
 
 
