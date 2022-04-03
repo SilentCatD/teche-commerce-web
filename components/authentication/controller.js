@@ -16,7 +16,7 @@ const AuthenticationController = {
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
       }
-      const {email,name, password } = req.body;
+      const { email, name, password } = req.body;
       const newUser = await UserService.createUserWithRole(
         email,
         name,
@@ -35,7 +35,7 @@ const AuthenticationController = {
     CommonMiddleWares.accountRegisterRequirement,
     AuthorizationController.isAdmin,
     async (req, res) => {
-      const { email,name, password } = req.body;
+      const { email, name, password } = req.body;
       const newUser = await UserService.createUserWithRole(
         email,
         name,
@@ -45,8 +45,6 @@ const AuthenticationController = {
       res.json({ success: true, user: newUser });
     },
   ],
-
-
 
   login: [
     body("email")
@@ -59,20 +57,40 @@ const AuthenticationController = {
       .isEmail()
       .withMessage("invalid email format")
       .bail()
+      .trim()
       .custom(async (email) => {
         const user = await User.findOne({ email: email });
         if (!user) {
-          throw new Error("email not registered")
+          throw new Error("email not registered");
         }
         if (!user.active) {
-          throw new Error("account not activated")
+          throw new Error("account not activated");
+        }
+        return true;
+      }),
+    body("role")
+      .exists()
+      .bail()
+      .notEmpty({ ignore_whitespace: true })
+      .withMessage("field can't be empty")
+      .bail()
+      .isIn(["user", "admin"])
+      .withMessage("field must be either 'user' or 'admin'")
+      .bail()
+      .trim()
+      .custom(async (role, { req, loc, path }) => {
+        const user = await User.findOne({ email: req.body.email });
+        if (user.role != role) {
+          throw new Error("role does not match");
         }
         return true;
       }),
     async (req, res) => {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res
+          .status(400)
+          .json({ success: false, msg: errors.array()[0].msg });
       }
       const user = await User.findOne({ email: req.body.email });
       const isValid = AuthenticationService.validPassword(
@@ -105,7 +123,28 @@ const AuthenticationController = {
     async (req, res) => {
       const tokenId = req.authInfo.id;
       await AuthoriztionService.revokeRefreshToken(tokenId);
-      res.status(200).json({msg: "you entered the wrong password" });
+      res.status(200).json({ success: true, msg: "logout success" });
+    },
+  ],
+
+  isAdmin: [
+    AuthorizationController.isAdmin,
+    async (req, res) => {
+      res.status(200).send({ success: true, msg: "account is admin" });
+    },
+  ],
+
+  isUser: [
+    AuthorizationController.isUser,
+    async (req, res) => {
+      res.status(200).send({ success: true, msg: "account is user" });
+    },
+  ],
+
+  isValidAccount: [
+    AuthorizationController.isValidAccount,
+    async (req, res) => {
+      res.status(200).send({ success: true, msg: "account is valid" });
     },
   ],
 };

@@ -21,12 +21,13 @@ const refreshTokenVerify = [
     try {
       const tokenType = req.authInfo.type;
       const tokenId = req.authInfo.id;
-      if (!tokenId) {
-        throw new Error("invalid token id");
-      }
       if (tokenType != "refresh-token") {
         throw new Error("invalid token type");
       }
+      if (!tokenId) {
+        throw new Error("invalid token id");
+      }
+
       const token = await AuthoriztionService.validateRefreshToken(tokenId);
       if (!token) {
         throw new Error("invalid refresh-token (revoked)");
@@ -44,12 +45,15 @@ const AuthorizationController = {
     async (req, res) => {
       const expiredIn = accessTokenExpiraion;
       try {
-
         const newAccessToken = AuthoriztionService.issueAccessToken(
           req.user.id,
           expiredIn
         );
+        const newRefreshToken = await AuthoriztionService.issueRefreshToken(
+          req.user.id
+        );
         return res.status(200).json({
+          refreshToken: newRefreshToken,
           accessToken: newAccessToken,
           expiresIn: expiredIn,
         });
@@ -74,7 +78,6 @@ const AuthorizationController = {
     accessTokenVerify,
     async (req, res, next) => {
       const role = req.user.role;
-      console.log(req.user.role);
       if (role == "user") {
         return next();
       }
@@ -87,7 +90,6 @@ const AuthorizationController = {
     accessTokenVerify,
     async (req, res, next) => {
       const role = req.user.role;
-      console.log(req.user.role);
       if (role == "admin") {
         return next();
       }
