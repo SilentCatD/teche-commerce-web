@@ -151,6 +151,15 @@ const CommonMiddleWares = {
         }
         return true;
       }),
+      body("name")
+      .exists()
+      .bail()
+      .notEmpty({ignore_whitespace: true})
+      .withMessage("field can't be empty")
+      .bail()
+      .trim()
+      .isByteLength({min:3,max:10 })
+      .withMessage("Name must in range [3, 10] Character"),
     body("password")
       .exists()
       .bail()

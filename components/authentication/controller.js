@@ -16,9 +16,10 @@ const AuthenticationController = {
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
       }
-      const { email, password } = req.body;
+      const {email,name, password } = req.body;
       const newUser = await UserService.createUserWithRole(
         email,
+        name,
         password,
         "user"
       );
@@ -34,9 +35,10 @@ const AuthenticationController = {
     CommonMiddleWares.accountRegisterRequirement,
     AuthorizationController.isAdmin,
     async (req, res) => {
-      const { email, password } = req.body;
+      const { email,name, password } = req.body;
       const newUser = await UserService.createUserWithRole(
         email,
+        name,
         password,
         "admin"
       );

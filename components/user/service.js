@@ -13,12 +13,13 @@ const UserService = {
     await user.save();
   },
 
-  createUserWithRole: async (email, password, role) => {
+  createUserWithRole: async (email,name, password, role) => {
     const saltHash = AuthenticationService.genPassword(password);
     const salt = saltHash.salt;
     const hash = saltHash.hash;
     const newUser = new User({
       email: email,
+      name: name,
       hash: hash,
       salt: salt,
       role: role,
