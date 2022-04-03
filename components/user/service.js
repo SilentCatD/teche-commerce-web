@@ -29,6 +29,18 @@ const UserService = {
     return newUser;
   },
 
+  createThirdPartyUser: async (id,email,name) => {
+    const newUser = new User({
+      thirdPartyID: id,
+      email: email,
+      name: name,
+      active: true,
+      role: "user",
+    });
+    await newUser.save();
+    return newUser;
+  },
+
   activeUserAccount: async (id) => {
     const user = await User.findById(id);
     if (!user) {
