@@ -13,4 +13,5 @@ authRouter.route('/resend-activate-email').post(EmailVerificationController.rese
 authRouter.route('/active/:hash').put(EmailVerificationController.verifyEmail); // active account hash
 authRouter.route('/send-reset-password-email').post(EmailVerificationController.sendResetPasswordEmail); // email
 authRouter.route('/reset-password/:hash').put();
+
 export default authRouter;

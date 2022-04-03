@@ -33,7 +33,7 @@
                 <div class="d-flex align-items-center input-field mb-4"> 
                     <span class="fas fa-lock p-2"></span> 
                     <input type="password" placeholder="Password" required class="form-control" id="userpwd">
-                    <span class="input-group-text" onclick="password_show_hide();">
+                    <span class="input-group-text" id="password_show_hide">
                         <i class="fas fa-eye" id="show_eye"></i>
                         <i class="fas fa-eye-slash d-none" id="hide_eye"></i>
                       </span> 
@@ -64,6 +64,7 @@
     <!-- Js Plugins -->
     <%-include('partials/script') %>
     <script src="https://unpkg.com/validator@latest/validator.min.js"></script>
+    <scprit scr="/user/js/utils/validator.js"></scprit>
     <script type="module" src="/user/js/login.js"></script>
 
 

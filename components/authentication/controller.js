@@ -93,6 +93,7 @@ const AuthenticationController = {
         accessToken: accessToken,
         refreshToken: refreshToken,
         expiresIn: accessTokenExpiraion,
+        userName: user.email,
       });
     },
   ],

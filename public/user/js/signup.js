@@ -1,3 +1,6 @@
+import API_CALL from "./utils/api-call.js";
+import {validateUserEmail,validateUserPassword} from "./utils/validate.js";
+
 $(document).ready(function(){
     $('.toast').toast('hide');
   });
@@ -25,35 +28,14 @@ $("#signup").bind("click", async () => {
 
 $("#useremail").on("input propertychange", function (e) {
     e.preventDefault();
-    validateUserEmail();
+    validateUserEmail("useremail","error");
   });
 
 
   $("#userpwd").on("input propertychange", function (e) {
     e.preventDefault();
-    validateUserPassword();
+    validateUserPassword("useremail","error");
   });
-
-function validateUserEmail() {
-    let email = $("#useremail").val().trim();
-    if(!validator.isEmail(email)) {
-        $("#error").text("Invalid Email format");
-    } else {
-        $("#error").text("");
-    }
-}
-
-function validateUserPassword() {
-    let password = $("#userpwd").val().trim();
-    if(validator.isEmpty(password,{ignore_whitespace: true})) {
-        $("#error").text("Password Should Not Be Empty");
-    } else if(!validator.isStrongPassword(password,{ minSymbols: 0 })) {
-        $("#error").text("Password Not Strong Enough");
-    } else {
-        $("#error").text("");
-    }
-}
-
 
 function password_show_hide() {
 

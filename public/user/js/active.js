@@ -10,6 +10,9 @@ $(document).ready(function () {
             $('#account-active-btn span.text').text('Activating....');
             await axios.put(`/api/v1/auth/active/${hash}`);
             $('#account-active-btn span.text').text('Account activated!');
+            const host = window.location.host;
+            window.location.href = `http://${host}/`;
+
         }
         catch(e){
             $('#account-active-btn').toggleClass('btn-primary btn-danger');

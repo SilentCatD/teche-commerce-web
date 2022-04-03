@@ -1,16 +1,16 @@
 // Short duration JWT token (5-10 min)
  const authentication = {
     getJwtToken: () => {
-        return localStorage.getItem("jwt")
+        return localStorage.getItem("jwt");
     },
     getRefreshToken: () => {
-        return localStorage.getItem("refreshToken")
+        return localStorage.getItem("refreshToken");
     },
     setRefreshToken: (token) =>{
-        localStorage.setItem("refreshToken", token)
+        localStorage.setItem("refreshToken", token);
     },
     setJwtToken: (token) => {
-        localStorage.setItem("jwt", token)
+        localStorage.setItem("jwt", token);
     },
     getHeaders: (token) => {
         const headers = {};
@@ -20,6 +20,13 @@
     removeToken: () => {
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("jwt");
+        localStorage.removeItem("userName");
+    },
+    getUserName: () => {
+        return localStorage.getItem("userName");
+    },
+    setUserName: (name) =>{
+        localStorage.setItem("userName",name );
     },
     sayHello: () => {
         console.log("hello");
