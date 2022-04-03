@@ -12,6 +12,8 @@ $(document).ready(async function () {
   } else {
     $("#logout-header").hide();
     $("#logout-humberger").hide();
+    $(".user-cart").hide();
+    $(".join-us").html("<a class='text-primary' href='signup'>Do you want join us <bold>Register Now!</bold></a>")
   }
 
   const userName = authentication.getUserName();
@@ -40,6 +42,11 @@ $(document).ready(async function () {
         window.location.reload();
       }
     }
+  })
+
+  $(".join-us").on("click",async function() {
+    const host = window.location.host;
+    window.location.href = `http://${host}/signup`;
   })
   
   

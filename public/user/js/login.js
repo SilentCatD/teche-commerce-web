@@ -2,7 +2,9 @@ import API_CALL from "./utils/api-call.js";
 import authentication from "./utils/auth.js";
 import { validateUserEmail } from "./utils/validate.js";
 
-$(document).ready(async function () {});
+$(document).ready(async function () {
+
+});
 
 $("#login").bind("click", async () => {
   $("#error").text("");
@@ -10,7 +12,12 @@ $("#login").bind("click", async () => {
   const email = $("#useremail").val();
   const password = $("#userpwd").val();
 
-  const response = await API_CALL.loginRequest(email, password);
+  const userInfo = {
+    email: email,
+    password: password
+  }
+
+  const response = await API_CALL.loginRequest(userInfo);
   console.log(response);
   if (response.status === 400) {
     // something fuckup validtor in backend
@@ -19,8 +26,6 @@ $("#login").bind("click", async () => {
     // wrong password
     $(".text-danger").text(response.data.msg);
   } else if (response.status === 200) {
-    // success login, now real stuff begin
-    authentication.sayHello();
 
     // what the hell is this (data.success)
 
@@ -38,7 +43,6 @@ $("#login").bind("click", async () => {
     console.log(response);
     if (jwtToken) {
       // step4: redirect to customer previous page (i dunnu how)
-      console.log("Token save in local storage");
       history.back();
     }
   }
@@ -93,7 +97,7 @@ async function getAccessToken() {
 
 $("#useremail").on("input propertychange", function (e) {
   e.preventDefault();
-  validateUserEmail("useremail", "error");
+  if(validateUserEmail("useremail", "error");
 });
 
 $("#password_show_hide").on("click", function (e) {
