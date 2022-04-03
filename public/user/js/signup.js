@@ -19,12 +19,10 @@ $("#signup").bind("click", async () => {
     console.log(userInfo);
     const response = await API_CALL.registerUserRequest(userInfo);
     if(response.status === 400) {
-        // something fuckup validtor in backend
+        // Validation in backend fail (this also include register same email)
         $(".text-danger").text(response.data.errors[0].msg);
-    } else if(response.status === 403) {
-        // wrong password 
-        $(".text-danger").text(response.data.msg);
     } else if(response.status === 200) {
+        // success
         $('.toast-body').text("Check your Email and click that shit");
         $('.toast').toast('show');
     }

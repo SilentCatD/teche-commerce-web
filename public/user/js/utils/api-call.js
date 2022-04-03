@@ -23,7 +23,7 @@ const API_CALL = {
     return res;
   },
   // tested
-  newTokenRequest: async () => {
+  newAccessTokenRequest: async () => {
     let res = await usingForEveryFuckingRequest(
       "get",
       "token",

@@ -20,14 +20,13 @@ $("#login").bind("click", async () => {
   const response = await API_CALL.loginRequest(userInfo);
   console.log(response);
   if (response.status === 400) {
-    // something fuckup validtor in backend
+    // Validation fuckup
     $(".text-danger").text(response.data.errors[0].msg);
   } else if (response.status === 403) {
-    // wrong password
+    // Wrong password
     $(".text-danger").text(response.data.msg);
   } else if (response.status === 200) {
-
-    // what the hell is this (data.success)
+    // success
 
     // step 1: extract jwt token (acess token and refresh token)
     const accessToken = response.data.accessToken;
@@ -48,10 +47,36 @@ $("#login").bind("click", async () => {
   }
 });
 
+
+$("#useremail").on("input propertychange", function (e) {
+  e.preventDefault();
+  validateUserEmail("useremail", "error");
+});
+
+$("#password_show_hide").on("click", function (e) {
+  const show_eye = $("#show_eye");
+  const hide_eye = $("#hide_eye");
+
+  const x = $("#userpwd");
+
+  hide_eye.removeClass("d-none");
+  if (x.attr("type") === "password") {
+    x.attr("type", "text");
+    show_eye.css("display", "none");
+    hide_eye.css("display", "block");
+  } else {
+    x.attr("type", "password");
+    show_eye.css("display", "block");
+    hide_eye.css("display", "none");
+  }
+});
+
+
+// FOR TEST ONLY
 $("#refresh").bind("click", async () => {
   $("#error").text("");
 
-  const response = await API_CALL.newTokenRequest();
+  const response = await API_CALL.newAccessTokenRequest();
   console.log(response);
   if (response.status === 500) {
     // something fuckup validtor in backend
@@ -75,12 +100,12 @@ $("#refresh").bind("click", async () => {
   }
 });
 
-async function getAccessToken() {
+async function getNewAccessToken() {
   const host = window.location.host;
   if (!authentication.getRefreshToken()) {
     window.location.href = `http://${host}/login`;
   } else {
-    const response = await API_CALL.newTokenRequest();
+    const response = await API_CALL.newAccessTokenRequest();
     console.log(response);
     if (response.status === 200) {
       const accessToken = response.data.accessToken;
@@ -93,27 +118,4 @@ async function getAccessToken() {
       window.location.href = `http://${host}/login`;
     }
   }
-}
-
-$("#useremail").on("input propertychange", function (e) {
-  e.preventDefault();
-  if(validateUserEmail("useremail", "error");
-});
-
-$("#password_show_hide").on("click", function (e) {
-  const show_eye = $("#show_eye");
-  const hide_eye = $("#hide_eye");
-
-  const x = $("#userpwd");
-
-  hide_eye.removeClass("d-none");
-  if (x.attr("type") === "password") {
-    x.attr("type", "text");
-    show_eye.css("display", "none");
-    hide_eye.css("display", "block");
-  } else {
-    x.attr("type", "password");
-    show_eye.css("display", "block");
-    hide_eye.css("display", "none");
-  }
-});
+};
