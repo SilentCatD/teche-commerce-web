@@ -5,7 +5,7 @@ let userData;
 
 async function fetchAndDisplayUserEmail(){
     try{
-        userData = await APIService.userInfo();
+        userData = await APIService.userInfo('admin');
         $("#userEmail").text(userData.email);
 
     }catch(e){
