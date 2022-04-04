@@ -1,5 +1,6 @@
 import AuthenticationService from "../authentication/service.js";
 import User from "./model.js";
+import mongoose from "mongoose";
 
 const UserService = {
 
@@ -29,10 +30,9 @@ const UserService = {
     return newUser;
   },
 
-  createThirdPartyUser: async (id,email,name) => {
-    const newUser = new User({
+  createThirdPartyUser: async (id,name) => {
+    const newUser = await new User({
       thirdPartyID: id,
-      email: email,
       name: name,
       active: true,
       role: "user",
@@ -58,6 +58,26 @@ const UserService = {
     user.active = false;
     await user.save();
   },
+  editUserProfile: async(id,name) => {
+    const session = await User.startSession();
+    session.startTransaction();
+    try {
+      const user = await User.findById(mongoose.Types.ObjectId(id)).session(session);
+      if(!user) {
+        throw new Error(`User ${id} is not existed`);
+      }
+      if(name) {
+        user.name = name;
+      }
+      await user.save();
+      await session.commitTransaction();
+    } catch (e) {
+      await session.abortTransaction();
+      throw e;
+    } finally{
+      await session.endSession();
+    }
+  }
 };
 
 export default UserService;
