@@ -1,3 +1,4 @@
+import passport from "passport";
 import accessTokenExpiraion from "../../config/access_token_expire.js";
 import AuthoriztionService from "../authorization/service.js";
 import User from "../user/model.js";
@@ -8,7 +9,7 @@ import EmailVerificationService from "../email_verification/service.js";
 import CommonMiddleWares from "../common/middleware.js";
 import AuthorizationController from "../authorization/controller.js";
 
-const AuthenticationController = {
+const   AuthenticationController = {
   registerUser: [
     CommonMiddleWares.accountRegisterRequirement,
     async (req, res) => {
@@ -147,6 +148,20 @@ const AuthenticationController = {
       res.status(200).send({ success: true, msg: "account is valid" });
     },
   ],
+  createFacebookAccount:[
+    passport.authenticate('facebook', {scope: ['email']}),
+    async (req, res,) => {
+      const authInfo = req.authInfo;
+      console.log(authInfo);
+      if(authInfo) { 
+        await UserService.createThirdPartyUser(
+          authInfo.id,
+          authInfo.email,
+          authInfo.name,
+        );
+      }
+    }
+  ]
 };
 
 export default AuthenticationController;

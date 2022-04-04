@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
+   thirdPartyID: {
+      type: String,
+      default: null,
+   },
    name: String,
    email: String,
    hash: String,

@@ -2,6 +2,8 @@ import express from "express";
 import __dirname from "../../dirname.js";
 import ProductService from "../../components/product/service.js";
 import EmailVerificationService from "../../components/email_verification/service.js";
+import passport from "passport";
+import AuthenticationService from "../../components/authentication/service.js";
 
 const webPageRouter = express.Router();
 
@@ -9,6 +11,29 @@ const webPageRouter = express.Router();
 webPageRouter.get("/login",async (req, res) => {
     res.render('user/login');
 });
+
+
+// webPageRouter.get('/login/facebook/callback',
+//   passport.authenticate('facebook', { failureRedirect: '/login' }),
+//   function(req, res) {
+//     // Successful authentication, redirect home.
+//     res.redirect('/');
+//   });
+
+webPageRouter.get('/login/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  async function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
+
+  webPageRouter.get('/login/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  async function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/');
+  });
+
 webPageRouter.get("/signup",async (req, res) => {
     res.render('user/signup');
 });
