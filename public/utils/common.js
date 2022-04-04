@@ -1,3 +1,4 @@
+import APIService from "./api_service.js";
 import TokenService from "./token_service.js";
 
 const cacheKey = {
@@ -14,21 +15,37 @@ async function sleep(ms, callback = null) {
   }
 }
 
-function clearCache(role = "both") {
+function clearCache({ role = "both", form = true, autoLogin = true }) {
   if (role == "admin" || role == "both") {
     TokenService.accessToken.del("admin");
     TokenService.refreshToken.del("admin");
-    localStorage.removeItem(cacheKey.adminEmailKey);
-    localStorage.removeItem(cacheKey.adminPwdKey);
-    localStorage.removeItem(cacheKey.adminAutoLogin);
-    localStorage.removeItem(cacheKey.adminRememberMe);
+    if (form) {
+      localStorage.removeItem(cacheKey.adminEmailKey);
+      localStorage.removeItem(cacheKey.adminPwdKey);
+      localStorage.removeItem(cacheKey.adminRememberMe);
+    }
+    if (autoLogin) {
+      localStorage.removeItem(cacheKey.adminAutoLogin);
+    }
   }
 
   if (role == "user" || role == "both") {
     TokenService.accessToken.del("user");
     TokenService.refreshToken.del("user");
-
   }
 }
 
-export { cacheKey, sleep, clearCache };
+function backToLogin(role, router) {
+  clearCache({ role: role, form: false, autoLogin: true });
+  window.location.replace(router);
+}
+
+
+async function goBackToLoginIfNotAdmin(){
+  const isAdmin = await APIService.isAdmin();
+  if (!isAdmin) {
+    backToLogin("admin", "/admin");
+  }
+}
+
+export { cacheKey, sleep, clearCache, backToLogin, goBackToLoginIfNotAdmin};

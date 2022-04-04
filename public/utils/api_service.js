@@ -74,7 +74,11 @@ const APIService = {
     }
   },
 
-  userInfo: async () => {},
+  userInfo: async () => {
+    const url  = '/api/v1/user';
+    let res = await Request.get({url: url, useToken: true, role: "admin"});
+    return res.data.data;
+  },
 };
 
 export default APIService;
