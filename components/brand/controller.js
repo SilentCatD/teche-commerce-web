@@ -2,10 +2,12 @@ import Brand from "./model.js";
 import BrandService from "./service.js";
 import CommonMiddleWares from "../common/middleware.js";
 import CommomDatabaseServies from "../common/services.js";
-import { body, validationResult } from "express-validator";
+import { body, validationResult, param } from "express-validator";
+import AuthorizationController from "../authorization/controller.js";
 
 const BrandController = {
   createBrand: [
+    AuthorizationController.isAdmin,
     body("brandName")
       .exists()
       .bail()
@@ -18,36 +20,47 @@ const BrandController = {
       .trim(),
     async (req, res) => {
       try {
-        const { brandName } = req.body;
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-          return res.status(400).json({ errors: errors.array() });
+          return res
+            .status(400)
+            .json({ success: false, msg: errors.array()[0].msg });
         }
+        const { brandName } = req.body;
         let brandImg = [];
         if (req.files) {
           brandImg = req.files;
         }
 
         if (brandImg.length > 1) {
-          return res.status(400).end("only 1 image for each brand");
+          return res
+            .status(400)
+            .json({ success: false, msg: "only 1 image for each brand" });
         }
         if (brandImg.length == 1) {
           const type = brandImg[0].mimetype;
           if (!["image/png", "image/jpeg"].includes(type)) {
-            return res.status(400).end("image must be of type png or jpeg");
+            return res.status(400).json({
+              success: false,
+              msg: "image must be of type png or jpeg",
+            });
           }
         }
 
         const id = await BrandService.createBrand(brandName, brandImg);
-        res.status(201).end(`Brand created with id ${id}`);
+        res
+          .status(201)
+          .json({ success: true, msg: `brand created with id ${id}` });
       } catch (e) {
         console.log(e);
-        res.status(402).end(`Can't create brand, something went wrong: ${e}`);
+        res.status(500).json({
+          success: false,
+          msg: `Can't create brand, something went wrong: ${e}`,
+        });
       }
     },
   ],
   fetchAllBrand: [
-    CommonMiddleWares.apiQueryValidations,
     CommonMiddleWares.apiQueryParamsExtract,
     async (req, res) => {
       try {
@@ -60,65 +73,113 @@ const BrandController = {
           sortParams,
           range
         );
-        res.status(200).json(result);
+        res.status(200).json({ success: true, data: result });
       } catch (e) {
         console.log(e);
-        res.status(404).end("Not Found");
+        res
+          .status(500)
+          .json({ success: false, msg: `something went wrong ${e}` });
       }
     },
   ],
 
-
-  fetchBrand: async (req, res) => {
-    try {
-      const { id } = req.params;
-      const result = await BrandService.fetchBrand(id);
-      res.writeHead(200, {
-        "Content-Type": "application/json",
-      });
-      res.status(200).end(JSON.stringify(result));
-    } catch (e) {
-      console.log(e);
-      res.status(404).end(e.message);
-    }
-  },
-
-  deleteAllBrand: async (req, res) => {
-    try {
-      await BrandService.deleteAllBrand();
-      res.status(200).end("All brands deleted");
-    } catch (e) {
-      console.log(e);
-      res.status(404).end("Failed to delete some brands, try again");
-    }
-  },
-  deleteBrand: async (req, res) => {
-    try {
-      const { id } = req.params;
-      await BrandService.deleteBrand(id);
-      res.status(200).end("Brand deleted");
-    } catch (e) {
-      console.log(e);
-      res
-        .status(404)
-        .end("Can't delete brand, it's not exist or something went wrong");
-    }
-  },
-  editBrand: async (req, res) => {
-    try {
-      const { brandName } = req.body;
-      const { id } = req.params;
-      let brandImages = undefined;
-      if (req.files.length > 0) {
-        brandImages = req.files;
+  fetchBrand: [
+    param("id")
+      .exists()
+      .bail()
+      .notEmpty({ ignore_whitespace: true })
+      .withMessage("field can't be empty")
+      .bail()
+      .trim()
+      .custom(async (productId) => {
+        const exist = await Brand.exists({ _id: productId });
+        if (!exist) {
+          throw new Error("brand not existed");
+        }
+        return true;
+      }),
+    async (req, res) => {
+      try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res
+            .status(400)
+            .json({ success: false, msg: errors.array()[0].msg });
+        }
+        const { id } = req.params;
+        const result = await BrandService.fetchBrand(id);
+        res.status(200).json({success: true, data: result});
+      } catch (e) {
+        console.log(e);
+        res.status(500).json({success: false, msg: `something went wrong ${e}`});
       }
-      await BrandService.editBrand(id, brandName, brandImages);
-      res.status(200).end("brand successfully edit");
-    } catch (e) {
-      console.log(e);
-      res.status(404);
-    }
-  },
+    },
+  ],
+
+  deleteAllBrand: [
+    AuthorizationController.isAdmin,
+    async (req, res) => {
+      try {
+        await BrandService.deleteAllBrand();
+        res.status(200).end("All brands deleted");
+      } catch (e) {
+        console.log(e);
+        res.status(404).end("Failed to delete some brands, try again");
+      }
+    },
+  ],
+  deleteBrand: [
+    AuthorizationController.isAdmin,
+    param("id")
+      .exists()
+      .bail()
+      .notEmpty({ ignore_whitespace: true })
+      .withMessage("field can't be empty")
+      .bail()
+      .trim()
+      .custom(async (productId) => {
+        const exist = await Brand.exists({ _id: productId });
+        if (!exist) {
+          throw new Error("brand not existed");
+        }
+        return true;
+      }),
+    async (req, res) => {
+      try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res
+            .status(400)
+            .json({ success: false, msg: errors.array()[0].msg });
+        }
+        const { id } = req.params;
+        await BrandService.deleteBrand(id);
+        res.status(200).json({ success: true, msg: "brand deleted" });
+      } catch (e) {
+        console.log(e);
+        res
+          .status(500)
+          .json({ success: false, msg: `something went wrong ${e}` });
+      }
+    },
+  ],
+  editBrand: [
+    async (req, res) => {
+      try {
+        const { brandName } = req.body;
+        const { id } = req.params;
+        let brandImages = undefined;
+        if (req.files.length > 0) {
+          brandImages = req.files;
+        }
+        await BrandService.editBrand(id, brandName, brandImages);
+        res.status(200).end("brand successfully edit");
+      } catch (e) {
+        console.log(e);
+        res.status(404);
+      }
+    },
+  ],
 };
 
 export default BrandController;

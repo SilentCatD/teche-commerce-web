@@ -314,9 +314,10 @@ function bindCarousel() {
 }
 
 async function renderBrandsAndCategories() {
-  const brands = await fetchSelectData("/api/v1/brand");
-  const categories = await fetchSelectData("/api/v1/category");
-
+  let brands = await APIService.fetchAllBrand();
+  let categories = await APIService.fetchAllCategory();
+  brands = brands.items;
+  categories = categories.items;
   const brandOptions = [];
   const categoryOptions = [];
   brandOptions.push(`<option value="default" selected>Choose a brand</option>`);
@@ -325,12 +326,12 @@ async function renderBrandsAndCategories() {
   );
 
   brands.forEach((brand) => {
-    brandOptions.push(`<option value="${brand.value}">${brand.text}</option>`);
+    brandOptions.push(`<option value="${brand.id}">${brand.name}</option>`);
   });
 
   categories.forEach((category) => {
     categoryOptions.push(
-      `<option value="${category.value}">${category.text}</option>`
+      `<option value="${category.id}">${category.name}</option>`
     );
   });
 
@@ -338,29 +339,13 @@ async function renderBrandsAndCategories() {
   $("#categorySelect").html(categoryOptions.join("\n"));
 }
 
-async function fetchSelectData(url) {
-  let res = await axios({
-    method: "get",
-    url: url,
-  });
-  return res.data.items.map((item) => {
-    return {
-      value: item.id,
-      text: item.name,
-    };
-  });
-}
+
 
 async function deleteProduct(id) {
   try {
-    let res = await axios({
-      method: "delete",
-      url: `/api/v1/product/${id}`,
-    });
-    console.log(res);
+    await APIService.deleteProduct(id);
     return true;
   } catch (e) {
-    console.log(e);
     return false;
   }
 }
@@ -445,10 +430,7 @@ function renderProductsCarousel() {
 }
 
 getItemsMethods = async (limit, page) => {
-  return axios({
-    method: "get",
-    url: `/api/v1/product?limit=${limit}&page=${page}`,
-  });
+  return await APIService.fetchAllProduct({page, limit});
 };
 
 setLimit = () => {

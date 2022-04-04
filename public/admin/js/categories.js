@@ -1,15 +1,13 @@
-import { goBackToLoginIfNotAdmin, sleep} from "../../utils/common.js";
+import APIService from "../../utils/api_service.js";
+import { goBackToLoginIfNotAdmin, sleep } from "../../utils/common.js";
 
 $(document).ready(async function () {
-  await goBackToLoginIfNotAdmin(),
-  await sleep(50);
+  await goBackToLoginIfNotAdmin(), await sleep(50);
   $("#spinner").removeClass("show");
 
-
-  deleteDocumentOnClick("Category",deleteCategory);
+  deleteDocumentOnClick("Category", deleteCategory);
 
   $("#categorySubmit").click(async function (e) {
-    
     e.preventDefault();
     const input = validateBrandNameInput();
     if (input === false) return;
@@ -31,9 +29,6 @@ $(document).ready(async function () {
     e.preventDefault();
     validateBrandNameInput();
   });
-
-
-
 });
 
 function triggerReloadBtn() {
@@ -42,14 +37,7 @@ function triggerReloadBtn() {
 
 async function createBrand(categoryName) {
   try {
-    let data = {};
-    data.categoryName = categoryName;
-    let res = await axios({
-      method: "post",
-      url: "/api/v1/category",
-      data: data,
-    });
-    console.log(res);
+    await APIService.createCategory({ categoryName });
     return true;
   } catch (e) {
     console.log(e);
@@ -107,14 +95,9 @@ function clearAllInput() {
   $("#inputCategoryName").removeClass("is-valid");
 }
 
-
 async function deleteCategory(categoryId) {
   try {
-    let res = await axios({
-      method: "delete",
-      url: `/api/v1/category/${categoryId}`,
-    });
-    console.log(res);
+    await APIService.deleteCategory(categoryId);
     return true;
   } catch (e) {
     console.log(e);
@@ -122,27 +105,23 @@ async function deleteCategory(categoryId) {
   }
 }
 
-getItemsMethods =  async (limit, page)=>{
-  return axios({
-    method: "get",
-    url: `/api/v1/category?limit=${limit}&page=${page}`,
-  });
-}
+getItemsMethods = async (limit, page) => {
+  return await APIService.fetchAllCategory({ limit, page });
+};
 
-
-setLimit = ()=>{
+setLimit = () => {
   return 12;
-}
+};
 
-  
-setDisplayPage = ()=>{
+setDisplayPage = () => {
   return 5;
-}
+};
 
+initialPage = () => {
+  return 1;
+};
 
-initialPage = ()=>{return 1};
-
-renderTableHead = () =>{
+renderTableHead = () => {
   return `<tr>
   <th scope="col">ID</th>
   <th scope="col">Categories Name</th>
@@ -152,10 +131,9 @@ renderTableHead = () =>{
   <th scope="col">&nbsp;</th>
   </tr>
   `;
-}
+};
 
-
-renderTableRow = (item)=>{
+renderTableRow = (item) => {
   return `<tr>
   <td class="align-middle">${item.id}</td>
   <td class="align-middle">${item.name}</td>
@@ -176,14 +154,13 @@ renderTableRow = (item)=>{
 </td>
 </tr>
 `;
-}
-
+};
 
 bindRowAction = () => {
   $(".manage-btn-delete").click(function (e) {
     e.preventDefault();
     const id = $(this).data("id");
-    
+
     $("#documentDelete").data("id", id);
 
     // call func here
@@ -191,7 +168,6 @@ bindRowAction = () => {
   });
 };
 
-
-setTableName = ()=>{
+setTableName = () => {
   return "Categories";
-}
+};

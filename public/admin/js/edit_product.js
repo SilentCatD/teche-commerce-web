@@ -1,7 +1,13 @@
+import APIService from "../../utils/api_service.js";
+import { goBackToLoginIfNotAdmin, sleep } from "../../utils/common.js";
+
 let productsImages = [];
 let currentCarousel;
 
-$(document).ready(function () {
+$(document).ready(async function () {
+  await goBackToLoginIfNotAdmin(), await sleep(50);
+  $("#spinner").removeClass("show");
+
   productsImages = product.images;
   currentCarousel = 0;
   renderProductsCarousel();
@@ -111,39 +117,21 @@ function triggerReloadBtn() {
   $(".reload-trigger").trigger("click");
 }
 
-async function urlToFile(url) {
-  const res = await fetch(url, {mode: 'cors'});
-  const blob = await res.blob();
-  const file = new File([blob], "file-name", { type: "image/jpeg" });
-  return file;
-}
-
 async function editProduct(name, description, price, unit, brand, category) {
   try {
-    let formData = new FormData();
-    formData.append("productName", name);
-    formData.append("productDetails", description);
-    formData.append("productPrice", price);
-    formData.append("productUnit", unit);
-    formData.append("productBrand", brand);
-    formData.append("productCategory", category);
-    for (let i = 0; i < productsImages.length; i++) {
-      if(productsImages[i] instanceof File){ 
-
-      }else{
-        productsImages[i] = await urlToFile(productsImages[i]);
-      }
-      formData.append("images", productsImages[i]);
-    }
-    const res = await axios({
-      method: "put",
-      url: `/api/v1/product/${product.id}`,
-      data: formData,
-      headers: { "Content-Type": "multipart/form-data" },
+    await APIService.editProduct({
+      id: product.id,
+      productName: name,
+      productDetails: description,
+      productPrice: price,
+      productUnit: unit,
+      productBrand: brand,
+      productCategory: category,
+      productsImages: productsImages,
     });
-    console.log(res.data);
     return true;
   } catch (e) {
+    console.log(e);
     return false;
   }
 }
@@ -183,9 +171,11 @@ async function reloadFormData() {
 }
 
 async function fetchAndRenderProduct() {
-  product = await fetchProductData(product);
-  const brands = await fetchData("/api/v1/brand");
-  const categories = await fetchData("/api/v1/category");
+  product = await APIService.fetchProduct(product.id);
+  let brands = await APIService.fetchAllBrand();
+  let categories = await APIService.fetchAllCategory();
+  brands = brands.items;
+  categories = categories.items;
   renderProduct(product, brands, categories);
   renderProductsCarousel();
 }
@@ -331,22 +321,6 @@ function renderProduct(product, brands, categories) {
   $("#categorySelect").removeClass("is-invalid");
 }
 
-async function fetchData(url) {
-  const res = await axios({
-    method: "get",
-    url: url,
-  });
-  return res.data.items;
-}
-
-async function fetchProductData(product) {
-  const res = await axios({
-    method: "get",
-    url: `/api/v1/product/${product.id}`,
-  });
-
-  return res.data;
-}
 
 function toggleFormInput(valid) {
   if (valid) {

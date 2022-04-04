@@ -2,7 +2,6 @@ function deleteDocumentOnClick(model, deleteFunction) {
   $("#documentDelete").click(async function () {
     const id = $("#documentDelete").data("id");
     $("#documentDelete").removeData("id");
-    console.log(id);
     if (await deleteFunction(id)) {
       displayAlert(true, `${model} Deleted`);
     } else {

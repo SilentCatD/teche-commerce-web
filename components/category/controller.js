@@ -1,11 +1,13 @@
 import CategotyService from "./service.js";
-import { body, validationResult } from "express-validator";
+import { body, param, validationResult } from "express-validator";
 import CommonMiddleWares from "../common/middleware.js";
 import CommomDatabaseServies from "../common/services.js";
 import Category from "./model.js";
+import AuthorizationController from "../authorization/controller.js";
 
 const CategoryController = {
   createCategory: [
+    AuthorizationController.isAdmin,
     body("categoryName")
       .exists()
       .bail()
@@ -20,20 +22,24 @@ const CategoryController = {
       try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-          return res.status(400).json({ errors: errors.array() });
+          return res
+            .status(400)
+            .json({ success: false, msg: errors.array()[0].msg });
         }
         const { categoryName } = req.body;
         const id = await CategotyService.createCategory(categoryName);
-        res.status(201).end(`Category created with id ${id}`);
-      } catch (e) {
         res
-          .status(500)
-          .end(`Can't create category, something went wrong: ${e}`);
+          .status(201)
+          .json({ success: true, msg: `category created with id ${id}` });
+      } catch (e) {
+        res.status(500).json({
+          success: false,
+          msg: `can't create category, something went wrong: ${e}`,
+        });
       }
     },
   ],
   fetchAllCategory: [
-    CommonMiddleWares.apiQueryValidations,
     CommonMiddleWares.apiQueryParamsExtract,
     async (req, res) => {
       try {
@@ -46,48 +52,97 @@ const CategoryController = {
           sortParams,
           range
         );
-        res.status(200).json(result);
+        res.status(200).json({ success: true, data: result });
       } catch (e) {
         console.log(e);
-        res.status(404).end("Not Found");
+        res
+          .status(500)
+          .json({ success: false, msg: `something went wrong ${e}` });
       }
     },
   ],
-  fetchCategory: async (req, res) => {
-    try {
-      const { id } = req.params;
-      const result = await CategotyService.fetchCategory(id);
-      res.writeHead(200, {
-        "Content-Type": "application/json",
-      });
-      res.status(200).end(JSON.stringify(result));
-    } catch (e) {
-      console.log(e);
-      res.status(404).end("Category not exist");
-    }
-  },
+  fetchCategory: [
+    param("id")
+      .exists()
+      .bail()
+      .notEmpty({ ignore_whitespace: true })
+      .withMessage("field can't be empty")
+      .bail()
+      .trim()
+      .custom(async (productId) => {
+        const exist = await Category.exists({ _id: productId });
+        if (!exist) {
+          throw new Error("category not existed");
+        }
+        return true;
+      }),
+    async (req, res) => {
+      try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res
+            .status(400)
+            .json({ success: false, msg: errors.array()[0].msg });
+        }
+        const { id } = req.params;
+        const result = await CategotyService.fetchCategory(id);
+        res.status(200).json({ success: true, data: result });
+      } catch (e) {
+        console.log(e);
+        res
+          .status(500)
+          .json({ success: false, msg: `something went wrong ${e}` });
+      }
+    },
+  ],
 
-  deleteAllCategory: async (req, res) => {
-    try {
-      await CategotyService.deleteAllCategory();
-      res.status(200).end("All Categorys deleted");
-    } catch (e) {
-      console.log(e);
-      res.status(404).end("Failed to delete some categories, try again");
-    }
-  },
-  deleteCategory: async (req, res) => {
-    try {
-      const { id } = req.params;
-      await CategotyService.deleteCategory(id);
-      res.status(200).end("Category deleted");
-    } catch (e) {
-      console.log(e);
-      res
-        .status(404)
-        .end("Can't delete category, it's not exist or something went wrong");
-    }
-  },
+  deleteAllCategory: [
+    AuthorizationController.isAdmin,
+    async (req, res) => {
+      try {
+        await CategotyService.deleteAllCategory();
+        res.status(200).end("All Categorys deleted");
+      } catch (e) {
+        console.log(e);
+        res.status(404).end("Failed to delete some categories, try again");
+      }
+    },
+  ],
+  deleteCategory: [
+    AuthorizationController.isAdmin,
+    param("id")
+      .exists()
+      .bail()
+      .notEmpty({ ignore_whitespace: true })
+      .withMessage("field can't be empty")
+      .bail()
+      .trim()
+      .custom(async (productId) => {
+        const exist = await Category.exists({ _id: productId });
+        if (!exist) {
+          throw new Error("category not existed");
+        }
+        return true;
+      }),
+    async (req, res) => {
+      try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res
+            .status(400)
+            .json({ success: false, msg: errors.array()[0].msg });
+        }
+        const { id } = req.params;
+        await CategotyService.deleteCategory(id);
+        res.status(200).json({ success: true, msg: "category deleted" });
+      } catch (e) {
+        console.log(e);
+        res
+          .status(500)
+          .json({ success: false, msg: `something went wrong ${e}` });
+      }
+    },
+  ],
   editCategory: async (req, res) => {
     try {
       const { categoryName } = req.body;

@@ -1,12 +1,11 @@
+import APIService from "../../utils/api_service.js";
 import { goBackToLoginIfNotAdmin, sleep } from "../../utils/common.js";
 
-
 $(document).ready(async function () {
-  await goBackToLoginIfNotAdmin(),
-  await sleep(50);
+  await goBackToLoginIfNotAdmin(), await sleep(50);
   $("#spinner").removeClass("show");
 
-  deleteDocumentOnClick("Brand",deleteBrand);
+  deleteDocumentOnClick("Brand", deleteBrand);
   $("#brandSubmit").click(async function (e) {
     e.preventDefault();
     const input = validateBrandNameInput();
@@ -37,21 +36,9 @@ $(document).ready(async function () {
   });
 });
 
-
 async function createBrand(brandName, imgFile) {
   try {
-    let formData = new FormData();
-    if (imgFile) {
-      formData.append("images", imgFile);
-    }
-    formData.append("brandName", brandName);
-    let res = await axios({
-      method: "post",
-      url: "/api/v1/brand",
-      data: formData,
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-    console.log(res);
+    await APIService.createBrand({ brandName, imgFile });
     return true;
   } catch (e) {
     console.log(e);
@@ -61,11 +48,7 @@ async function createBrand(brandName, imgFile) {
 
 async function deleteBrand(brandId) {
   try {
-    let res = await axios({
-      method: "delete",
-      url: `/api/v1/brand/${brandId}`,
-    });
-    console.log(res);
+    await APIService.deleteBrand(brandId);
     return true;
   } catch (e) {
     console.log(e);
@@ -161,10 +144,7 @@ function displayImage(file) {
 }
 
 getItemsMethods = async (limit, page) => {
-  return axios({
-    method: "get",
-    url: `/api/v1/brand?limit=${limit}&page=${page}`,
-  });
+  return await APIService.fetchAllBrand({ limit, page });
 };
 
 setLimit = () => {
@@ -228,7 +208,7 @@ bindRowAction = () => {
   $(".manage-btn-delete").click(function (e) {
     e.preventDefault();
     const id = $(this).data("id");
-    
+
     $("#documentDelete").data("id", id);
 
     // call func here

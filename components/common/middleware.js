@@ -3,12 +3,44 @@ import Brand from "../brand/model.js";
 import Category from "../category/model.js";
 import User from "../user/model.js";
 
+const apiQueryValidations = [
+  query("page")
+    .if(query("page").exists())
+    .trim()
+    .isInt({ min: 1 })
+    .withMessage("page must be interger in range 1-...")
+    .toInt(),
+  query("limit")
+    .if(query("limit").exists())
+    .trim()
+
+    .isInt({ min: 1 })
+    .withMessage("limit  must be interger in range 1-...")
+    .toInt(),
+  query("min")
+    .if(query("min").exists())
+    .if(query("range_field").exists())
+    .trim()
+
+    .isInt()
+    .withMessage("min value must be interger")
+    .toInt(),
+  query("max")
+    .if(query("max").exists())
+    .if(query("range_field").exists())
+    .trim()
+
+    .isInt()
+    .withMessage("max value must be interger")
+    .toInt(),
+];
+
 const CommonMiddleWares = {
   productCreateAndEditValidations: [
     body("productName")
       .exists()
       .bail()
-      .notEmpty({ignore_whitespace: true})
+      .notEmpty({ ignore_whitespace: true })
       .withMessage("field can't be emtpy")
       .bail()
       .trim()
@@ -65,74 +97,50 @@ const CommonMiddleWares = {
       }),
   ],
 
-  apiQueryValidations: [
-    query("page")
-      .if(query("page").exists())
-      .trim()
-      .isInt({ min: 1 })
-      .withMessage("page must be interger in range 1-...")
-      .toInt(),
-    query("limit")
-      .if(query("limit").exists())
-      .trim()
+  apiQueryParamsExtract: [
+    apiQueryValidations,
+    async (req, res, next) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res
+          .status(400)
+          .json({ success: false, msg: errors.array()[0].msg });
+      }
+      const { page, limit, sort, range_field, min, max } = req.query;
+      if (sort) {
+        let order_by = req.query.order_by;
+        let sortParams = {};
+        if (!order_by) {
+          order_by = "desc";
+        }
+        if (!["desc", "asc"].includes(order_by)) {
+          return res
+            .status(400)
+            .send({ success: false, msg: "invalid sort params" });
+        }
 
-      .isInt({ min: 1 })
-      .withMessage("limit  must be interger in range 1-...")
-      .toInt(),
-    query("min")
-      .if(query("min").exists())
-      .if(query("range_field").exists())
-      .trim()
+        if (order_by == "desc") {
+          order_by = -1;
+        } else {
+          order_by = 1;
+        }
+        sortParams[sort] = order_by;
 
-      .isInt()
-      .withMessage("min value must be interger")
-      .toInt(),
-    query("max")
-      .if(query("max").exists())
-      .if(query("range_field").exists())
-      .trim()
-
-      .isInt()
-      .withMessage("max value must be interger")
-      .toInt(),
+        req.params.sortParams = sortParams;
+      }
+      if (range_field) {
+        let range = {};
+        range[range_field] = {
+          ...(min !== null && min !== undefined && { $gte: min }),
+          ...(max !== null && max !== undefined && { $lte: max }),
+        };
+        req.params.range = range;
+      }
+      req.params.page = page;
+      req.params.limit = limit;
+      next();
+    },
   ],
-  apiQueryParamsExtract: async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    const { page, limit, sort, range_field, min, max } = req.query;
-    if (sort) {
-      let order_by = req.query.order_by;
-      let sortParams = {};
-      if (!order_by) {
-        order_by = "desc";
-      }
-      if (!["desc", "asc"].includes(order_by)) {
-        return res.status(400).send("invalid sort params");
-      }
-
-      if (order_by == "desc") {
-        order_by = -1;
-      } else {
-        order_by = 1;
-      }
-      sortParams[sort] = order_by;
-
-      req.params.sortParams = sortParams;
-    }
-    if (range_field) {
-      let range = {};
-      range[range_field] = {
-        ...(min !== null && min !== undefined && { $gte: min }),
-        ...(max !== null && max !== undefined && { $lte: max }),
-      };
-      req.params.range = range;
-    }
-    req.params.page = page;
-    req.params.limit = limit;
-    next();
-  },
 
   accountRegisterRequirement: [
     body("email")
@@ -151,19 +159,19 @@ const CommonMiddleWares = {
         }
         return true;
       }),
-      body("name")
+    body("name")
       .exists()
       .bail()
-      .notEmpty({ignore_whitespace: true})
+      .notEmpty({ ignore_whitespace: true })
       .withMessage("field can't be empty")
       .bail()
       .trim()
-      .isByteLength({min:3,max:10 })
+      .isByteLength({ min: 3, max: 10 })
       .withMessage("Name must in range [3, 10] Character"),
     body("password")
       .exists()
       .bail()
-      .notEmpty({ignore_whitespace: true})
+      .notEmpty({ ignore_whitespace: true })
       .withMessage("field can't be empty")
       .bail()
       .trim()

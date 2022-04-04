@@ -18,7 +18,7 @@ const strategy = new JwtStrategy(opts, async (payload, done)=>{
             return done(null, false, {success: false, msg: "can't locate user associated with token"});
         }
         if(!user.active){
-            return done(null, false,  {success: false, msg: "user not activated"});
+            return done(null, false,  {success: false, msg: "user account not activated"});
         }
         const tokenInfo = {
             id: payload.id,

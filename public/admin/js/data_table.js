@@ -62,11 +62,11 @@ async function tableLoadData() {
   $(".table-data").removeClass("table-loaded");
   let res = await getItemsMethods(limit, page);
   items = [];
-  totalPage = res.data["total-pages"];
-  for (let i = 0; i < res.data["item-count"]; i++) {
-    items.push(res.data.items[i]);
+  totalPage = res["total-pages"];
+  for (let i = 0; i < res["item-count"]; i++) {
+    items.push(res.items[i]);
   }
-  page = res.data["current-page"];
+  page = res["current-page"];
   renderTable();
   renderPagination();
   $(".table-data").removeClass("table-loading");

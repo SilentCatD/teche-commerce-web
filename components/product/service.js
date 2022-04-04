@@ -94,7 +94,6 @@ const ProductService = {
       const product = await Product.findById(mongoose.mongo.ObjectId(id))
         .populate("brand")
         .populate("category");
-      if (product === null) throw new Error(`Product ${id} is not found`);
       return ProductService.returnData(product);
   },
 

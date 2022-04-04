@@ -37,7 +37,16 @@ async function tokenReset(role) {
   }
 }
 
-async function request(url, body, headers, method, role, useToken, token) {
+async function request(
+  url,
+  params,
+  body,
+  headers,
+  method,
+  role,
+  useToken,
+  token
+) {
   checkValidReq(role, useToken);
   let reqHeaders;
   if (useToken) {
@@ -52,6 +61,7 @@ async function request(url, body, headers, method, role, useToken, token) {
     headers: reqHeaders,
     data: body,
     url: url,
+    params: params,
   };
   try {
     const res = await axios(request);
@@ -81,43 +91,83 @@ async function request(url, body, headers, method, role, useToken, token) {
 const Request = {
   get: async ({
     url,
+    params = {},
     body = {},
     headers = {},
     role = "public",
     useToken = false,
     token = null,
-  }) => {
-    return await request(url, body, headers, "get", role, useToken, token);
+  } = {}) => {
+    return await request(
+      url,
+      params,
+      body,
+      headers,
+      "get",
+      role,
+      useToken,
+      token
+    );
   },
   put: async ({
     url,
+    params = {},
     body = {},
     headers = {},
     role = "public",
     useToken = false,
     token = null,
-  }) => {
-    return await request(url, body, headers, "put", role, useToken, token);
+  } = {}) => {
+    return await request(
+      url,
+      params,
+      body,
+      headers,
+      "put",
+      role,
+      useToken,
+      token
+    );
   },
   post: async ({
     url,
+    params = {},
     body = {},
     headers = {},
     role = "public",
     useToken = false,
     token = null,
-  }) => {
-    return await request(url, body, headers, "post", role, useToken, token);
+  } = {}) => {
+    return await request(
+      url,
+      params,
+      body,
+      headers,
+      "post",
+      role,
+      useToken,
+      token
+    );
   },
   delete: async ({
     url,
+    params = {},
     body = {},
     headers = {},
     role = "public",
     useToken = false,
     token = null,
-  }) => {
-    return await request(url, body, headers, "delete", role, useToken, token);
+  } = {}) => {
+    return await request(
+      url,
+      params,
+      body,
+      headers,
+      "delete",
+      role,
+      useToken,
+      token
+    );
   },
 };
 

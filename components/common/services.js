@@ -5,7 +5,6 @@ const CommomDatabaseServies = {
   createDocument: async (model, object) => {
     let newDocument = new model(object);
     await newDocument.save();
-    console.log(model.collection.collectionName + " Created");
     return newDocument.id;
   },
 
