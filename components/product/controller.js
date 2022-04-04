@@ -6,15 +6,17 @@ import CommomDatabaseServies from "../common/services.js";
 import { body, validationResult } from "express-validator";
 import Brand from "../brand/model.js";
 import Category from "../category/model.js";
+import AuthorizationController from "../authorization/controller.js";
 
 const ProductController = {
   createProduct: [
+    AuthorizationController.isAdmin,
     CommonMiddleWares.productCreateAndEditValidations,
     async (req, res) => {
       try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-          return res.status(400).json({ errors: errors.array() });
+          return res.status(400).json({success: false, msg: errors.array()[0].msg });
         }
         const {
           productName,
@@ -37,10 +39,10 @@ const ProductController = {
           productDetails,
           productImages
         );
-        res.status(201).end(`Product created with id ${id}`);
+        res.status(201).json({success: true, msg: `product created with id ${id}`});
       } catch (e) {
         console.log(e);
-        res.status(402).end(`Can't create product, something went wrong: ${e}`);
+        res.status(500).json({success: false, msg:`can't create product, something went wrong: ${e}`});
       }
     },
   ],

@@ -4,8 +4,11 @@ function checkValidReq(role, useToken) {
   if (!["user", "admin", "public"].includes(role)) {
     throw new Error("role not specified");
   }
-  if(role=='public' && useToken){
-      throw new Error("public role don't need token");
+  if (role == "public" && useToken) {
+    throw new Error("public role don't need token");
+  }
+  if ((role == "admin" || role == "user") && !useToken) {
+    throw new Error("if you don't need token, use public role instead");
   }
   // public: not include header
   // user: include user tokens
@@ -34,19 +37,19 @@ async function tokenReset(role) {
   }
 }
 
-async function request(url, body, method, role, useToken, token) {
+async function request(url, body, headers, method, role, useToken, token) {
   checkValidReq(role, useToken);
-  let headers;
+  let reqHeaders;
   if (useToken) {
     let reqToken = TokenService.accessToken.get(role);
-    if(token){
+    if (token) {
       reqToken = token;
     }
-    headers = headerAuthFormat(reqToken);
+    reqHeaders = { ...headers, ...headerAuthFormat(reqToken) };
   }
   const request = {
     method: method,
-    headers: headers,
+    headers: reqHeaders,
     data: body,
     url: url,
   };
@@ -55,37 +58,66 @@ async function request(url, body, method, role, useToken, token) {
     return res;
   } catch (err) {
     let errMsg;
-    try{
+    try {
       errMsg = err.response.data.msg;
-    }catch(err){
+    } catch (err) {
       errMsg = "something went wrong";
     }
-    if(!useToken){
-        throw new Error(errMsg);
+    if (!useToken) {
+      throw new Error(errMsg);
     }
     await tokenReset(role);
     let reqToken = TokenService.accessToken.get(role);
-    if(token){
+    if (token) {
       reqToken = token;
     }
-    request.headers = headerAuthFormat(reqToken);
+    reqHeaders = { ...headers, ...headerAuthFormat(reqToken) };
+    request.headers = reqHeaders;
     const res = await axios(request);
     return res;
   }
 }
 
 const Request = {
-  get: async ({url, body = {}, role = "public", useToken = false, token=null}) => {
-    return await request(url, body, "get", role, useToken, token);
+  get: async ({
+    url,
+    body = {},
+    headers = {},
+    role = "public",
+    useToken = false,
+    token = null,
+  }) => {
+    return await request(url, body, headers, "get", role, useToken, token);
   },
-  put: async ({url, body = {}, role = "public", useToken = false, token=null}) => {
-    return await request(url, body, "put", role, useToken, token);
+  put: async ({
+    url,
+    body = {},
+    headers = {},
+    role = "public",
+    useToken = false,
+    token = null,
+  }) => {
+    return await request(url, body, headers, "put", role, useToken, token);
   },
-  post: async ({url, body = {}, role = "public", useToken = false, token=null}) => {
-    return await request(url, body, "post", role, useToken, token);
+  post: async ({
+    url,
+    body = {},
+    headers = {},
+    role = "public",
+    useToken = false,
+    token = null,
+  }) => {
+    return await request(url, body, headers, "post", role, useToken, token);
   },
-  delete: async ({url, body = {}, role = "public", useToken =false, token=null}) => {
-    return await request(url, body, "delete", role, useToken, token);
+  delete: async ({
+    url,
+    body = {},
+    headers = {},
+    role = "public",
+    useToken = false,
+    token = null,
+  }) => {
+    return await request(url, body, headers, "delete", role, useToken, token);
   },
 };
 

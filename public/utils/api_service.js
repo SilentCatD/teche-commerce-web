@@ -75,9 +75,35 @@ const APIService = {
   },
 
   userInfo: async () => {
-    const url  = '/api/v1/user';
-    let res = await Request.get({url: url, useToken: true, role: "admin"});
+    const url = "/api/v1/user";
+    let res = await Request.get({ url: url, useToken: true, role: "admin" });
     return res.data.data;
+  },
+
+  createProduct: async ({
+    productName,
+    productDetails,
+    productPrice,
+    productUnit,
+    productBrand,
+    productCategory,
+    productsImages,
+  }) => {
+    let formData = new FormData();
+    formData.append("productName", productName);
+    formData.append("productDetails", productDetails);
+    formData.append("productPrice", productPrice);
+    formData.append("productUnit", productUnit);
+    formData.append("productBrand", productBrand);
+    formData.append("productCategory", productCategory);
+    productsImages.forEach((file) => {
+      formData.append("images", file);
+    });
+    const url = "/api/v1/product";
+    const body = formData;
+    const headers = { "Content-Type": "multipart/form-data" };
+    const res = await Request.post({url: url, body: body, headers: headers, role:'admin', useToken: true});
+    console.log(res);
   },
 };
 

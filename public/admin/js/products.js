@@ -1,12 +1,11 @@
+import APIService from "../../utils/api_service.js";
 import { goBackToLoginIfNotAdmin, sleep } from "../../utils/common.js";
 
 let productsImages = [];
 let currentCarousel;
 $(document).ready(async function () {
-  await goBackToLoginIfNotAdmin(),
-  await sleep(50);
+  await goBackToLoginIfNotAdmin(), await sleep(50);
   $("#spinner").removeClass("show");
-
 
   $("#file-input").change(function (e) {
     e.preventDefault();
@@ -46,7 +45,14 @@ $(document).ready(async function () {
     }
     toggleBtnLoading(true);
     toggleFormInput(true);
-    const result = await createProduct(name, description, price, unit, brand, category);
+    const result = await createProduct(
+      name,
+      description,
+      price,
+      unit,
+      brand,
+      category
+    );
     toggleBtnLoading(false);
     toggleFormInput(false);
     if (result) {
@@ -98,9 +104,8 @@ $(document).ready(async function () {
   });
 
   bindCarousel();
-  deleteDocumentOnClick("Product",deleteProduct);
+  deleteDocumentOnClick("Product", deleteProduct);
 });
-
 
 function triggerReloadBtn() {
   $(".table-load-trigger").trigger("click");
@@ -114,25 +119,19 @@ async function createProduct(
   productBrand,
   productCategory
 ) {
-  let formData = new FormData();
-  formData.append("productName", productName);
-  formData.append("productDetails", productDetails);
-  formData.append("productPrice", productPrice);
-  formData.append("productUnit", productUnit);
-  formData.append("productBrand", productBrand);
-  formData.append("productCategory", productCategory);
-  productsImages.forEach((file) => {
-    formData.append("images", file);
-  });
   try {
-    let response = await axios({
-      method: "post",
-      url: "/api/v1/product",
-      data: formData,
-      headers: { "Content-Type": "multipart/form-data" },
+    await APIService.createProduct({
+      productName,
+      productDetails,
+      productPrice,
+      productUnit,
+      productBrand,
+      productCategory,
+      productsImages,
     });
     return true;
   } catch (e) {
+    console.log(e);
     return false;
   }
 }
@@ -352,7 +351,7 @@ async function fetchSelectData(url) {
   });
 }
 
-async function deleteProduct(id){
+async function deleteProduct(id) {
   try {
     let res = await axios({
       method: "delete",
@@ -365,7 +364,6 @@ async function deleteProduct(id){
     return false;
   }
 }
-
 
 function addProductImages(el) {
   const index = $(el).data("img-index");
@@ -491,8 +489,12 @@ renderTableRow = (item) => {
   }</td>
   <td class="align-middle">${item.price}</td>
   <td class="align-middle">${item.status}</td>
-  <td class="align-middle">${item.brand? item.brand.name: 'not available'}</td>
-  <td class="align-middle">${item.category? item.category.name: 'not available'}</td>
+  <td class="align-middle">${
+    item.brand ? item.brand.name : "not available"
+  }</td>
+  <td class="align-middle">${
+    item.category ? item.category.name : "not available"
+  }</td>
   <td class="align-middle">${item.createdAt}</td>
   <td class="align-middle">
   <div class="dropdown position-static">
@@ -500,9 +502,11 @@ renderTableRow = (item) => {
         Manage
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-        <li><a href="/admin/edit-product/${item.id}" class="manage-btn-edit dropdown-item btn"  data-id='${
+        <li><a href="/admin/edit-product/${
           item.id
-        }'>Edit</a></li>
+        }" class="manage-btn-edit dropdown-item btn"  data-id='${
+    item.id
+  }'>Edit</a></li>
         <li class="dropdown-divider"></li>
         <li><a class="manage-btn-delete dropdown-item text-danger btn" data-id='${
           item.id
@@ -518,7 +522,7 @@ bindRowAction = () => {
   $(".manage-btn-delete").click(function (e) {
     e.preventDefault();
     const id = $(this).data("id");
-    
+
     $("#documentDelete").data("id", id);
 
     // call func here

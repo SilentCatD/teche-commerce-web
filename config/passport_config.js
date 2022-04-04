@@ -15,10 +15,10 @@ const strategy = new JwtStrategy(opts, async (payload, done)=>{
         const userId = payload.sub;
         const user =  await User.findById(userId);
         if(!user){
-            return done(null, false);
+            return done(null, false, {success: false, msg: "can't locate user associated with token"});
         }
         if(!user.active){
-            return done(null, false);
+            return done(null, false,  {success: false, msg: "user not activated"});
         }
         const tokenInfo = {
             id: payload.id,
@@ -27,7 +27,7 @@ const strategy = new JwtStrategy(opts, async (payload, done)=>{
         return done(null, user, tokenInfo);
     }
     catch(err){  
-        done(err, false);
+        done(err, false, {success: false, msg: `something went wrong ${err}`});
     }
 });
 
