@@ -3,7 +3,7 @@ import __dirname from "../../dirname.js";
 import ProductService from "../../components/product/service.js";
 import EmailVerificationService from "../../components/email_verification/service.js";
 import passport from "passport";
-import AuthenticationService from "../../components/authentication/service.js";
+import AuthenticationController from "../../components/authentication/controller.js";
 
 const webPageRouter = express.Router();
 
@@ -13,26 +13,29 @@ webPageRouter.get("/login",async (req, res) => {
 });
 
 
-// webPageRouter.get('/login/facebook/callback',
-//   passport.authenticate('facebook', { failureRedirect: '/login' }),
-//   function(req, res) {
-//     // Successful authentication, redirect home.
-//     res.redirect('/');
-//   });
-
 webPageRouter.get('/login/facebook/callback',
-  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  AuthenticationController.loginByFacebookAccount,
+  function(req, res) {
+    // Successful authentication, redirect home
+
+    // console.log(res.data);
+    // res.render('user/cheater',{tokens:res.data});
+
+    res.cookie("accessToken",res.data.accessToken);
+    res.cookie("refreshToken",res.data.refreshToken);
+    
+    res.redirect("/");
+  });
+
+
+webPageRouter.get('/login/google/callback',
+  passport.authenticate('google'),
   async function(req, res) {
     // Successful authentication, redirect home.
     res.redirect('/');
   });
 
-  webPageRouter.get('/login/google/callback',
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  async function(req, res) {
-    // Successful authentication, redirect home.
-    res.redirect('/');
-  });
+
 
 webPageRouter.get("/signup",async (req, res) => {
     res.render('user/signup');
@@ -63,6 +66,10 @@ webPageRouter.get('/contact', async (req, res)=>{
     const params = {title: "Teche Contact"};
     res.render('user/contact',params);
 });
+
+webPageRouter.get('/profile',async (req, res)=>{
+    res.render('user/profile');
+})
 
 
 webPageRouter.get('/details/:id', async (req, res)=>{

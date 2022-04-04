@@ -7,8 +7,7 @@ import passport from "passport";
 const authRouter = express.Router();
 
 authRouter.route('/login').post(AuthenticationController.login); // email, password
-authRouter.route('/login/facebook').get(passport.authenticate('facebook', {scope: ['email']}));
-// authRouter.route('/login/facebook').get(AuthenticationController.loginByFacebook);
+authRouter.route('/login/facebook').get(passport.authenticate('facebook', {scope: ['email']})); // facebo
 
 authRouter.route('/login/google').get(passport.authenticate('google', {scope: ['email','profile']}));
 

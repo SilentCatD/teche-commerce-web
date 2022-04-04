@@ -1,10 +1,4 @@
-import API_CALL from "./utils/api-call.js";
-import authentication from "./utils/auth.js";
-import { validateUserEmail } from "./utils/validate.js";
-
-$(document).ready(async function () {
-
-});
+import APIService from "../../utils/api_service.js";
 
 $("#login").bind("click", async () => {
   $("#error").text("");
@@ -17,33 +11,11 @@ $("#login").bind("click", async () => {
     password: password
   }
 
-  const response = await API_CALL.loginRequest(userInfo);
-  console.log(response);
-  if (response.status === 400) {
-    // Validation fuckup
-    $(".text-danger").text(response.data.errors[0].msg);
-  } else if (response.status === 403) {
-    // Wrong password
-    $(".text-danger").text(response.data.msg);
-  } else if (response.status === 200) {
-    // success
-
-    // step 1: extract jwt token (acess token and refresh token)
-    const accessToken = response.data.accessToken;
-    const refreshToken = response.data.refreshToken;
-
-    // step 2: save some where (seasionStorage)
-    authentication.setJwtToken(accessToken);
-    authentication.setRefreshToken(refreshToken);
-    authentication.setUserName(response.data.userName);
-
-    // step 3: redirect homePage customer or admin
-    const jwtToken = authentication.getJwtToken();
-    console.log(response);
-    if (jwtToken) {
-      // step4: redirect to customer previous page (i dunnu how)
-      history.back();
-    }
+  try {
+    const response = await APIService.login(email,password,"user");
+    history.back();
+  } catch (err) {
+    $(".text-danger").text(err.message);
   }
 });
 
@@ -70,52 +42,3 @@ $("#password_show_hide").on("click", function (e) {
     hide_eye.css("display", "none");
   }
 });
-
-
-// FOR TEST ONLY
-$("#refresh").bind("click", async () => {
-  $("#error").text("");
-
-  const response = await API_CALL.newAccessTokenRequest();
-  console.log(response);
-  if (response.status === 500) {
-    // something fuckup validtor in backend
-    $(".text-danger").text("Server fuckup");
-  } else if (response.status === 403) {
-    // RefreshToken Fuckup
-    $(".text-danger").text(response.data.msg);
-  } else if(response.status === 401) {
-    $(".text-danger").text("Token can't verify or be expire");
-  }else if (response.status === 200) {
-    const accessToken = response.data.accessToken;
-    // step 2: save some where (seasionStorage)
-    authentication.setJwtToken(accessToken);
-
-    // step 3: redirect homePage customer or admin
-    const jwtToken = authentication.getJwtToken();
-    if (jwtToken) {
-      // step4: redirect to customer previous page (i dunnu how)
-      console.log("Token save in storage seasion");
-    }
-  }
-});
-
-async function getNewAccessToken() {
-  const host = window.location.host;
-  if (!authentication.getRefreshToken()) {
-    window.location.href = `http://${host}/login`;
-  } else {
-    const response = await API_CALL.newAccessTokenRequest();
-    console.log(response);
-    if (response.status === 200) {
-      const accessToken = response.data.accessToken;
-      authentication.setJwtToken(accessToken);
-      const jwtToken = authentication.getJwtToken();
-      if (jwtToken) {
-        console.log("Token save in storage seasion");
-      }
-    } else {
-      window.location.href = `http://${host}/login`;
-    }
-  }
-};

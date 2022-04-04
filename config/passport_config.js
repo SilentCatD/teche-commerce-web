@@ -6,6 +6,7 @@ import User from "../components/user/model.js";
 import { facebookAuthConfig, googleAuthConfig } from "./third_party_auth.js";
 import FacebookStrategy from "passport-facebook";
 import GoogleStrategy from "passport-google-oauth2";
+import passport from "passport";
 
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -36,6 +37,14 @@ const jwtStrategy = new JwtStrategy(opts, async (payload, done)=>{
     }
   });
 
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
 const googleStrategy = new GoogleStrategy(
     {
       clientID: googleAuthConfig.clientID,
@@ -43,22 +52,29 @@ const googleStrategy = new GoogleStrategy(
       callbackURL: googleAuthConfig.callbackURL,
       passReqToCallback: true,
     },
-    async function (request, accessToken, refreshToken, profile, cb) {
-        const user = await User.findOne({ thirdPartyID: profile.id });
-        // Find User
-        console.log(user);
-        if (user) {
-          return cb(null, user);
-        } else {
-          const tokenInfo = {
-            thirdPartyID: profile.id,
-            name: profile.displayName,
-            email: profile.emails[0].value,
-          };
-          console.log(tokenInfo);
-          return cb(null, user, tokenInfo);
+    function (request, accessToken, refreshToken, profile, cb) {
+        // const user =  User.findOne({ thirdPartyID: profile.id });
+        // // Find User
+        // console.log(user);
+        // if (user) {
+        //   return cb(null, user);
+        // } else {
+        //   const tokenInfo = {
+        //     thirdPartyID: profile.id,
+        //     name: profile.displayName,
+        //     email: profile.emails[0].value,
+        //   };
+        //   console.log(tokenInfo);
+        //   return cb(null, user, tokenInfo);
+        // }
+        const tokenInfo = {
+          thirdPartyID: profile.id,
+          name: profile.displayName,
+          email: profile.emails[0].value,
         }
-      });
+        console.log(tokenInfo);
+        return cb(null,tokenInfo);
+          });
 
 
 const facebookStrategy = new FacebookStrategy(
@@ -68,20 +84,26 @@ const facebookStrategy = new FacebookStrategy(
     callbackURL: facebookAuthConfig.callbackURL,
     profileFields: ["id", "displayName", "email"],
   },
-  async function (accessToken, refreshToken, profile, cb) {
-    const user = await User.findOne({ thirdPartyID: profile.id });
-    // Find User
-    console.log(user);
-    if (user) {
-      return cb(null, user);
-    } else {
-      const tokenInfo = {
-        thirdPartyID: profile.id,
-        name: profile.displayName,
-        email: profile.emails[0].value,
-      };
-      return cb(null, user, tokenInfo);
+  function (accessToken, refreshToken, profile, cb) {
+    // const user = await User.findOne({ thirdPartyID: profile.id });
+    // // Find User
+    // console.log(user);
+    // if (user) {
+    //   return cb(null, user);
+    // } else {
+    //   const tokenInfo = {
+    //     thirdPartyID: profile.id,
+    //     name: profile.displayName,
+    //     email: profile.emails[0].value,
+    //   };
+    //   return cb(null, user, tokenInfo);
+    // }
+    const tokenInfo = {
+      thirdPartyID: profile.id,
+      name: profile.displayName,
+      email: profile.emails[0].value,
     }
+    return cb(null,tokenInfo);
   }
 );
 

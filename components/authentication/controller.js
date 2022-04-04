@@ -69,6 +69,12 @@ const   AuthenticationController = {
         }
         return true;
       }),
+      body("password")
+      .exists()
+      .bail()
+      .notEmpty({ignore_whitespace: true})
+      .withMessage("field can't be empty")
+      .trim(),
     body("role")
       .exists()
       .bail()
@@ -114,7 +120,6 @@ const   AuthenticationController = {
         accessToken: accessToken,
         refreshToken: refreshToken,
         expiresIn: accessTokenExpiraion,
-        userName: user.email,
       });
     },
   ],
@@ -148,18 +153,28 @@ const   AuthenticationController = {
       res.status(200).send({ success: true, msg: "account is valid" });
     },
   ],
-  createFacebookAccount:[
-    passport.authenticate('facebook', {scope: ['email']}),
-    async (req, res,) => {
-      const authInfo = req.authInfo;
-      console.log(authInfo);
-      if(authInfo) { 
-        await UserService.createThirdPartyUser(
-          authInfo.id,
-          authInfo.email,
-          authInfo.name,
+
+  loginByFacebookAccount: [
+    passport.authenticate('facebook', { failureRedirect: '/login' }),
+    async function (req,res,next) {
+      // find user by thirdPartyID
+      const userInfo = req.user;
+      if(userInfo) {
+        let user = await User.findOne({ thirdPartyID: userInfo.thirdPartyID});
+        if(!user) {
+          user = await UserService.createThirdPartyUser(userInfo.thirdPartyID,userInfo.name);
+        } 
+        const accessToken = AuthoriztionService.issueAccessToken(
+          user.id,
+          accessTokenExpiraion
         );
+        const refreshToken = await AuthoriztionService.issueRefreshToken(user.id);
+        res.data = ({
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+        });
       }
+      next();
     }
   ]
 };

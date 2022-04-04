@@ -81,6 +81,7 @@ async function usingForEveryFuckingRequest(type, route, userInfo, token) {
       if (userInfo.password) {
         request.data.password = userInfo.password;
       }
+      request.data.role = "user";
     }
     if (token) {
       request.headers = authentication.getHeaders(token);
