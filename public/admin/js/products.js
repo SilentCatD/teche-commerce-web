@@ -1,6 +1,13 @@
+import { goBackToLoginIfNotAdmin, sleep } from "../../utils/common.js";
+
 let productsImages = [];
 let currentCarousel;
-$(document).ready(function () {
+$(document).ready(async function () {
+  await goBackToLoginIfNotAdmin(),
+  await sleep(50);
+  $("#spinner").removeClass("show");
+
+
   $("#file-input").change(function (e) {
     e.preventDefault();
     const result = validateProductsImg();

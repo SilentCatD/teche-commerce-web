@@ -1,7 +1,15 @@
-$(document).ready(function () {
+import { goBackToLoginIfNotAdmin, sleep} from "../../utils/common.js";
+
+$(document).ready(async function () {
+  await goBackToLoginIfNotAdmin(),
+  await sleep(50);
+  $("#spinner").removeClass("show");
+
+
   deleteDocumentOnClick("Category",deleteCategory);
 
   $("#categorySubmit").click(async function (e) {
+    
     e.preventDefault();
     const input = validateBrandNameInput();
     if (input === false) return;

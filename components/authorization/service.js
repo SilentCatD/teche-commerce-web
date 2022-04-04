@@ -19,6 +19,7 @@ const AuthoriztionService = {
     try {
       const refreshToken = await RefreshToken.findById(tokenId);
       if (refreshToken) {
+        await refreshToken.remove();
         return true;
       }
       return false;
