@@ -14,7 +14,7 @@ $("#login").bind("click", async () => {
 
   try {
     const response = await APIService.login(email,password,"user");
-    history.back();
+    window.location.href = `/`;
   } catch (err) {
     console.log(err);
     $(".text-danger").text(err.message);

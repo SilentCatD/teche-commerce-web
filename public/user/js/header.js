@@ -30,8 +30,7 @@ $(document).ready(async function () {
     );
     $(".header__top__left__edit").html("");
     $(".join-us").on("click", async function () {
-      const host = window.location.host;
-      window.location.href = `http://${host}/signup`;
+      window.location.href = `/signup`;
     });
   }
 });
