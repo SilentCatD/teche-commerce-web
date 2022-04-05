@@ -166,8 +166,8 @@ const CommonMiddleWares = {
       .withMessage("field can't be empty")
       .bail()
       .trim()
-      .isByteLength({ min: 3, max: 10 })
-      .withMessage("Name must in range [3, 10] Character"),
+      .isByteLength({ min: 3, max: 20 })
+      .withMessage("Name must in range [3, 20] Character"),
     body("password")
       .exists()
       .bail()

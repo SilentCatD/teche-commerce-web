@@ -58,7 +58,7 @@ const UserService = {
     user.active = false;
     await user.save();
   },
-  editUserProfile: async(id,name) => {
+  editUserProfile: async(id,password,name) => {
     const session = await User.startSession();
     session.startTransaction();
     try {
@@ -68,6 +68,14 @@ const UserService = {
       }
       if(name) {
         user.name = name;
+      }
+      if(password) {
+        const saltHash = AuthenticationService.genPassword(password);
+        const salt = saltHash.salt;
+        const hash = saltHash.hash;
+
+        user.hash = hash;
+        user.salt = salt;
       }
       await user.save();
       await session.commitTransaction();

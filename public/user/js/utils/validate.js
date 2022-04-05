@@ -14,8 +14,8 @@ export function validateUserName(elementId,elementNotifyError) {
     let name = $(`#${elementId}`).val().trim();
     if(validator.isEmpty(name,{ignore_whitespace: true})) {
         $(`#${elementNotifyError}`).text("Name Should Not Be Empty");
-    } else if(!validator.isByteLength(name,{ min: 3 ,max:10})) {
-        $(`#${elementNotifyError}`).text("Name must in range [3, 10] characters");
+    } else if(!validator.isByteLength(name,{ min: 3 ,max:20})) {
+        $(`#${elementNotifyError}`).text("Name must in range [3, 20] characters");
     } else {
         $(`#${elementNotifyError}`).text("");
         return true;

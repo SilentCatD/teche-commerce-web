@@ -1,7 +1,8 @@
 import AuthorizationController from "../authorization/controller.js";
-import User from "./model.js";
 import UserService from "./service.js";
-import  validator from "express-validator";
+import CommentService from "../common/middleware.js";
+import AuthenticationService from "../authentication/service.js";
+
 
 const UserController = {
   fetchUserInfo: [
@@ -12,14 +13,27 @@ const UserController = {
   ],
   editUserProfile: [
     AuthorizationController.isValidAccount,
+    CommentService.accountRegisterRequirement,
     async (req,res) => {
       try {
-      const {name} = req.body;
+      const {name,verifyPassword,password} = req.body;
       const userID = req.user.id;
-      await UserService.editUserProfile(userID,name);
+      if(password) {
+        const isValidConfirmPassword = AuthenticationService.validPassword(
+          verifyPassword,
+          req.user.hash,
+          req.user.salt
+        );
+        if(isValidConfirmPassword)  {
+          await UserService.editUserProfile(userID,password,null);
+        } else {
+          return res.status(200).end("You Enter Wrong Password");
+        }
+      } else {
+        await UserService.editUserProfile(userID,null,name);
+      }
       return res.status(200).end("Edit Successful");
       } catch (err) {
-        console.error(err);
         res.status(404).end(err.message);
       }
     }

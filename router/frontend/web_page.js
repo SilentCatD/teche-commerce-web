@@ -16,11 +16,6 @@ webPageRouter.get("/login",async (req, res) => {
 webPageRouter.get('/login/facebook/callback',
   AuthenticationController.loginByFacebookAccount,
   function(req, res) {
-    // Successful authentication, redirect home
-
-    // console.log(res.data);
-    // res.render('user/cheater',{tokens:res.data});
-
     res.cookie("accessToken",res.data.accessToken);
     res.cookie("refreshToken",res.data.refreshToken);
     
@@ -29,10 +24,12 @@ webPageRouter.get('/login/facebook/callback',
 
 
 webPageRouter.get('/login/google/callback',
-  passport.authenticate('google'),
-  async function(req, res) {
-    // Successful authentication, redirect home.
-    res.redirect('/');
+AuthenticationController.loginByGoogleAccount,
+function(req, res) {
+    res.cookie("accessToken",res.data.accessToken);
+    res.cookie("refreshToken",res.data.refreshToken);
+    
+    res.redirect("/");
   });
 
 

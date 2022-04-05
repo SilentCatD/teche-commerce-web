@@ -88,8 +88,12 @@ const APIService = {
     return res.data;
     } catch (e) {
       console.log(e);
-      return "Edit Failed because magic happend or u are witch";
+      return e.message;
     }
+  },
+  haveTokens: async(role) => {
+    const token = TokenService.refreshToken.get(role);
+    if(token) return true;
   }
 };
 

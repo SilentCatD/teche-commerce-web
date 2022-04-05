@@ -1,4 +1,5 @@
 import APIService from "../../utils/api_service.js";
+import {validateUserEmail} from "./utils/validate.js";
 
 $("#login").bind("click", async () => {
   $("#error").text("");
@@ -15,6 +16,7 @@ $("#login").bind("click", async () => {
     const response = await APIService.login(email,password,"user");
     history.back();
   } catch (err) {
+    console.log(err);
     $(".text-danger").text(err.message);
   }
 });

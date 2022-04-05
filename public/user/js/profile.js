@@ -1,58 +1,79 @@
 import APIService from "../../utils/api_service.js";
-$(document).ready(async function() {
+import { validateUserName, validateUserPassword } from "./utils/validate.js";
 
-    $("#password_show_hide").on("click", function (e) {
-        console.log("fuck");
-        const show_eye = $("#show_eye");
-        const hide_eye = $("#hide_eye");
-      
-        const x = $("#userpwd");
-      
-        hide_eye.removeClass("d-none");
-        if (x.attr("type") === "password") {
-          x.attr("type", "text");
-          show_eye.css("display", "none");
-          hide_eye.css("display", "block");
-        } else {
-          x.attr("type", "password");
-          show_eye.css("display", "block");
-          hide_eye.css("display", "none");
+$(document).ready(async function () {
+  try {
+    const userInfo = await APIService.userInfo("user");
+    if (userInfo) {
+      $(".alert").hide();
+      $("#edit-name").val(userInfo.name);
+      $("#edit-email").prop("disabled", true);
+
+
+      $("#edit-name").on("input propertychange", function (e) {
+        e.preventDefault();
+        validateUserName("edit-name", "edit-name-error");
+      });
+
+      $("#edit-user-password").on("input propertychange", function (e) {
+        e.preventDefault();
+        validateUserPassword("edit-user-password", "edit-password-error");
+      });
+
+
+      $("#edit-info-submit").on("click", async function (e) {
+        const isValidName = validateUserName("edit-name", "edit-name-error");
+        if(isValidName) {
+          const newUserInfo = {
+            name: $("#edit-name").val(),
+          };
+          const res = await APIService.userInfoEdit("user", newUserInfo);
+          console.log(res);
+          showAlert(res);
+        }  else {
+          showAlert("You have some invalid field");
         }
       });
 
-      try {
-        const userInfo = await APIService.userInfo("user");
-    if(userInfo) {
-        $(".alert").hide();
-        $("#edit-name").val(userInfo.name);
-        $("#edit-email").prop('disabled', true);
-        if(userInfo.email) {
-            $("#edit-email").val(userInfo.email);
-        } else {
-            $("#edit-email").val("Third party User");
-        }
+      if (userInfo.email) {
+        $("#edit-email").val(userInfo.email);
 
-        $("#edit-submit").on("click", async function(e) {
-            const newUserInfo = {
-                name: $("#edit-name").val(),
-            }
-            const res = await APIService.userInfoEdit("user",newUserInfo);
-            console.log(res);
-            $(".alert").text(res);
-            $(".alert").show();
-            $(".alert").alert();
-        })
-    }
-      } catch (e) {
-        window.location.href = "/";
+        $("#edit-password-submit").on("click", async function (e) {
+          const isValidPassword = validateUserPassword(
+            "edit-user-password",
+            "edit-password-error"
+          );
+  
+          if(isValidPassword) {
+            const newUserPassword = {
+              verifyPassword: $("#user-password").val(),
+              password: $("#edit-user-password").val(),
+            };
+            const res = await APIService.userInfoEdit("user", newUserPassword);
+            showAlert(res);
+          }
+        });
+
+      } else {
+        $("#edit-email").val("Third party User");
+
+        $(".password-input").attr("type","text");
+        $(".password-input").val("Third party User");
+        $(".password-input").prop("disabled", true);
       }
 
-    // console.log(userInfo);
+    }
+  } catch (e) {
+    window.location.href = "/";
+  }
+});
 
-    // const newUserInfo = {
-    //     name: "Phạm Lê Mít",
-    // }
-    // const msg = await APIService.userInfoEdit("user",newUserInfo);
 
-    // console.log(msg);
-})
+function showAlert(message) {
+  $(".alert").html(
+    `<a class="panel-close close" data-dismiss="alert">×</a> 
+    ${message}`
+  );
+  $(".alert").show();
+  $(".alert").alert();
+}

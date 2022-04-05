@@ -7,11 +7,17 @@ $(document).ready(function(){
 
 $("#signup").bind("click", async () => {
     $("#error").text("");
+
+    const isValidUserEmail = validateUserEmail("useremail","error");
+    const isValidUserName = validateUserName("username","error");
+    const isValidUserPwd = validateUserPassword("userpwd","error");
+
+    if(isValidUserEmail && isValidUserName && isValidUserPwd) {
     const email = $("#useremail").val();
     const name = $("#username").val();
     const password = $("#userpwd").val();
     
-    const userInfo = {
+      const userInfo = {
         email: email,
         name: name,
         password: password,
@@ -25,6 +31,7 @@ $("#signup").bind("click", async () => {
         // success
         $('.toast-body').text("Check your Email and click that shit");
         $('.toast').toast('show');
+    }
     }
 });
 

@@ -9,6 +9,29 @@ import EmailVerificationService from "../email_verification/service.js";
 import CommonMiddleWares from "../common/middleware.js";
 import AuthorizationController from "../authorization/controller.js";
 
+
+const issueThirdPartyToken = async (req,res,next) => {
+  // find user by thirdPartyID
+  const userInfo = req.user;
+  if(userInfo) {
+    let user = await User.findOne({ thirdPartyID: userInfo.thirdPartyID});
+    if(!user) {
+      user = await UserService.createThirdPartyUser(userInfo.thirdPartyID,userInfo.name);
+    } 
+    const accessToken = AuthoriztionService.issueAccessToken(
+      user.id,
+      accessTokenExpiraion
+    );
+    const refreshToken = await AuthoriztionService.issueRefreshToken(user.id);
+    res.data = ({
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    });
+  }
+  next();
+};
+
+
 const   AuthenticationController = {
   registerUser: [
     CommonMiddleWares.accountRegisterRequirement,
@@ -156,26 +179,11 @@ const   AuthenticationController = {
 
   loginByFacebookAccount: [
     passport.authenticate('facebook', { failureRedirect: '/login' }),
-    async function (req,res,next) {
-      // find user by thirdPartyID
-      const userInfo = req.user;
-      if(userInfo) {
-        let user = await User.findOne({ thirdPartyID: userInfo.thirdPartyID});
-        if(!user) {
-          user = await UserService.createThirdPartyUser(userInfo.thirdPartyID,userInfo.name);
-        } 
-        const accessToken = AuthoriztionService.issueAccessToken(
-          user.id,
-          accessTokenExpiraion
-        );
-        const refreshToken = await AuthoriztionService.issueRefreshToken(user.id);
-        res.data = ({
-          accessToken: accessToken,
-          refreshToken: refreshToken,
-        });
-      }
-      next();
-    }
+    issueThirdPartyToken,
+  ],
+  loginByGoogleAccount: [
+    passport.authenticate('google', { failureRedirect: '/login' }),
+    issueThirdPartyToken,
   ]
 };
 

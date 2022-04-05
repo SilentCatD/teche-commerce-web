@@ -102,6 +102,7 @@ const renderCompenent = {
     }
   },
   renderProductList: async function (products) {
+    console.log(products);
     products.forEach((product) => {
       if(product.images.length==0) {
         renderHTMLElement.renderProductItem(product,"https://pbs.twimg.com/media/EpYWByzUUAAvuZh.jpg");
@@ -197,18 +198,18 @@ const renderHTMLElement = {
   }
 };
 async function FetchProduct() {
-  let fetchResult = await API_CALL.fetchProduct(
+  let response = await API_CALL.fetchProduct(
     pageConfiguration.currentPage,
     pageConfiguration.item_per_page
   );
   
-  console.log(fetchResult);
+  productsData = response.data;
 
-  await renderCompenent.renderProductList(fetchResult.data["items"]);
+  await renderCompenent.renderProductList(productsData.data["items"]);
 
-  pageConfiguration.currentPage = fetchResult.data["current-page"];
-  pageConfiguration.totalPage = fetchResult.data["total-pages"];
-  pageConfiguration.totalItems = fetchResult.data["total-items"];
+  pageConfiguration.currentPage = productsData.data["current-page"];
+  pageConfiguration.totalPage = productsData.data["total-pages"];
+  pageConfiguration.totalItems = productsData.data["total-items"];
 }
 
 function clearPage() {

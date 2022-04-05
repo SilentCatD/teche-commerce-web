@@ -1,4 +1,3 @@
-import authentication from "./auth.js";
 
 const API_CALL = {
   // tested
