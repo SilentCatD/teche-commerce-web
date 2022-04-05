@@ -19,7 +19,7 @@ const APIService = {
     const res = await Request.post({
       url: url,
       body: body,
-      role: role,
+      role: "public",
     });
     const accessToken = res.data.accessToken;
     const refreshToken = res.data.refreshToken;
