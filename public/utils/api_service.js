@@ -303,6 +303,11 @@ const APIService = {
     const url = `/api/v1/category/${id}`;
     await Request.delete({ url, role: "admin", useToken: true });
   },
+  createAdminAccount: async (email, name, password) =>{
+    const url = `/api/v1/auth/register-admin`;
+    const body = {email, name, password};
+    await Request.post({url, body, useToken: true, role: 'admin'});
+  }
 };
 
 export default APIService;

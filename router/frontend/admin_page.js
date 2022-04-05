@@ -8,6 +8,7 @@ adminPageRouter.get('/home', AdminPageController.home);
 adminPageRouter.get('/products',AdminPageController.products);
 adminPageRouter.get('/brands', AdminPageController.brands);
 adminPageRouter.get('/categories',AdminPageController.categories);
+adminPageRouter.get('/accounts',AdminPageController.accounts);
 adminPageRouter.get('/edit-product/:id', AdminPageController.editProduct);
 
 export default adminPageRouter;

@@ -64,6 +64,11 @@ const AdminPageController = {
     };
     res.render("admin/edit-product", param);
   },
+  accounts: async (req, res) => {
+    const param = { title: "Accounts", active: ["accounts"] };
+    res.render("admin/accounts", param);
+  },
+
 };
 
 export default AdminPageController;

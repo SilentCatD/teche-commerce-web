@@ -32,7 +32,7 @@ const issueThirdPartyToken = async (req,res,next) => {
 };
 
 
-const   AuthenticationController = {
+const  AuthenticationController = {
   registerUser: [
     CommonMiddleWares.accountRegisterRequirement,
     async (req, res) => {
@@ -59,7 +59,12 @@ const   AuthenticationController = {
     CommonMiddleWares.accountRegisterRequirement,
     AuthorizationController.isAdmin,
     async (req, res) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
       const { email, name, password } = req.body;
+      console.log(email, name, password);
       const newUser = await UserService.createUserWithRole(
         email,
         name,
