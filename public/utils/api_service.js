@@ -7,6 +7,44 @@ function roleAssert(role) {
   }
 }
 
+async function urlToFile(url) {
+  const res = await fetch(url, { mode: "cors" });
+  const blob = await res.blob();
+  const file = new File([blob], "file-name", { type: "image/jpeg" });
+  return file;
+}
+
+function queryAllParamsFormat(
+  page,
+  limit,
+  sort = "createdAt",
+  order_by = "desc",
+  range_field,
+  min,
+  max
+) {
+  const searchParams = new URLSearchParams();
+  searchParams.set("sort", sort);
+  searchParams.set("order_by", order_by);
+  if (page) {
+    searchParams.set("page", page);
+  }
+  if (limit) {
+    searchParams.set("limit", limit);
+  }
+  if (range_field) {
+    searchParams.set("range_field", range_field);
+  }
+  if (min) {
+    searchParams.set("min", min);
+  }
+  if (max) {
+    searchParams.set("max", max);
+  }
+
+  return searchParams;
+}
+
 const APIService = {
   login: async (email, password, role) => {
     roleAssert(role);
