@@ -2,6 +2,7 @@ import { query, validationResult, body } from "express-validator";
 import Brand from "../brand/model.js";
 import Category from "../category/model.js";
 import User from "../user/model.js";
+import Product from "../product/model.js";
 
 const apiQueryValidations = [
   query("page")
@@ -178,6 +179,36 @@ const CommonMiddleWares = {
       .isStrongPassword({ minSymbols: 0 })
       .withMessage("password not strong enough"),
   ],
+  createEditCommentRequirement:[
+    body("rating")
+    .exists()
+    .bail()
+    .notEmpty({ ignore_whitespace: true })
+    .withMessage("field can't be empty")
+    .bail()
+    .trim()
+    .isInt({min:1,max:5})
+    .withMessage("field must be integer in range [1,5]")
+    .toInt(),
+    body("description")
+    .trim()
+    .isByteLength({ min: 0, max: 256 })
+    .withMessage("Description is too long"),
+    body("productId")
+    .exists()
+    .bail()
+    .notEmpty({ ignore_whitespace: true })
+    .withMessage("field can't be empty")
+    .bail()
+    .trim()
+    .custom(async (productId) => {
+      const exists = await Product.exists({_id:productId});
+      if (!exists) {
+        throw new Error("product not existed");
+      }
+      return true;
+    }),
+  ]
 };
 
 export default CommonMiddleWares;

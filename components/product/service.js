@@ -108,42 +108,6 @@ const ProductService = {
   deleteProduct: async (id) => {
     await CommomDatabaseServies.deleteDocument(Product, id, true);
   },
-
-  rateProduct: async (id, rate) => {
-    if (!isInt(rate) && (rate < 1 || rate > 5)) {
-      throw Error("Invalid rate");
-    }
-    const session = await Product.startSession();
-    session.startTransaction();
-    try {
-      const product = await Product.findById(
-        mongoose.Types.ObjectId(id)
-      ).session(session);
-      if (product === null) throw new Error(`Product ${id} is not existed`);
-      let rates = product.rates;
-      rates[rate - 1] = rates[rate - 1] + 1;
-      let totalRates = 0;
-      let totalStars = 0;
-      let rateAverage = 0;
-      for (let i = 0; i < 5; i++) {
-        totalRates += rates[i];
-        totalStars += rates[i] * (i + 1);
-      }
-      if (totalRates != 0) {
-        rateAverage = totalStars / totalRates;
-      }
-      product.rateAverage = rateAverage;
-      product.rates = rates;
-      await product.save();
-      await session.commitTransaction();
-    } catch (e) {
-      await session.abortTransaction();
-      throw e;
-    } finally {
-      await session.endSession();
-    }
-  },
-
   editProduct: async (
     id,
     name,
@@ -193,6 +157,44 @@ const ProductService = {
       await session.endSession();
     }
   },
+
+  rateProduct: async (id, rate) => {
+    const session = await Product.startSession();
+    session.startTransaction();
+    try {
+      let temp_1 =  (rate > 0 ) ? 1 : -1;
+
+      rate = Math.abs(rate);
+      const product = await Product.findById(
+        mongoose.Types.ObjectId(id)
+      ).session(session);
+      if (product === null) throw new Error(`Somehow Product ${id} is not existed`);
+      let rates = product.rates;
+
+      rates[rate - 1] = rates[rate - 1] + temp_1;
+
+      let totalRates = 0;
+      let totalStars = 0;
+      let rateAverage = 0;
+      for (let i = 0; i < 5; i++) {
+        totalRates += rates[i];
+        totalStars += rates[i] * (i + 1);
+      }
+      if (totalRates != 0) {
+        rateAverage = totalStars / totalRates;
+      }
+      product.rateAverage = rateAverage;
+      product.rates = rates;
+      await product.save();
+      await session.commitTransaction();
+    } catch (e) {
+      await session.abortTransaction();
+      throw e;
+    } finally {
+      await session.endSession();
+    }
+  },
+
 };
 
 export default ProductService;

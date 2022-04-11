@@ -50,3 +50,7 @@ POST http://127.0.0.1:3000/api/v1/product
     "productBrand": "6241b6d3590ab74cf48fc537",
     "productCategory": "6241b6bd590ab74cf48fc52c"
 }
+
+###
+DELETE http://127.0.0.1:3000/api/v1/comment/6254a2af3a241e86e00ba7a2
+
