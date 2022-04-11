@@ -128,7 +128,7 @@ Query parameters available:
 - `range_field`: `optional`, name of the field to get value by range, require `min` or `max` to work
 - `min`: `optional` `number`, the minimum value of said `range_field`
 - `max`: `optional` `number`, the maximum value of said `range_field`
-- `query`: `optional` `string`, search by category's name
+- `query`: `optional` `string`, search by product's name or description
 
 
 #### Create Product:
