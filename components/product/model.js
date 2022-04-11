@@ -41,6 +41,7 @@ const productSchema = new mongoose.Schema({
     comments: [commentSchema],
 }, {autoCreate: false, timestamps: true});
 
+productSchema.index({name: 'text', details: 'text'});
 
 const Product = mongoose.model('Product', productSchema);
 

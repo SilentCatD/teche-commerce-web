@@ -5,7 +5,7 @@ import categoryRouter from "./scripts/category.js";
 import productRouter from "./scripts/product.js";
 import userRouter from "./scripts/user.js";
 
-const apiV1Router = express.Router();
+const apiV1Router = express.Router({mergeParams: true});
 
 apiV1Router.use('/brand', brandRouter);
 apiV1Router.use('/category', categoryRouter);

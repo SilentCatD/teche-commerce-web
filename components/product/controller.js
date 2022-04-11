@@ -90,8 +90,8 @@ const ProductController = {
           .json({ success: false, msg: errors.array()[0].msg });
       }
       try {
-        const { limit, page, sortParams, range, brand, category, query } = req.params;
-        const result = await ProductService.modelQueryAll();
+        const { limit, page, sortParams, range, brand, category, query } = req.query;
+        const result = await ProductService.modelQueryAll(range, limit, page, sortParams, brand, category, query);
         res.status(200).json({ success: true, data: result });
       } catch (e) {
         console.log(e);

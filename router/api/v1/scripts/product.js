@@ -4,7 +4,7 @@ import ProductController from "../../../../components/product/controller.js";
 
 const upload = multer();
 
-const productRouter = express.Router();
+const productRouter = express.Router({mergeParams: true});
 
 productRouter.route('/')
     .post(upload.any('images'),ProductController.createProduct)

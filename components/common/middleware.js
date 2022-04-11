@@ -126,7 +126,7 @@ const CommonMiddleWares = {
         }
         sortParams[sort] = order_by;
 
-        req.params.sortParams = sortParams;
+        req.query.sortParams = sortParams;
       }
       if (range_field) {
         let range = {};
@@ -134,10 +134,10 @@ const CommonMiddleWares = {
           ...(min !== null && min !== undefined && { $gte: min }),
           ...(max !== null && max !== undefined && { $lte: max }),
         };
-        req.params.range = range;
+        req.query.range = range;
       }
-      req.params.page = page;
-      req.params.limit = limit;
+      req.query.page = page;
+      req.query.limit = limit;
       next();
     },
   ],

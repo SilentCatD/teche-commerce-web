@@ -46,8 +46,8 @@ const ProductService = {
   modelQueryAll: async (range, limit, page, sortParams, brand, category, query) => {
     let queryParams = {
       ...range,
-      brand: mongoose.SchemaTypes.ObjectId(brand),
-      category: mongoose.SchemaType.ObjectId(category),
+      ...(brand && {brand: mongoose.Types.ObjectId(brand)}),
+      ...(category && {category: mongoose.Types.ObjectId(category)}),
       ...(query  && {$text: {$search: query}}),
     };
     const totalCount = await Product.countDocuments(queryParams);
