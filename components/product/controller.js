@@ -1,9 +1,10 @@
 import ProductService from "./service.js";
 import Product from "./model.js";
-
+import Brand from "../brand/model.js";
+import Category from "../category/model.js";
 import CommonMiddleWares from "../common/middleware.js";
 import CommomDatabaseServies from "../common/services.js";
-import { param, validationResult } from "express-validator";
+import { param, validationResult, query } from "express-validator";
 import AuthorizationController from "../authorization/controller.js";
 
 const ProductController = {
@@ -53,17 +54,44 @@ const ProductController = {
   ],
   fetchAllProduct: [
     CommonMiddleWares.apiQueryParamsExtract,
+    query("brand")
+      .if(query("brand").exists())
+      .trim()
+      .custom(async (brandId) => {
+        try {
+          const brand = await Brand.findById(brandId);
+          if (!brand) {
+            throw new Error();
+          }
+        } catch (e) {
+          throw new Error("brand not exist");
+        }
+        return true;
+      }),
+    query("category")
+      .if(query("category").exists())
+      .trim()
+      .custom(async (categoryId) => {
+        try {
+          const category = await Category.findById(categoryId);
+          if (!category) {
+            throw new Error();
+          }
+        } catch (e) {
+          throw new Error("category not exist");
+        }
+        return true;
+      }),
     async (req, res) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res
+          .status(400)
+          .json({ success: false, msg: errors.array()[0].msg });
+      }
       try {
-        const { limit, page, sortParams, range } = req.params;
-        const result = await CommomDatabaseServies.queryAllWithModel(
-          Product,
-          ProductService,
-          limit,
-          page,
-          sortParams,
-          range
-        );
+        const { limit, page, sortParams, range, brand, category, query } = req.params;
+        const result = await ProductService.modelQueryAll();
         res.status(200).json({ success: true, data: result });
       } catch (e) {
         console.log(e);
