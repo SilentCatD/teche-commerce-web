@@ -35,13 +35,19 @@ const BrandService = {
       productsHold: brand.productsHold,
     };
   },
-  modelQueryAll: async(range, limit, page, sortParams)=>{
+  brandQueryAll: async(range, limit, page, sortParams, query)=>{
+    let queryParams = {
+      ...range,
+      ...(query  && {$text: {$search: query}}),
+    };
+    const totalCount = await Brand.countDocuments(queryParams);
     const brands = await Brand
-    .find(range)
+    .find(queryParams)
     .skip(limit * page - limit)
     .limit(limit)
     .sort(sortParams);
-    return brands.map((brand)=>{return BrandService.returnData(brand)});
+    const items =  brands.map((brand)=>{return BrandService.returnData(brand)});
+    return CommomDatabaseServies.queryAllFormat(totalCount, limit, page, items);
 },
 
   fetchBrand: async (id) => {

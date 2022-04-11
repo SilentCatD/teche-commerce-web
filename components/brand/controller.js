@@ -64,15 +64,8 @@ const BrandController = {
     CommonMiddleWares.apiQueryParamsExtract,
     async (req, res) => {
       try {
-        const { limit, page, sortParams, range } = req.query;
-        const result = await CommomDatabaseServies.queryAllWithModel(
-          Brand,
-          BrandService,
-          limit,
-          page,
-          sortParams,
-          range
-        );
+        const { limit, page, sortParams, range, query } = req.query;
+        const result = await BrandService.brandQueryAll(range, limit, page, sortParams, query);
         res.status(200).json({ success: true, data: result });
       } catch (e) {
         console.log(e);

@@ -91,7 +91,7 @@ const ProductController = {
       }
       try {
         const { limit, page, sortParams, range, brand, category, query } = req.query;
-        const result = await ProductService.modelQueryAll(range, limit, page, sortParams, brand, category, query);
+        const result = await ProductService.productQueryAll(range, limit, page, sortParams, brand, category, query);
         res.status(200).json({ success: true, data: result });
       } catch (e) {
         console.log(e);

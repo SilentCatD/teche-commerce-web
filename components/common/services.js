@@ -99,8 +99,7 @@ const CommomDatabaseServies = {
     }
     await model.deleteMany();
   },
-  queryAllWithModel: async (model, modelService, limit, page, sortParams, range) => {
-    const totalCount = await model.countDocuments(range);
+  queryAllFormat: async (totalCount, limit, page, items) => {
     let totalPages = Math.ceil(totalCount / limit);
     if (totalPages == 0) {
       totalPages = 1;
@@ -108,7 +107,6 @@ const CommomDatabaseServies = {
     if (page && page > totalPages) {
       page = totalPages;
     }
-    const items = await modelService.modelQueryAll(range, limit, page, sortParams);
     const result = {
       ...(limit && { "total-pages": totalPages }),
       ...(limit && { "current-page": page ? page : 1 }),

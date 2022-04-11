@@ -43,7 +43,7 @@ const ProductService = {
     await CommomDatabaseServies.deleteCollection(Product, true);
   },
 
-  modelQueryAll: async (range, limit, page, sortParams, brand, category, query) => {
+  productQueryAll: async (range, limit, page, sortParams, brand, category, query) => {
     let queryParams = {
       ...range,
       ...(brand && {brand: mongoose.Types.ObjectId(brand)}),
@@ -51,13 +51,6 @@ const ProductService = {
       ...(query  && {$text: {$search: query}}),
     };
     const totalCount = await Product.countDocuments(queryParams);
-    let totalPages = Math.ceil(totalCount / limit);
-    if (totalPages == 0) {
-      totalPages = 1;
-    }
-    if (page && page > totalPages) {
-      page = totalPages;
-    }
     const products = await Product.find(queryParams)
       .populate("brand")
       .populate("category")
@@ -67,15 +60,7 @@ const ProductService = {
     const items =  products.map((product) => {
       return ProductService.returnData(product);
     });
-
-    const result = {
-      ...(limit && { "total-pages": totalPages }),
-      ...(limit && { "current-page": page ? page : 1 }),
-      "total-items": totalCount,
-      "item-count": items.length,
-      items: items,
-    };
-    return result;
+    return CommomDatabaseServies.queryAllFormat(totalCount, limit, page, items);
   },
 
   returnData: (product) => {

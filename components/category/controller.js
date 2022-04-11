@@ -43,15 +43,8 @@ const CategoryController = {
     CommonMiddleWares.apiQueryParamsExtract,
     async (req, res) => {
       try {
-        const { limit, page, sortParams, range } = req.query;
-        const result = await CommomDatabaseServies.queryAllWithModel(
-          Category,
-          CategotyService,
-          limit,
-          page,
-          sortParams,
-          range
-        );
+        const { limit, page, sortParams, range, query} = req.query;
+        const result = await CategotyService.categoryQueryAll(range, limit, page, sortParams, query);
         res.status(200).json({ success: true, data: result });
       } catch (e) {
         console.log(e);
