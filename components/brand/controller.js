@@ -1,7 +1,6 @@
 import Brand from "./model.js";
 import BrandService from "./service.js";
 import CommonMiddleWares from "../common/middleware.js";
-import CommomDatabaseServies from "../common/services.js";
 import { body, validationResult, param } from "express-validator";
 import AuthorizationController from "../authorization/controller.js";
 
