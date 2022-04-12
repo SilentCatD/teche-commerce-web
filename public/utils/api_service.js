@@ -172,6 +172,8 @@ const APIService = {
     range_field,
     min,
     max,
+    brand,
+    category
   } = {}) => {
     const url = "/api/v1/product";
     const searchParams = queryAllParamsFormat(
@@ -183,6 +185,12 @@ const APIService = {
       min,
       max
     );
+    if(brand){
+      searchParams.set('brand', brand);
+    }
+    if(category){
+      searchParams.set('category', category)
+    }
     const res = await Request.get({ url: url, params: searchParams });
     return res.data.data;
   },
