@@ -28,7 +28,7 @@
     <!-- Breadcrumb Section End -->
 
     <!-- Product Section Begin -->
-    <section class="product spad">
+    <section class="product spad vh-100">
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-5">
@@ -81,33 +81,6 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="sidebar__item">
-                            <div class="latest-product__text">
-                                <h4>Newest Products</h4>
-                                <div id="slider_latest_product" class="latest-product__slider owl-carousel">
-                                    <% let i = 0; %>
-                                    <% while(i <= products.length) {%>
-                                            <%if(i!= 0 && i % 3 ==0) {%>
-                                                <div class="latest-prdouct__slider__item">
-                                                <% for(let j = i-3; j < i; j++) { %>
-                                                    <a href="#" class="latest-product__item">
-                                                        <div class="latest-product__item__pic">
-                                                            <img src=<%-products[j].images[0]%> alt="">
-                                                        </div>
-                                                        <div class="latest-product__item__text">
-                                                            <h6> <%-products[j].name%> </h6>
-                                                            <span>$ <%-products[j].price%> </span>
-                                                        </div>
-                                                    </a>
-                                                <%}%>
-                                                </div>
-                                    <%}%>
-                                    <% i++ %>
-                                <%}%> 
-                                </div>
-
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="col-lg-9 col-md-7">
@@ -123,10 +96,21 @@
                             <div class="col-lg-4 col-md-5">
                                 <div class="filter__sort">
                                     <span>Sort By</span>
-                                    <select>
-                                        <option value="0">Popular</option>
-                                        <option value="0">Rating</option>
-                                        <option value="0">Price</option>
+                                    <select id="sortSelect">
+                                        <option value="createdAt">Newest</option>
+                                        <option value="price">Price</option>
+                                        <option value="rateAverage">Price</option>
+                                        <option value="viewCount">View</option>
+                                        <option value="buyCount">Bought</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-5">
+                                <div class="filter__sort">
+                                    <span>Order By</span>
+                                    <select id="orderBySelect">
+                                        <option value="desc">Descending</option>
+                                        <option value="asc">Ascending</option>
                                     </select>
                                 </div>
                             </div>
@@ -135,40 +119,11 @@
                                     <h6><span id="total-items-found">16</span> Products found</h6>
                                 </div>
                             </div>
-                            <div class="col-lg-4 col-md-3">
-                                <div class="filter__option">
-                                    <span >🔼</span>
-                                    <span >🔽</span>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="row" id="product-list">
-                        <div class="loader">
-
-                        </div>
-                        <!-- below is original -->
-                        <!-- <div class="col-lg-4 col-md-6 col-sm-6">
-                            <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="https://salt.tikicdn.com/cache/280x280/ts/product/a7/e8/d6/0aae2ebd7d4568cb577629db0a5c744b.jpg">
-                                    <ul class="product__item__pic__hover">
-                                        <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                                <div class="product__item__text">
-                                    <h6><a href="#">Macbook MSI Chetah</a></h6>
-                                    <h5>$30.00</h5>
-                                </div>
-                            </div>
-                        </div> -->
                     </div>
                     <div class="product__pagination" id="pagination">
-                        <!-- <a href="#">1</a>
-                        <a href="#">2</a>
-                        <a href="#">3</a>
-                        <a href="#"><i class="fa fa-long-arrow-right"></i></a> -->
                     </div>
                 </div>
             </div>
@@ -182,7 +137,7 @@
 
     <script src="/user/js/breadcrumb.js"></script>
     <script type='module' src="/user/js/header.js"></script>
-    <script src="/user/js/shop-grid.js"></script>
+    <script type="module" src="/user/js/shop-grid.js"></script>
 
 
     <!-- Footer Section End -->

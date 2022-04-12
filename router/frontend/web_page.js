@@ -2,7 +2,6 @@ import express from "express";
 import __dirname from "../../dirname.js";
 import ProductService from "../../components/product/service.js";
 import EmailVerificationService from "../../components/email_verification/service.js";
-import passport from "passport";
 import AuthenticationController from "../../components/authentication/controller.js";
 
 const webPageRouter = express.Router();
@@ -49,8 +48,7 @@ webPageRouter.get('/', async (req, res)=>{
 
 webPageRouter.get('/shop', async (req, res)=>{
     try{
-        const products = await ProductService.productQueryAll(null,9,1,'createAt');
-        const params = {title: "Teche Shop", products: products};
+        const params = {title: "Teche Shop"};
         res.render('user/shop-grid',params);
     }
     catch(e){

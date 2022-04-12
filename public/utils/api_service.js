@@ -21,7 +21,8 @@ function queryAllParamsFormat(
   order_by = "desc",
   range_field,
   min,
-  max
+  max,
+  query
 ) {
   const searchParams = new URLSearchParams();
   searchParams.set("sort", sort);
@@ -41,7 +42,9 @@ function queryAllParamsFormat(
   if (max) {
     searchParams.set("max", max);
   }
-
+  if (query) {
+    searchParams.set("query", query);
+  }
   return searchParams;
 }
 
@@ -113,25 +116,30 @@ const APIService = {
   },
 
   userInfo: async (role) => {
-    const url  = '/api/v1/user';
-    let res = await Request.get({url: url, useToken: true, role: role});
+    const url = "/api/v1/user";
+    let res = await Request.get({ url: url, useToken: true, role: role });
     return res.data.data;
   },
-  userInfoEdit: async (role,userInfo) => {
+  userInfoEdit: async (role, userInfo) => {
     try {
-    const url = "/api/v1/user";
-    const body = userInfo;
-    // header is using automagic
-    let res = await Request.post({url: url,body:body, useToken: true, role:role});
-    return res.data;
+      const url = "/api/v1/user";
+      const body = userInfo;
+      // header is using automagic
+      let res = await Request.post({
+        url: url,
+        body: body,
+        useToken: true,
+        role: role,
+      });
+      return res.data;
     } catch (e) {
       console.log(e);
       return e.message;
     }
   },
-  haveTokens: async(role) => {
+  haveTokens: async (role) => {
     const token = TokenService.refreshToken.get(role);
-    if(token) return true;
+    if (token) return true;
   },
   createProduct: async ({
     productName,
@@ -172,6 +180,9 @@ const APIService = {
     range_field,
     min,
     max,
+    brand,
+    category,
+    query,
   } = {}) => {
     const url = "/api/v1/product";
     const searchParams = queryAllParamsFormat(
@@ -181,8 +192,15 @@ const APIService = {
       order_by,
       range_field,
       min,
-      max
+      max,
+      query
     );
+    if (brand) {
+      searchParams.set("brand", brand);
+    }
+    if (category) {
+      searchParams.set("category", category);
+    }
     const res = await Request.get({ url: url, params: searchParams });
     return res.data.data;
   },
@@ -194,6 +212,7 @@ const APIService = {
     range_field,
     min,
     max,
+    query,
   } = {}) => {
     const url = "/api/v1/brand";
     const searchParams = queryAllParamsFormat(
@@ -203,7 +222,8 @@ const APIService = {
       order_by,
       range_field,
       min,
-      max
+      max,
+      query
     );
     const res = await Request.get({ url: url, params: searchParams });
     return res.data.data;
@@ -216,6 +236,7 @@ const APIService = {
     range_field,
     min,
     max,
+    query,
   } = {}) => {
     const url = "/api/v1/category";
     const searchParams = queryAllParamsFormat(
@@ -225,13 +246,14 @@ const APIService = {
       order_by,
       range_field,
       min,
-      max
+      max,
+      query
     );
     const res = await Request.get({ url: url, params: searchParams });
     return res.data.data;
   },
-  fetchAllComment: async (productId,
-    {
+  fetchAllComment: async ({
+    productId,
     page,
     limit,
     sort = "createdAt",
@@ -325,17 +347,19 @@ const APIService = {
     const url = `/api/v1/category/${id}`;
     await Request.delete({ url, role: "admin", useToken: true });
   },
+
   createComment: async(productId, rating,description) => {
     const body = {productId,rating,description};
     const url = "/api/v1/comment";
     console.log(body);
     await Request.post({url,body,role:"user",useToken:true});
   },
-  createAdminAccount: async (email, name, password) =>{
+
+  createAdminAccount: async (email, name, password) => {
     const url = `/api/v1/auth/register-admin`;
-    const body = {email, name, password};
-    await Request.post({url, body, useToken: true, role: 'admin'});
-  }
+    const body = { email, name, password };
+    await Request.post({ url, body, useToken: true, role: "admin" });
+  },
 };
 
 export default APIService;
