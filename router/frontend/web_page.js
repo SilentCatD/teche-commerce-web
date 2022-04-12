@@ -49,7 +49,7 @@ webPageRouter.get('/', async (req, res)=>{
 
 webPageRouter.get('/shop', async (req, res)=>{
     try{
-        const products = await ProductService.modelQueryAll(null,9,1,'createAt');
+        const products = await ProductService.productQueryAll(null,9,1,'createAt');
         const params = {title: "Teche Shop", products: products};
         res.render('user/shop-grid',params);
     }

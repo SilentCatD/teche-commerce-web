@@ -230,7 +230,29 @@ const APIService = {
     const res = await Request.get({ url: url, params: searchParams });
     return res.data.data;
   },
-
+  fetchAllComment: async (productId,
+    {
+    page,
+    limit,
+    sort = "createdAt",
+    order_by = "desc",
+    range_field,
+    min,
+    max,
+  } = {}) => {
+    const url = `/api/v1/comment/${productId}`;
+    const searchParams = queryAllParamsFormat(
+      page,
+      limit,
+      sort,
+      order_by,
+      range_field,
+      min,
+      max
+    );
+    const res = await Request.get({ url: url, params: searchParams });
+    return res.data.data;
+  },
   deleteProduct: async (id) => {
     const url = `/api/v1/product/${id}`;
     await Request.delete({ url, role: "admin", useToken: true });

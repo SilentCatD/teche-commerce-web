@@ -52,5 +52,18 @@ POST http://127.0.0.1:3000/api/v1/product
 }
 
 ###
-DELETE http://127.0.0.1:3000/api/v1/comment/6254a2af3a241e86e00ba7a2
+GET http://127.0.0.1:3000/api/v1/comment/62544c34ac32e2117acdd671?limit=5&page=1
+
+###
+POST http://127.0.0.1:3000/api/v1/comment
+Content-Type: application/json
+
+{
+ "productId":"62544c34ac32e2117acdd671",
+ "userId":"624c2c76520272eaebfdc7c8",
+ "rating":"4",
+ "userName":"forTest",
+ "userEmail":"forTest@gmail.com",
+ "description":"sdasd123123123123123123123123asdasdasdasdasd"
+}
 

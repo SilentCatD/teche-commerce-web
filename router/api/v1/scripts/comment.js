@@ -7,9 +7,11 @@ const commentRouter = express.Router();
 
 commentRouter.route('/')
     .post(CommentController.createComment)
-    .get(CommentController.fetchAllComments)
     .delete(CommentController.deleteAllComments);
 
+commentRouter.route("/:productId")
+    .get(CommentController.fetchAllComments);
+    
 commentRouter.route('/:commentId')
     .delete(CommentController.deleteComment)
     .put(CommentController.editComment);
