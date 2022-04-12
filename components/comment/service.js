@@ -13,8 +13,8 @@ const CommentService = {
             userName: comment.userName,
             description: comment.description,
             rating: comment.rating,
-            createAt: comment.createdAt,
-            updateAt: comment.updatedAt,
+            createdAt: comment.createdAt.toLocaleString('en-US'),
+            updatedAt: comment.updatedAt.toLocaleString('en-US'),
         }
     },
     fetchComment: async(id) => {

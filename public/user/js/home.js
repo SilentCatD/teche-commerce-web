@@ -7,11 +7,9 @@ $(document).ready(async function () {
     
     if(accessToken) {
       TokenService.accessToken.set("user", accessToken);
-      console.log("fuck");
     }
     if(refreshToken) {
         TokenService.refreshToken.set("user", refreshToken);
-        console.log("fuck");
     }
     delete_cookie("accessToken");
     delete_cookie("refreshToken");

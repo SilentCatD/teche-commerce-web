@@ -12,7 +12,7 @@ import { body,param, validationResult, query } from "express-validator";
 
 const CommentController = {
     createComment: [
-        // AuthorizationController.isValidAccount,
+        AuthorizationController.isValidAccount,
         CommonMiddleWares.createEditCommentRequirement,
         async (req,res) => {
             try {
@@ -20,10 +20,8 @@ const CommentController = {
                 if(!errors.isEmpty()) {
                     return res.status(400).json({msg:errors.array()[0].msg});
                 }
-                // const user = req.user
-                const {userId,userEmail,userName, productId,rating,description} = req.body;
-                const docId = await CommentService.createComment(userId, userEmail,userName, productId, rating, description);
-
+                const {productId,rating,description} = req.body;
+                const docId = await CommentService.createComment(req.user.id, req.user.email,req.user.name, productId, rating, description);
                 return res.status(200).json({success:true,msg:`comment created with ${docId}`})
             } catch(e) {
                 console.log(e);

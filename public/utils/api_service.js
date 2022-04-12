@@ -325,6 +325,12 @@ const APIService = {
     const url = `/api/v1/category/${id}`;
     await Request.delete({ url, role: "admin", useToken: true });
   },
+  createComment: async(productId, rating,description) => {
+    const body = {productId,rating,description};
+    const url = "/api/v1/comment";
+    console.log(body);
+    await Request.post({url,body,role:"user",useToken:true});
+  },
   createAdminAccount: async (email, name, password) =>{
     const url = `/api/v1/auth/register-admin`;
     const body = {email, name, password};

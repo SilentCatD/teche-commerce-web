@@ -2,13 +2,13 @@
 <html lang="zxx">
 
     <head>
-        <title><%=title%></title>
-        <%-include('partials/head') %>
         <link rel="stylesheet" href="/user/css/comment.css" type="text/css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <title><%=title%></title>
+        <%-include('partials/head') %>
     </head>
     <script>
-        const product = <%-JSON.stringify(product)%>
+        let product = <%-JSON.stringify(product)%>
     </script>
 
     
@@ -58,7 +58,7 @@
                             <div class="product__details__rating__star d-inline">
 
                             </div>
-                            <span class="product__details__review"></span>
+                            <span class="product__details__review number-of-review"></span>
                         </div>
                         <div class="product__details__price"></div>
                         <p class="product__details__desc"></p>
@@ -170,11 +170,11 @@
                                                                 <td class="progress-bar-container">
                                                                     <div class="fit-progressbar fit-progressbar-bar star-progress-bar">
                                                                         <div class="fit-progressbar-background">
-                                                                            <span class="progress-fill" style="width: 97.2973%;"></span>
+                                                                            <span id="progress-fill-5" class="progress-fill" style="width: 97.2973%;"></span>
                                                                         </div>
                                                                     </div>
                                                                 </td>
-                                                                <td class="star-num star-5">(36)</td>
+                                                                <td id="num-star-5" class="star-num">(36)</td>
                                                             </tr>
                                                             <tr class="">
                                                                 <td>
@@ -185,11 +185,11 @@
                                                                 <td class="progress-bar-container">
                                                                     <div class="fit-progressbar fit-progressbar-bar star-progress-bar">
                                                                         <div class="fit-progressbar-background">
-                                                                            <span class="progress-fill" style="width: 2.2973%;"></span>
+                                                                            <span id="progress-fill-4" class="progress-fill" style="width: 2.2973%;"></span>
                                                                         </div>
                                                                     </div>
                                                                 </td>
-                                                                <td class="star-num star-4">(2)</td>
+                                                                <td id="num-star-4" class="star-num">(2)</td>
                                                             </tr>
                                                             <tr class="">
                                                                 <td>
@@ -200,11 +200,11 @@
                                                                 <td class="progress-bar-container">
                                                                     <div class="fit-progressbar fit-progressbar-bar star-progress-bar">
                                                                         <div class="fit-progressbar-background">
-                                                                            <span class="progress-fill" style="width: 0;"></span>
+                                                                            <span id="progress-fill-3" class="progress-fill" style="width: 0;"></span>
                                                                         </div>
                                                                     </div>
                                                                 </td>
-                                                                <td class="star-num start-3">(0)</td>
+                                                                <td id="num-star-3" class="star-num">(0)</td>
                                                             </tr>
                                                             <tr class="">
                                                                 <td>
@@ -215,11 +215,11 @@
                                                                 <td class="progress-bar-container">
                                                                     <div class="fit-progressbar fit-progressbar-bar star-progress-bar">
                                                                         <div class="fit-progressbar-background">
-                                                                            <span class="progress-fill" style="width: 0;"></span>
+                                                                            <span id="progress-fill-2" class="progress-fill" style="width: 0;"></span>
                                                                         </div>
                                                                     </div>
                                                                 </td>
-                                                                <td class="star-num star-2">(0)</td>
+                                                                <td id="num-star-2" class="star-num">(0)</td>
                                                             </tr>
                                                             <tr class="">
                                                                 <td>
@@ -230,20 +230,20 @@
                                                                 <td class="progress-bar-container">
                                                                     <div class="fit-progressbar fit-progressbar-bar star-progress-bar">
                                                                         <div class="fit-progressbar-background">
-                                                                            <span class="progress-fill" style="width: 0;"></span>
+                                                                            <span id="progress-fill-1" class="progress-fill" style="width: 0;"></span>
                                                                         </div>
                                                                     </div>
                                                                 </td>
-                                                                <td class="star-num star-1">(0)</td>
+                                                                <td id="num-star-1" class="star-num">(0)</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
                                                 </div>  
                                             </div>
                                         </div>
-                                        
+                                        <h3>Customer Reviews</h3>
 
-                                        <div class="container">
+                                        <div class="container create-review">
                                             <div class="row" style="margin-top:40px;">
                                                 <div class="col-md-6">
                                                 <div class="well well-sm">
@@ -333,6 +333,14 @@
                                                 </li>
                                             </ul>
                                         </div>
+
+                                        <div id="pagination-section" class="product__pagination">
+                                            <!-- <a href="#">1</a>
+                                            <a href="#">2</a>
+                                            <a href="#">3</a>
+                                            <a href="#"><i class="fa fa-long-arrow-right"></i></a> -->
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>

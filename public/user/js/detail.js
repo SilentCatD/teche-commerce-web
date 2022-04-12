@@ -1,18 +1,15 @@
 import APIService from "../../utils/api_service.js";
 
+let currentPage = 1;
 $(document).ready(async function () {
+  console.log(product);
   setBreadCrumb("Shop",product.name);
 
-
-// Reference UI and Javascript 
-// ref: https://bootsnipp.com/snippets/PjPa#reviews-anchor
-
-(function(e){let t,o={className:"autosizejs",append:"",callback:!1,resizeDelay:10},i='<textarea tabindex="-1" style="position:absolute; top:-999px; left:0; right:auto; bottom:auto; border:0; padding: 0; -moz-box-sizing:content-box; -webkit-box-sizing:content-box; box-sizing:content-box; word-wrap:break-word; height:0 !important; min-height:0 !important; overflow:hidden; transition:none; -webkit-transition:none; -moz-transition:none;"/>',n=["fontFamily","fontSize","fontWeight","fontStyle","letterSpacing","textTransform","wordSpacing","textIndent"],s=e(i).data("autosize",!0)[0];s.style.lineHeight="99px","99px"===e(s).css("lineHeight")&&n.push("lineHeight"),s.style.lineHeight="",e.fn.autosize=function(i){return this.length?(i=e.extend({},o,i||{}),s.parentNode!==document.body&&e(document.body).append(s),this.each(function(){function o(){let t,o;"getComputedStyle"in window?(t=window.getComputedStyle(u,null),o=u.getBoundingClientRect().width,e.each(["paddingLeft","paddingRight","borderLeftWidth","borderRightWidth"],function(e,i){o-=parseInt(t[i],10)}),s.style.width=o+"px"):s.style.width=Math.max(p.width(),0)+"px"}function a(){let a={};if(t=u,s.className=i.className,d=parseInt(p.css("maxHeight"),10),e.each(n,function(e,t){a[t]=p.css(t)}),e(s).css(a),o(),window.chrome){let r=u.style.width;u.style.width="0px",u.offsetWidth,u.style.width=r}}function r(){let e,n;t!==u?a():o(),s.value=u.value+i.append,s.style.overflowY=u.style.overflowY,n=parseInt(u.style.height,10),s.scrollTop=0,s.scrollTop=9e4,e=s.scrollTop,d&&e>d?(u.style.overflowY="scroll",e=d):(u.style.overflowY="hidden",c>e&&(e=c)),e+=w,n!==e&&(u.style.height=e+"px",f&&i.callback.call(u,u))}function l(){clearTimeout(h),h=setTimeout(function(){let e=p.width();e!==g&&(g=e,r())},parseInt(i.resizeDelay,10))}let d,c,h,u=this,p=e(u),w=0,f=e.isFunction(i.callback),z={height:u.style.height,overflow:u.style.overflow,overflowY:u.style.overflowY,wordWrap:u.style.wordWrap,resize:u.style.resize},g=p.width();p.data("autosize")||(p.data("autosize",!0),("border-box"===p.css("box-sizing")||"border-box"===p.css("-moz-box-sizing")||"border-box"===p.css("-webkit-box-sizing"))&&(w=p.outerHeight()-p.height()),c=Math.max(parseInt(p.css("minHeight"),10)-w||0,p.height()),p.css({overflow:"hidden",overflowY:"hidden",wordWrap:"break-word",resize:"none"===p.css("resize")||"vertical"===p.css("resize")?"none":"horizontal"}),"onpropertychange"in u?"oninput"in u?p.on("input.autosize keyup.autosize",r):p.on("propertychange.autosize",function(){"value"===event.propertyName&&r()}):p.on("input.autosize",r),i.resizeDelay!==!1&&e(window).on("resize.autosize",l),p.on("autosize.resize",r),p.on("autosize.resizeIncludeStyle",function(){t=null,r()}),p.on("autosize.destroy",function(){t=null,clearTimeout(h),e(window).off("resize",l),p.off("autosize").off(".autosize").css(z).removeData("autosize")}),r())})):this}})(window.jQuery||window.$);
+  (function(e){let t,o={className:"autosizejs",append:"",callback:!1,resizeDelay:10},i='<textarea tabindex="-1" style="position:absolute; top:-999px; left:0; right:auto; bottom:auto; border:0; padding: 0; -moz-box-sizing:content-box; -webkit-box-sizing:content-box; box-sizing:content-box; word-wrap:break-word; height:0 !important; min-height:0 !important; overflow:hidden; transition:none; -webkit-transition:none; -moz-transition:none;"/>',n=["fontFamily","fontSize","fontWeight","fontStyle","letterSpacing","textTransform","wordSpacing","textIndent"],s=e(i).data("autosize",!0)[0];s.style.lineHeight="99px","99px"===e(s).css("lineHeight")&&n.push("lineHeight"),s.style.lineHeight="",e.fn.autosize=function(i){return this.length?(i=e.extend({},o,i||{}),s.parentNode!==document.body&&e(document.body).append(s),this.each(function(){function o(){let t,o;"getComputedStyle"in window?(t=window.getComputedStyle(u,null),o=u.getBoundingClientRect().width,e.each(["paddingLeft","paddingRight","borderLeftWidth","borderRightWidth"],function(e,i){o-=parseInt(t[i],10)}),s.style.width=o+"px"):s.style.width=Math.max(p.width(),0)+"px"}function a(){let a={};if(t=u,s.className=i.className,d=parseInt(p.css("maxHeight"),10),e.each(n,function(e,t){a[t]=p.css(t)}),e(s).css(a),o(),window.chrome){let r=u.style.width;u.style.width="0px",u.offsetWidth,u.style.width=r}}function r(){let e,n;t!==u?a():o(),s.value=u.value+i.append,s.style.overflowY=u.style.overflowY,n=parseInt(u.style.height,10),s.scrollTop=0,s.scrollTop=9e4,e=s.scrollTop,d&&e>d?(u.style.overflowY="scroll",e=d):(u.style.overflowY="hidden",c>e&&(e=c)),e+=w,n!==e&&(u.style.height=e+"px",f&&i.callback.call(u,u))}function l(){clearTimeout(h),h=setTimeout(function(){let e=p.width();e!==g&&(g=e,r())},parseInt(i.resizeDelay,10))}let d,c,h,u=this,p=e(u),w=0,f=e.isFunction(i.callback),z={height:u.style.height,overflow:u.style.overflow,overflowY:u.style.overflowY,wordWrap:u.style.wordWrap,resize:u.style.resize},g=p.width();p.data("autosize")||(p.data("autosize",!0),("border-box"===p.css("box-sizing")||"border-box"===p.css("-moz-box-sizing")||"border-box"===p.css("-webkit-box-sizing"))&&(w=p.outerHeight()-p.height()),c=Math.max(parseInt(p.css("minHeight"),10)-w||0,p.height()),p.css({overflow:"hidden",overflowY:"hidden",wordWrap:"break-word",resize:"none"===p.css("resize")||"vertical"===p.css("resize")?"none":"horizontal"}),"onpropertychange"in u?"oninput"in u?p.on("input.autosize keyup.autosize",r):p.on("propertychange.autosize",function(){"value"===event.propertyName&&r()}):p.on("input.autosize",r),i.resizeDelay!==!1&&e(window).on("resize.autosize",l),p.on("autosize.resize",r),p.on("autosize.resizeIncludeStyle",function(){t=null,r()}),p.on("autosize.destroy",function(){t=null,clearTimeout(h),e(window).off("resize",l),p.off("autosize").off(".autosize").css(z).removeData("autosize")}),r())})):this}})(window.jQuery||window.$);
 
 let __slice=[].slice;(function(e,t){let n;n=function(){function t(t,n){let r,i,s,o=this;this.options=e.extend({},this.defaults,n);this.$el=t;s=this.defaults;for(r in s){i=s[r];if(this.$el.data(r)!=null){this.options[r]=this.$el.data(r)}}this.createStars();this.syncRating();this.$el.on("mouseover.starrr","span",function(e){return o.syncRating(o.$el.find("span").index(e.currentTarget)+1)});this.$el.on("mouseout.starrr",function(){return o.syncRating()});this.$el.on("click.starrr","span",function(e){return o.setRating(o.$el.find("span").index(e.currentTarget)+1)});this.$el.on("starrr:change",this.options.change)}t.prototype.defaults={rating:void 0,numStars:5,change:function(e,t){}};t.prototype.createStars=function(){let e,t,n;n=[];for(e=1,t=this.options.numStars;1<=t?e<=t:e>=t;1<=t?e++:e--){n.push(this.$el.append("<span class='glyphicon .glyphicon-star-empty'></span>"))}return n};t.prototype.setRating=function(e){if(this.options.rating===e){e=void 0}this.options.rating=e;this.syncRating();return this.$el.trigger("starrr:change",e)};t.prototype.syncRating=function(e){let t,n,r,i;e||(e=this.options.rating);if(e){for(t=n=0,i=e-1;0<=i?n<=i:n>=i;t=0<=i?++n:--n){this.$el.find("span").eq(t).removeClass("glyphicon-star-empty").addClass("glyphicon-star")}}if(e&&e<5){for(t=r=e;e<=4?r<=4:r>=4;t=e<=4?++r:--r){this.$el.find("span").eq(t).removeClass("glyphicon-star").addClass("glyphicon-star-empty")}}if(!e){return this.$el.find("span").removeClass("glyphicon-star").addClass("glyphicon-star-empty")}};return t}();return e.fn.extend({starrr:function(){let t,r;r=arguments[0],t=2<=arguments.length?__slice.call(arguments,1):[];return this.each(function(){let i;i=e(this).data("star-rating");if(!i){e(this).data("star-rating",i=new n(e(this),r))}if(typeof r==="string"){return i[r].apply(i,t)}})}})})(window.jQuery,window);$(function(){return $(".starrr").starrr()})
 
 
-const viewReviews = $("#view-review");
 const reviewBox = $('#post-review-box');
 const newReview = $('#new-review');
 const openReviewBtn = $('#open-review-box');
@@ -20,18 +17,12 @@ const closeReviewBtn = $('#close-review-box');
 const ratingsField = $('#ratings-hidden');
 const sendReview = $('#send-review-box');
 
-
 $(function(){
   $('#new-review').autosize({append: "\n"});
 
-  viewReviews.click(async(e) => {
-    e.preventDefault();
-    const comments  = await detailController.fetchComment(product.id);
-    detailController.renderCommentList("reviews-list",comments.items);
-  })
-
-  openReviewBtn.click(function(e)
+  openReviewBtn.click(async function(e)
   {
+    if(await APIService.haveTokens("user")) {
     reviewBox.slideDown(400, function()
       {
         $('#new-review').trigger('autosize.resize');
@@ -39,6 +30,9 @@ $(function(){
       });
     openReviewBtn.fadeOut(100);
     closeReviewBtn.show();
+    } else {
+      alert("You need login first!");
+    }
   });
 
   closeReviewBtn.click(function(e)
@@ -58,52 +52,69 @@ $(function(){
   });
 });
 
-// ------------------------------------------------------
-
-sendReview.click(function (e) {
+sendReview.click(async function (e) {
     e.preventDefault();
-    const rate = ratingsField.val();
-    console.log(rate);
+    const rating = ratingsField.val();
+    const description = newReview.val()
+
+    try {
+    await APIService.createComment(product.id,rating,description);
+    product = await APIService.fetchProduct(product.id);
+    console.log(product);
+    detailController.renderProduct(product);
+    REinit(currentPage);
+    } catch (e) {
+      console.log(e);
+    }
 })
 
+// Reference UI and Javascript 
+// ref: https://bootsnipp.com/snippets/PjPa#reviews-anchor
 
+  detailController.renderProduct(product);
 
-  await REinit();
-
+  await REinit(1);
   });
   
-  async function REinit() {
-    $('.product__details__name').text(product.name);
-    $('.product__details__review').text(`(${product.rateCount} reviews)`);
-    $('.product__details__price').text(`$${product.price}`);
-    $('.product__details__desc').text(product.details);
+  async function REinit(page) {
+    const result  = await detailController.fetchComment(product.id,2,page);
 
-    $("#product__details__avail").text(product.status);
-    if(product.brand) {
-      $('#product__details__brand').text(product.brand.name);
-    } else {
-      $('#product__details__brand').text("Unknown");
-    }
-
-    if(product.category) {
-      $('#product__details__category').text(product.category.name);
-    } else {
-      $('#product__details__brand').text("Unknown");
-    }
-
-
-    product.rateAverage = 3.6;
-    let ratingValue = product.rateAverage, rounded = (product.rateAverage | 0);
-  
-    for (let j = 0; j < 5 ; j++) {
-      $(".product__details__rating__star").append('<i class="fa '+ ((j < rounded) ? "fa-star" : ((((ratingValue - j) > 0) && ((ratingValue - j) < 1)) ? "fa-star-half-o" : "fa-star-o")) +'" aria-hidden="true"></i>');
-    }
-  
+    $("#reviews-list").empty();
+    detailController.renderCommentList("reviews-list",result.items);
+    currentPage = result["current-page"];
+    const totalPage = result["total-pages"];
+    detailController.renderPagination(currentPage,totalPage);
   }
 
 const detailController = {
-    renderProduct: async(product) => {
-        
+    renderProduct: (product) => {
+      $('.product__details__name').text(product.name);
+      $('.number-of-review').text(`(${product.rateCount} reviews)`);
+      $('.product__details__price').text(`$${product.price}`);
+      $('.product__details__desc').text(product.details);
+  
+      $("#product__details__avail").text(product.status);
+      if(product.brand) {
+        $('#product__details__brand').text(product.brand.name);
+      } else {
+        $('#product__details__brand').text("Unknown");
+      }
+  
+      if(product.category) {
+        $('#product__details__category').text(product.category.name);
+      } else {
+        $('#product__details__brand').text("Unknown");
+      }
+  
+  
+      let ratingValue = product.rateAverage, rounded = (product.rateAverage | 0);
+    
+      $(".product__details__rating__star").empty();
+      for (let j = 0; j < 5 ; j++) {
+        $(".product__details__rating__star").append('<i class="fa '+ ((j < rounded) ? "fa-star" : ((((ratingValue - j) > 0) && ((ratingValue - j) < 1)) ? "fa-star-half-o" : "fa-star-o")) +'" aria-hidden="true"></i>');
+        $(`#num-star-${j+1}`).text(`(${product.rates[j]})`)
+        $(`#progress-fill-${j+1}`).css("width",`${product.rates[j]*100/product.rateCount}%`)
+      }
     },
     renderCommentList: (listId,comments) => {
       for(let i = 0 ; i < comments.length;i++) {
@@ -141,7 +152,7 @@ const detailController = {
                     ${comment.description}
                     </p>
                 </div>
-                <span class="publish py-3 d-inline-block w-100">${comment.updatedAt}</span>
+                <span class="publish py-3 d-inline-block w-100">Published at ${comment.updatedAt}</span>
                 <div class="helpful-thumbs">
                     <div class="helpful-thumb text-body-2">
                         <span class="fit-icon thumbs-icon mr-1">
@@ -167,6 +178,43 @@ const detailController = {
             </div>
         </div>
     </li>`
+    },
+    renderPagination: (page, totalPage) => {
+      const pages = [];
+      let  generated= 0;
+      let startAt = page - Math.floor(5/2);
+      let curr = startAt;
+      while (generated < 5) {
+        if (curr > totalPage) {
+          startAt--;
+          if(startAt<1) break;
+          pages.splice(1, 0,
+            `<a class="page-item" href="#">${startAt}</a>`
+          );
+          generated++;
+          continue;
+        }
+        if (curr > 0) {
+          if (curr == page) {
+            pages.push(
+              `<a class="page-item" href="#">${curr}</a>`
+            );
+          } else {
+            pages.push(
+              `<a  class="page-item" href="#">${curr}</a>`
+            );
+          }
+          generated++;
+        }
+        curr++;
+      }
+      console.log(generated);
+      $("#pagination-section").html(pages.join("\n"));
+      $(".page-item").click(async function (e) {
+        e.preventDefault();
+        const nextPage = $(this).text().trim();
+        await REinit(nextPage);
+      });
     },
     fetchComment : async (productId,limit, page) => {
       return await APIService.fetchAllComment(productId,{ limit, page });
