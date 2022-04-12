@@ -10,6 +10,10 @@ const commentSchema = new mongoose.Schema({
     userEmail: {
         type: String,
     },
+    userName: {
+        type: String,
+        default: "How this Happen",
+    },
     productId :{
         type: mongoose.SchemaTypes.ObjectId,
         required: true,

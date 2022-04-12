@@ -21,8 +21,8 @@ const CommentController = {
                     return res.status(400).json({msg:errors.array()[0].msg});
                 }
                 // const user = req.user
-                const {userId,userEmail, productId,rating,description} = req.body;
-                const docId = await CommentService.createComment(userId, userEmail, productId, rating, description);
+                const {userId,userEmail,userName, productId,rating,description} = req.body;
+                const docId = await CommentService.createComment(userId, userEmail,userName, productId, rating, description);
 
                 return res.status(200).json({success:true,msg:`comment created with ${docId}`})
             } catch(e) {
@@ -83,7 +83,7 @@ const CommentController = {
     ],
     fetchAllComments: [
         CommonMiddleWares.apiQueryParamsExtract,
-        query("productId")
+        param("productId")
         .exists()
         .bail()
         .notEmpty({ ignore_whitespace: true })
@@ -105,7 +105,8 @@ const CommentController = {
                   .json({ success: false, msg: errors.array()[0].msg });
             }
             try {
-                const {productId,limit,page} = req.query;
+                const {productId} = req.params;
+                const {limit,page} = req.query;
                 const comments = await CommentService.commentQueryAll(productId,limit,page);
                 res.status(200).json({success: true, data:comments});
             } catch (e) {

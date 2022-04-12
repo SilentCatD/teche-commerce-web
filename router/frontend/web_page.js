@@ -2,7 +2,6 @@ import express from "express";
 import __dirname from "../../dirname.js";
 import ProductService from "../../components/product/service.js";
 import EmailVerificationService from "../../components/email_verification/service.js";
-import passport from "passport";
 import AuthenticationController from "../../components/authentication/controller.js";
 
 const webPageRouter = express.Router();
