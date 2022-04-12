@@ -21,7 +21,8 @@ function queryAllParamsFormat(
   order_by = "desc",
   range_field,
   min,
-  max
+  max,
+  query,
 ) {
   const searchParams = new URLSearchParams();
   searchParams.set("sort", sort);
@@ -41,7 +42,9 @@ function queryAllParamsFormat(
   if (max) {
     searchParams.set("max", max);
   }
-
+  if(query){
+    searchParams.set("query", query);
+  }
   return searchParams;
 }
 
@@ -173,7 +176,8 @@ const APIService = {
     min,
     max,
     brand,
-    category
+    category,
+    query
   } = {}) => {
     const url = "/api/v1/product";
     const searchParams = queryAllParamsFormat(
@@ -183,7 +187,8 @@ const APIService = {
       order_by,
       range_field,
       min,
-      max
+      max,
+      query
     );
     if(brand){
       searchParams.set('brand', brand);
@@ -202,6 +207,7 @@ const APIService = {
     range_field,
     min,
     max,
+    query,
   } = {}) => {
     const url = "/api/v1/brand";
     const searchParams = queryAllParamsFormat(
@@ -211,7 +217,8 @@ const APIService = {
       order_by,
       range_field,
       min,
-      max
+      max,
+      query
     );
     const res = await Request.get({ url: url, params: searchParams });
     return res.data.data;
@@ -224,6 +231,7 @@ const APIService = {
     range_field,
     min,
     max,
+    query,
   } = {}) => {
     const url = "/api/v1/category";
     const searchParams = queryAllParamsFormat(
@@ -233,7 +241,8 @@ const APIService = {
       order_by,
       range_field,
       min,
-      max
+      max,
+      query
     );
     const res = await Request.get({ url: url, params: searchParams });
     return res.data.data;

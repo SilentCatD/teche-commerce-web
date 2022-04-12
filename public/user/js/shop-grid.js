@@ -9,7 +9,7 @@ let pageConfiguration = {
   sortOption: "createdAt",
   totalItems: -1,
   itemInPage: -1,
-
+  query: "",
   item_per_page: 12,
   pagination_size: 5,
 
@@ -30,6 +30,12 @@ $(document).ready(async function () {
     e.preventDefault();
     pageConfiguration.orderOption = $(this).val();
     await REinit();
+  });
+  $('#searchBtn').click(async function (e) { 
+    e.preventDefault(); 
+    const query = $('#searchBox').val().trim();
+    pageConfiguration.query = query;
+    await REinit()
   });
 });
 
@@ -114,7 +120,7 @@ const renderCompenent = {
     }
   },
   renderProductList: function (products) {
-    products.forEach((product) => {
+      products.forEach((product) => {
       renderHTMLElement.renderProductItem(product);
     });
     $("#total-items-found").text(`${products.length}`);
@@ -204,6 +210,7 @@ async function FetchProduct() {
     limit: pageConfiguration.item_per_page,
     sort: pageConfiguration.sortOption,
     order_by: pageConfiguration.orderOption,
+    query: pageConfiguration.query,
   });
   let productsData = response;
 
