@@ -1,11 +1,5 @@
-export const facebookAuthConfig = {
-        clientID: '3124408457877801',
-        clientSecret: '4a2a3bc360b24afbca26039b9f8ec5e0',
-        callbackURL: `${process.env.HOST_URL}/login/facebook/callback`,
-}
-
 export const googleAuthConfig = {
-    clientID: '29067664636-036r61egd3s9dilemr5jnru2bo354ctg.apps.googleusercontent.com',
-    clientSecret: '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',
+    clientID: '750385611622-j1lunkp6r3420jrfihr8n7gabivup4ug.apps.googleusercontent.com',
+    clientSecret: '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',
     callbackURL: `${process.env.HOST_URL}/login/google/callback`,
 }

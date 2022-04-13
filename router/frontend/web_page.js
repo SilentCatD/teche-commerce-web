@@ -12,22 +12,11 @@ webPageRouter.get("/login",async (req, res) => {
 });
 
 
-webPageRouter.get('/login/facebook/callback',
-  AuthenticationController.loginByFacebookAccount,
-  function(req, res) {
-    res.cookie("accessToken",res.data.accessToken);
-    res.cookie("refreshToken",res.data.refreshToken);
-    
-    res.redirect("/");
-  });
-
-
 webPageRouter.get('/login/google/callback',
 AuthenticationController.loginByGoogleAccount,
 function(req, res) {
     res.cookie("accessToken",res.data.accessToken);
     res.cookie("refreshToken",res.data.refreshToken);
-    
     res.redirect("/");
   });
 
@@ -41,14 +30,14 @@ webPageRouter.get("/signup",async (req, res) => {
 // ohter shiting route
 
 webPageRouter.get('/', async (req, res)=>{
-    const params = {title: "Teche Home"};
+    const params = {title: "Teche Home", tab: 'home'};
     res.render('user/index',params);
 });
 
 
 webPageRouter.get('/shop', async (req, res)=>{
     try{
-        const params = {title: "Teche Shop"};
+        const params = {title: "Teche Shop", tab: 'shop'};
         res.render('user/shop-grid',params);
     }
     catch(e){
@@ -58,12 +47,13 @@ webPageRouter.get('/shop', async (req, res)=>{
 });
 
 webPageRouter.get('/contact', async (req, res)=>{
-    const params = {title: "Teche Contact"};
+    const params = {title: "Teche Contact", tab: 'contact'};
     res.render('user/contact',params);
 });
 
 webPageRouter.get('/profile',async (req, res)=>{
-    res.render('user/profile');
+    const params = {title: "Teche Profile", tab: 'none'};
+    res.render('user/profile', params);
 })
 
 

@@ -30,10 +30,10 @@ const UserService = {
     return newUser;
   },
 
-  createThirdPartyUser: async (id,name) => {
+  createThirdPartyUser: async (name, email) => {
     const newUser = await new User({
-      thirdPartyID: id,
       name: name,
+      email: email,
       active: true,
       role: "user",
     });

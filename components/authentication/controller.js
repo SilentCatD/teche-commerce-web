@@ -11,23 +11,20 @@ import AuthorizationController from "../authorization/controller.js";
 
 
 const issueThirdPartyToken = async (req,res,next) => {
-  // find user by thirdPartyID
   const userInfo = req.user;
-  if(userInfo) {
-    let user = await User.findOne({ thirdPartyID: userInfo.thirdPartyID});
-    if(!user) {
-      user = await UserService.createThirdPartyUser(userInfo.thirdPartyID,userInfo.name);
-    } 
-    const accessToken = AuthoriztionService.issueAccessToken(
-      user.id,
-      accessTokenExpiraion
-    );
-    const refreshToken = await AuthoriztionService.issueRefreshToken(user.id);
-    res.data = ({
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-    });
+  let user = await User.findOne({ email: userInfo.email});
+  if(!user) {
+    user = await UserService.createThirdPartyUser(userInfo.name, userInfo.email);
   }
+  const accessToken = AuthoriztionService.issueAccessToken(
+    user.id,
+    accessTokenExpiraion
+  );
+  const refreshToken = await AuthoriztionService.issueRefreshToken(user.id);
+  res.data = ({
+    accessToken: accessToken,
+    refreshToken: refreshToken,
+  });
   next();
 };
 
