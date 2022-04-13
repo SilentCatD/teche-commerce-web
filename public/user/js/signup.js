@@ -5,12 +5,12 @@ $(document).ready(function(){
     $('.toast').toast('hide');
   });
 
-$("#signup").bind("click", async () => {
+$("#signup").on("click", async () => {
     $("#error").text("");
 
-    const isValidUserEmail = validateUserEmail("useremail","error");
-    const isValidUserName = validateUserName("username","error");
-    const isValidUserPwd = validateUserPassword("userpwd","error");
+    const isValidUserEmail =  validateUserEmail("useremail","email-error");
+    const isValidUserName =  validateUserName("username","name-error");
+    const isValidUserPwd =  validateUserPassword("userpwd","password-error");
 
     if(isValidUserEmail && isValidUserName && isValidUserPwd) {
     const email = $("#useremail").val();
@@ -26,7 +26,7 @@ $("#signup").bind("click", async () => {
     const response = await API_CALL.registerUserRequest(userInfo);
     if(response.status === 400) {
         // Validation in backend fail (this also include register same email)
-        $(".text-danger").text(response.data.errors[0].msg);
+        $("#error").text(response.data.errors[0].msg);
     } else if(response.status === 200) {
         // success
         $('.toast-body').text("Check your Email and click that shit");
@@ -39,18 +39,18 @@ $("#signup").bind("click", async () => {
 
 $("#useremail").on("input propertychange", function (e) {
     e.preventDefault();
-    validateUserEmail("useremail","error");
+    validateUserEmail("useremail","email-error");
   });
 
   $("#username").on("input propertychange", function (e) {
     e.preventDefault();
-    validateUserName("username","error");
+    validateUserName("username","name-error");
   });
 
 
   $("#userpwd").on("input propertychange", function (e) {
     e.preventDefault();
-    validateUserPassword("userpwd","error");
+    validateUserPassword("userpwd","password-error");
   });
 
   $("#password_show_hide").on("click", function (e) {
