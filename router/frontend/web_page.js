@@ -92,7 +92,13 @@ webPageRouter.get('/active/:hash', async (req, res)=>{
     return res.status(404).end();
 });
 
-
+webPageRouter.get('/reset-password/:hash', async (req, res)=>{
+    const {hash} = req.params;
+    if(await EmailVerificationService.verifyHasResetPwd(hash)){
+        return res.render('user/forget-password', {hash: hash});
+    }
+    return res.status(404).end();
+});
 
 
 export default webPageRouter;

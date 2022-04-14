@@ -3,6 +3,9 @@ export function validateUserEmail(elementId,elementNotifyError) {
     if(!validator.isEmail(email)) {
         $(`#${elementNotifyError}`).text("Invalid Email format");
     }
+    // else if(validator.isEmpty(email,{ignore_whitespace: true})) {
+    //     $(`#${elementNotifyError}`).text("Email Should Not Be Empty");
+    // }
     else {
         $(`#${elementNotifyError}`).text("");
         return true;

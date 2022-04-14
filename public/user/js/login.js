@@ -1,6 +1,27 @@
 import APIService from "../../utils/api_service.js";
 import {validateUserEmail} from "./utils/validate.js";
 
+$("#forget-password").on("click", async (event) => {
+  console.log("fuck");
+  $("#modal-forget-password").modal("show");
+});
+
+$("#send-forget-password").on("click", async (event) => {
+
+  if(!validateUserEmail("user-email-forget", "forget-error")) {
+    return;
+  }
+    const email = $("#user-email-forget").val();
+    try {
+    const res = await APIService.requestResetPassword(email);
+    $("#modal-forget-password").modal("hide");
+    $('.toast-body').text("Check your Email and click that shit");
+    $('.toast').toast('show');
+    } catch(err) {
+      console.log(err.message);
+    }
+});
+
 $("#login").bind("click", async () => {
   $("#error").text("");
 
@@ -26,6 +47,14 @@ $("#useremail").on("input propertychange", function (e) {
   e.preventDefault();
   validateUserEmail("useremail", "error");
 });
+
+
+$("#user-email-forget").on("input propertychange", function (e) {
+  e.preventDefault();
+  validateUserEmail("user-email-forget", "forget-error");
+});
+
+
 
 $("#password_show_hide").on("click", function (e) {
   const show_eye = $("#show_eye");

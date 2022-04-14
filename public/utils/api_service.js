@@ -84,6 +84,28 @@ const APIService = {
       TokenService.refreshToken.del(role);
     }
   },
+  requestResetPassword: async(email) => {
+    const url = "/api/v1/auth/send-reset-password-email";
+    const body = {
+      email: email,
+    }
+    await Request.post({
+        url: url,
+        role: "public",
+        body: body,
+      })
+  },
+  verifyResetPassword: async(hash,password) => {
+    const url = `/api/v1/auth/reset-password/${hash}`;
+    const body = { 
+      password: password
+    }
+    await Request.put({
+      url:url,
+      role:"public",
+      body: body,
+    })
+  },
   isValidAccount: async () => {
     try {
       const url = "/api/v1/auth/is-valid-account";
