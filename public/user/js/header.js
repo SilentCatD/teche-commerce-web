@@ -7,12 +7,11 @@ $(document).ready(async function () {
       $("#login-header").hide();
       $("#login-humberger").hide();
       $(".join-us").text("Click into icon to edit your profile");
-      if (userInfo.name) {
-        $(".user-name").html(`<i class='fa fa-user'></i>${userInfo.name}`);
-      } else {
-        $(".user-name").html(`<i class='fa fa-user'></i>???`);
-      }
-  
+      $(".user-name").html(`<i class='fa fa-user'></i>${userInfo.name}`);
+      $('.user-name').click(function (e) { 
+        e.preventDefault();
+        window.location.href = '/profile';
+      });
       $(".logout").on("click", async function () {
         await APIService.logout("user");
         window.location.reload();
@@ -22,6 +21,7 @@ $(document).ready(async function () {
       console.log(e);
     }
   } else {
+    $('#header__order').hide();
     $("#logout-header").hide();
     $("#logout-humberger").hide();
     $(".user-cart").hide();
@@ -30,7 +30,7 @@ $(document).ready(async function () {
     );
     $(".header__top__left__edit").html("");
     $(".join-us").on("click", async function () {
-      window.location.href = `/signup`;
+      window.location.replace(`/signup`);
     });
   }
 });
