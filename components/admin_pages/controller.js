@@ -29,7 +29,8 @@ const AdminPageController = {
     const product = await ProductService.fetchProduct(id);
     let brands = await BrandService.brandQueryAll();
     let categories = await CategotyService.categoryQueryAll();
-
+    brands = brands.items;
+    categories = categories.items
     brands = product.brand
       ? brands.filter((brand) => {
           return brand.id != product.brand.id;
