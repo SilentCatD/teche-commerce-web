@@ -44,6 +44,7 @@ const BrandController = {
               msg: "image must be of type png or jpeg",
             });
           }
+          brandImg = brandImg[0];
         }
 
         const id = await BrandService.createBrand(brandName, brandImg);

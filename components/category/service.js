@@ -4,11 +4,11 @@ import CommomDatabaseServies from "../common/services.js";
 
 const CategotyService = {
   createCategory: async (name) => {
-    return CommomDatabaseServies.createDocument(Category, { name: name });
+    return await Category.create({name: name});
   },
 
   deleteAllCategory: async () => {
-    await CommomDatabaseServies.deleteCollection(Category, false);
+    await Category.deleteMany();
   },
 
   fetchCategory: async (id) => {
@@ -52,7 +52,7 @@ const CategotyService = {
   },
 
   deleteCategory: async (id) => {
-    await CommomDatabaseServies.deleteDocument(Category, id, false);
+    await Category.deleteOne({_id: id});
   },
 
   editProductHolds: async (id, op) => {
@@ -63,7 +63,6 @@ const CategotyService = {
   },
 
   editCategory: async (id, name) => {
-    //  undefined => not change
     const session = await Category.startSession();
     session.startTransaction();
     try {

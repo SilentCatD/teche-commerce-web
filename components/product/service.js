@@ -1,4 +1,3 @@
-import isInt from "../../utils/is_int.js";
 import BrandService from "../brand/service.js";
 import CategotyService from "../category/service.js";
 import ImageService from "../image/service.js";
@@ -35,12 +34,15 @@ const ProductService = {
     };
     await BrandService.editProductHolds(brandId, '+');
     await CategotyService.editProductHolds(categoryId, '+');
-    return await CommomDatabaseServies.createDocument(Product, productDocObj);
+    return await Product.create(productDocObj);
   },
 
   // Mising edit product,category holds
   deleteAllProduct: async () => {
-    await CommomDatabaseServies.deleteCollection(Product, true);
+    const products = await Product.find();
+    await Promise.all(products.map( async (product)=>{
+      await ProductService.deleteProduct(product.id);
+    }));
   },
 
   productQueryAll: async (range, limit, page, sortParams, brand, category, query) => {
@@ -106,7 +108,17 @@ const ProductService = {
   },
 
   deleteProduct: async (id) => {
-    await CommomDatabaseServies.deleteDocument(Product, id, true);
+    const product = await Product.findById(id);
+    if(product.brand){
+      await BrandService.editProductHolds(product.brand, '-');
+    }
+    if(product.category){
+      await CategotyService.editProductHolds(product.category,'-');
+    }
+    await Promise.all(product.images.map( async (image)=>{
+      await ImageService.deleteImage(image.firebasePath);
+    }));
+    await product.remove();
   },
   editProduct: async (
     id,

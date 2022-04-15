@@ -2,12 +2,6 @@ import mongoose from "mongoose";
 import ImageService from "../image/service.js";
 
 const CommomDatabaseServies = {
-  createDocument: async (model, object) => {
-    let newDocument = new model(object);
-    await newDocument.save();
-    return newDocument.id;
-  },
-
   editProductHolds: async (model, id, op) => {
     const session = await model.startSession();
     session.startTransaction();
@@ -72,33 +66,6 @@ const CommomDatabaseServies = {
     }
   },
 
-  deleteDocument: async (model, id, haveImages) => {
-    try {
-      const doc = await model.findById(mongoose.Types.ObjectId(id));
-      if (doc === null)
-        throw new Error(`${model.collection.collectionName} ${id} not found`);
-      if (haveImages) {
-        await Promise.all(doc.images.map( async (image)=>{
-          await ImageService.deleteImage(image.firebasePath);
-        }));
-      }
-      await model.deleteOne({ _id: doc.id });
-    } catch (e) {
-      console.log(e);
-      throw e;
-    }
-  },
-  deleteCollection: async (model, haveImages) => {
-    const docs = await model.find();
-    if (haveImages) {
-      await Promise.all(docs.map( async (doc)=>{
-        await Promise.all(doc.images.map( async (image)=>{
-          await ImageService.deleteImage(image.firebasePath);
-        }));
-      }));
-    }
-    await model.deleteMany();
-  },
   queryAllFormat: async (totalCount, limit, page, items) => {
     let totalPages = Math.ceil(totalCount / limit);
     if (totalPages == 0) {

@@ -7,24 +7,22 @@ const BrandService = {
   createBrand: async (name, img) => {
     // name: <String> Sname of the brand
     // img: <File> object represent the file
-    let brandImg = [];
-    if(img.length > 0){
-      const imgId =  await ImageService.createImage(img[0]);
-      brandImg.push(imgId);
-    }
-    let brandDocObject = { name: name, images: brandImg };
-    return await CommomDatabaseServies.createDocument(Brand, brandDocObject);
+    const imgObj =  await ImageService.createImage(img[0]);
+    let brandDocObject = { name: name, image: imgObj };
+    return await Brand.create(brandDocObject);
   },
 
   deleteAllBrand: async () => {
-    await CommomDatabaseServies.deleteCollection(Brand, true);
+    const brands = await Brand.find();
+    await Promise.all(brands.map(async (brand)=>{
+      await BrandService.deleteBrand(brand.id);
+    }));
   },
   returnData: (brand) => {
     if(!brand) return null;
-    let brandImg = brand.images;
     let imgLink = null;
-    if (brandImg.length > 0) {
-      imgLink = brandImg[0].firebaseUrl;
+    if (brand.image) {
+      imgLink = brand.image.firebaseUrl;
     }
     return {
       id: brand.id,
@@ -63,7 +61,11 @@ const BrandService = {
   },
 
   deleteBrand: async (id) => {
-    await CommomDatabaseServies.deleteDocument(Brand, id, true);
+    const brand = await Brand.findById(id);
+    if(brand.image){
+      await ImageService.deleteImage(brand.image.firebasePath);
+    }
+    await brand.remove();
   },
 
   editProductHolds: async (id, op) => {
