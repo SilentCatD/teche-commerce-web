@@ -31,7 +31,10 @@ webPageRouter.get("/signup",async (req, res) => {
 // ohter shiting route
 
 webPageRouter.get('/', async (req, res)=>{
-    const params = {title: "Teche Home", tab: 'home'};
+    const latestProducts = (await ProductService.productQueryAll(null, 6, 1, {"createdAt": -1}, null, null, null)).items;
+    const topRatedProducts = (await ProductService.productQueryAll(null, 6, 1, {"rateAverage": -1}, null, null, null)).items;
+    const topViewProducts = (await ProductService.productQueryAll(null, 6, 1, {"viewCount": -1}, null, null, null)).items;
+    const params = {title: "Teche Home", tab: 'home',latestProducts : latestProducts, topRatedProducts :topRatedProducts, topViewProducts :topViewProducts};
     res.render('user/index',params);
 });
 

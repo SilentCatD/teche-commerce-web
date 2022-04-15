@@ -191,71 +191,46 @@
                 <div class="col-lg-4 col-md-6">
                     <div class="latest-product__text">
                         <h4>Latest Products</h4>
-                        <%- include('items/product/product-latest-slider')%>
+                        <div class="latest-product__slider owl-carousel">
+                            <% let latestSet = 0 %> 
+                            <% for( let carouselSet = 0; carouselSet < Math.floor(latestProducts.length / 3); carouselSet++, latestSet+=3) { %>
+                                <div class="latest-prdouct__slider__item">
+                                <% for( let index = latestSet; index < latestSet + 3 && index < latestProducts.length; index++ ) { %>
+                                    <a href="#" class="latest-product__item">
+                                        <div class="latest-product__item__pic">
+                                            <img style="width: 110px; background: <%= latestProducts[index].images.length > 0 ? `url(${latestProducts[index].images[0]})` : 'gray' %> ; object-fit: cover;">
+                                        </div>
+                                        <div class="latest-product__item__text">
+                                            <h6><%= latestProducts[index].name %> </h6>
+                                            <span>$<%= latestProducts[index].price %>.00 </span>
+                                        </div>
+                                    </a>
+                                <% } %>
+                                </div>
+                            <% } %>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="latest-product__text">
                         <h4>Top Rated Products</h4>
                         <div class="latest-product__slider owl-carousel">
-                            <div class="latest-prdouct__slider__item">
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-1.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-2.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-3.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="latest-prdouct__slider__item">
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-1.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-2.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-3.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                            </div>
+                            <% let ratedSet = 0 %> 
+                            <% for( let carouselSet = 0; carouselSet < Math.floor(topRatedProducts.length / 3); carouselSet++, ratedSet+=3) { %>
+                                <div class="latest-prdouct__slider__item">
+                                <% for( let index = ratedSet; index < ratedSet + 3 && index < topRatedProducts.length; index++ ) { %>
+                                    <a href="#" class="latest-product__item">
+                                        <div class="latest-product__item__pic">
+                                            <img style="width: 110px; background: <%= topRatedProducts[index].images.length > 0 ? `url(${topRatedProducts[index].images[0]})` : 'gray' %> ; object-fit: cover;">
+                                        </div>
+                                        <div class="latest-product__item__text">
+                                            <h6><%= topRatedProducts[index].name %> </h6>
+                                            <span>$<%= topRatedProducts[index].price %>.00 </span>
+                                        </div>
+                                    </a>
+                                <% } %>
+                                </div>
+                            <% } %>
                         </div>
                     </div>
                 </div>
@@ -263,64 +238,22 @@
                     <div class="latest-product__text">
                         <h4>Top View Products</h4>
                         <div class="latest-product__slider owl-carousel">
-                            <div class="latest-prdouct__slider__item">
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-1.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-2.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-3.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="latest-prdouct__slider__item">
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-1.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-2.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-3.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                            </div>
+                            <% let viewSet = 0 %> 
+                            <% for( let carouselSet = 0; carouselSet < Math.floor(topViewProducts.length / 3); carouselSet++, viewSet+=3) { %>
+                                <div class="latest-prdouct__slider__item">
+                                <% for( let index = viewSet; index < viewSet + 3 && index < topViewProducts.length; index++ ) { %>
+                                    <a href="#" class="latest-product__item">
+                                        <div class="latest-product__item__pic">
+                                            <img style="width: 110px; background: <%= topViewProducts[index].images.length > 0 ? `url(${topViewProducts[index].images[0]})` : 'gray' %> ; object-fit: cover;">
+                                        </div>
+                                        <div class="latest-product__item__text">
+                                            <h6><%= topViewProducts[index].name %> </h6>
+                                            <span>$<%= topViewProducts[index].price %>.00 </span>
+                                        </div>
+                                    </a>
+                                <% } %>
+                                </div>
+                            <% } %>
                         </div>
                     </div>
                 </div>
@@ -332,9 +265,10 @@
     <!-- Footer Section Begin -->
     <%-include('partials/footer') %>
     <%-include('partials/script') %>
-    <script type="module" src="/user/js/home.js"> </script>
-    <script src="user/js/index.js"></script>
     <script type="module" src="/user/js/header.js"></script>
+    <script type="module" src="/user/js/home.js"> </script>
+    <script  type="module" src="user/js/hero.js"></script>
+    <script src="user/js/index.js"></script>
 
 
 

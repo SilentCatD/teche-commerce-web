@@ -2,12 +2,13 @@ import ImageService from "../image/service.js";
 import Brand from "./model.js";
 import mongoose from "mongoose";
 import CommomDatabaseServies from "../common/services.js";
+import Product from "../product/model.js";
 
 const BrandService = {
   createBrand: async (name, img) => {
     // name: <String> Sname of the brand
     // img: <File> object represent the file
-    const imgObj =  await ImageService.createImage(img[0]);
+    const imgObj =  await ImageService.createImage(img);
     let brandDocObject = { name: name, image: imgObj };
     return await Brand.create(brandDocObject);
   },
@@ -65,6 +66,13 @@ const BrandService = {
     if(brand.image){
       await ImageService.deleteImage(brand.image.firebasePath);
     }
+    const products = Product.find({brand: id});
+    
+    await Promise.all(products.map(async (product)=>{
+      product.brand = null;
+      await product.save();
+    }));
+
     await brand.remove();
   },
 

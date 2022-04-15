@@ -1,6 +1,7 @@
 import Category from "./model.js";
 import mongoose from "mongoose";
 import CommomDatabaseServies from "../common/services.js";
+import Product from "../product/model.js";
 
 const CategotyService = {
   createCategory: async (name) => {
@@ -8,7 +9,10 @@ const CategotyService = {
   },
 
   deleteAllCategory: async () => {
-    await Category.deleteMany();
+    const categories =  await Category.find();
+    await Promise.all(categories.map(async(category)=>{
+      CategotyService.deleteCategory(category.id);
+    }));
   },
 
   fetchCategory: async (id) => {
@@ -52,6 +56,11 @@ const CategotyService = {
   },
 
   deleteCategory: async (id) => {
+    const products = await Product.find({category: id});
+    await Promise.all(products.map(async (product)=>{
+      product.brand = null;
+      await product.save();
+    }));
     await Category.deleteOne({_id: id});
   },
 
