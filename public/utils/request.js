@@ -49,7 +49,7 @@ async function request(url, params, body, headers, method, useToken, token) {
     } catch (err) {
       errMsg = "something went wrong";
     }
-    if (!useToken || statusCode!=403) {
+    if (!useToken || statusCode!=401) {
       throw new Error(errMsg);
     }
     await tokenReset();

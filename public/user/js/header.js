@@ -3,11 +3,11 @@ import APIService from "../../utils/api_service.js";
 $(document).ready(async function () {
   if (await APIService.haveTokens("user")) {
     try {
-      const userInfo = await APIService.userInfo("user");
+      const userInfo = await APIService.userInfo();
       $("#login-header").hide();
       $("#login-humberger").hide();
       $(".join-us").text("Click into icon to edit your profile");
-      $(".user-name").html(`<i class='fa fa-user'></i>${userInfo.name}`);
+      $(".user-name").html(`<i class='fa fa-user'></i>${userInfo.name} - ${userInfo.role}`);
       $('.user-name').click(function (e) { 
         e.preventDefault();
         window.location.href = '/profile';
@@ -16,7 +16,6 @@ $(document).ready(async function () {
         await APIService.logout("user");
         window.location.reload();
       });
-      console.log(userInfo);
     } catch (e) {
       console.log(e);
     }

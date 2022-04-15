@@ -2,28 +2,29 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="Ogani Template">
-    <meta name="keywords" content="Ogani, unica, creative, html">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Teche | Login</title>
+  <meta charset="UTF-8">
+  <meta name="description" content="Ogani Template">
+  <meta name="keywords" content="Ogani, unica, creative, html">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Teche | Login</title>
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
 
-    <!-- Css Styles -->
-    <link rel="stylesheet" href="user/css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="user/css/login-style.css" type="text/css">
+  <!-- Css Styles -->
+  <link rel="stylesheet" href="user/css/bootstrap.min.css" type="text/css">
+  <link rel="stylesheet" href="user/css/login-style.css" type="text/css">
 
-    <!-- Font awesome -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous" />
+  <!-- Font awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+    integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous" />
 
 </head>
 
 <body>
 
-  <div class="toast" data-autohide="false" >
+  <div class="toast" data-autohide="false">
     <div class="toast-header">
       <strong class="mr-auto text-primary">Teche</strong>
       <small class="text-muted">You have 7 day to save your shit</small>
@@ -32,48 +33,57 @@
     <div class="toast-body"></div>
   </div>
 
-    <div class="wrapper">
-        <div class="card">
-            <div  class="d-flex flex-column"">
-                <div class="h3 text-center text-white">Login</div>
-                <div class="d-flex align-items-center input-field my-3 mb-4"> 
-                    <span class="far fa-user p-2"></span>
-                    <input type="text" placeholder="Email"  class="form-control" id="useremail" autocomplete="off"> 
-                </div>
-                <div class="d-flex align-items-center input-field mb-4"> 
-                    <span class="fas fa-lock p-2"></span> 
-                    <input type="password" placeholder="Password"  class="form-control" id="userpwd">
-                    <span class="input-group-text" id="password_show_hide">
-                        <i class="fas fa-eye" id="show_eye"></i>
-                        <i class="fas fa-eye-slash d-none" id="hide_eye"></i>
-                      </span> 
-                </div>
-                <div class="d-sm-flex align-items-sm-center justify-content-sm-between">
-                    <div class="d-flex align-items-center">
-                        <p class="text-danger text-break" id="error"></p>
-                    </div>
-                    <div class="mt-sm-0 mt-3"><a data-bs-toggle="modal" id="forget-password" >Forgot password?</a>
-                
-                    </div>
-                </div>
-                <div class="my-3">
-                     <input type="button" value="Login" class="btn btn-primary" id="login"></input>
-                    </div>
-                <div class="mb-3"> <span class="text-light-white">Don't have an account?</span> <a href="/signup">Sign Up</a>
-                </div>
-            </div>
-            <div class="position-relative border-bottom my-3 line"> <span class="connect">or connect with</span> </div>
-            <div class="text-center py-3 connections"> 
-                <a href="/api/v1/auth/login/google"  class="px-2"> 
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1200px-Google_%22G%22_Logo.svg.png" alt=""> 
-                </a> 
-            </div>
+  <div class="wrapper">
+    <div class="card">
+      <div class="d-flex flex-column"">
+                <div class=" h3 text-center text-white">Login</div>
+      <div class="d-flex align-items-center input-field my-3 mb-4">
+        <span class="far fa-user p-2"></span>
+        <input type="text" placeholder="Email" class="form-control" id="useremail" autocomplete="off">
+      </div>
+      <div class="d-flex align-items-center input-field mb-4">
+        <span class="fas fa-lock p-2"></span>
+        <input type="password" placeholder="Password" class="form-control" id="userpwd">
+        <span class="input-group-text" id="password_show_hide">
+          <i class="fas fa-eye" id="show_eye"></i>
+          <i class="fas fa-eye-slash d-none" id="hide_eye"></i>
+        </span>
+      </div>
+      <div class="d-sm-flex align-items-sm-center justify-content-sm-between">
+        <div class="d-flex align-items-center">
+          <p class="text-danger text-break" id="error"></p>
         </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <input type="checkbox"id="rememberMeCheck">
+          <label class="form-check-label text-white" for="rememberMeCheck">Remember me</label>
+        </div>
+        <div class="col-6">
+          <a data-bs-toggle="modal" id="forget-password" class="d-block">Forgot password?</a>
+        </div>
+      </div>
+      <div class="my-3">
+        <input type="button" value="Login" class="btn btn-primary" id="login"></input>
+      </div>
+      <div class="mb-3"> <span class="text-light-white">Don't have an account?</span> <a href="/signup">Sign Up</a>
+      </div>
     </div>
+    <div class="position-relative border-bottom my-3 line"> <span class="connect">or connect with</span> </div>
+    <div class="text-center py-3 connections">
+      <a href="/api/v1/auth/login/google" class="px-2">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1200px-Google_%22G%22_Logo.svg.png"
+          alt="">
+      </a>
+    </div>
+  </div>
+  </div>
 
 
-<!-- Modal -->
-<div class="modal fade" id="modal-forget-password" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <!-- Modal -->
+  <div class="modal fade" id="modal-forget-password" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -83,11 +93,11 @@
           </button>
         </div>
         <div class="modal-body">
-            <div class="d-flex align-items-center input-field my-3 mb-4"> 
-                <span class="far fa-user p-2"></span>
-                <input type="text" placeholder="Email"  class="form-control" id="user-email-forget" autocomplete="off"> 
-            </div>
-            <p class="text-danger text-break" id="forget-error"></p>
+          <div class="d-flex align-items-center input-field my-3 mb-4">
+            <span class="far fa-user p-2"></span>
+            <input type="text" placeholder="Email" class="form-control" id="user-email-forget" autocomplete="off">
+          </div>
+          <p class="text-danger text-break" id="forget-error"></p>
           Check your mail after send this
         </div>
         <div class="modal-footer">
@@ -98,8 +108,8 @@
     </div>
   </div>
 
-    <!-- Js Plugins -->
-    <%-include('partials/script') %>
+  <!-- Js Plugins -->
+  <%-include('partials/script') %>
     <script src="https://unpkg.com/validator@latest/validator.min.js"></script>
     <scprit scr="/user/js/utils/validator.js"></scprit>
     <script type="module" src="/user/js/login.js"></script>

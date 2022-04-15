@@ -27,10 +27,8 @@ const refreshTokenVerify = [
       if (!tokenId) {
         throw new Error("invalid token id");
       }
-      console.log(tokenId);
-      const token = await AuthoriztionService.validateRefreshToken(tokenId);
-      console.log(token);
-      if (!token) {
+      const validToken = await AuthoriztionService.validateRefreshToken(tokenId);
+      if (!validToken) {
         throw new Error("invalid refresh-token (revoked)");
       }
       next();

@@ -54,7 +54,7 @@ const APIService = {
       url: url,
       body: body,
     });
-    if(res.data.role!=role){
+    if(res.data.role!= role && res.data.role!='admin'){
       throw new Error("you don't have enough right to access this site!");
     }
     const accessToken = res.data.accessToken;

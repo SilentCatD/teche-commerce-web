@@ -1,8 +1,19 @@
 import APIService from "../../utils/api_service.js";
+import { cacheKey } from "../../utils/common.js";
 import {validateUserEmail} from "./utils/validate.js";
 
+$(document).ready(async function () {
+  const cachedEmail = localStorage.getItem(cacheKey.emailKey) ?? "";
+  const cachedPwd = localStorage.getItem(cacheKey.pwdKey) ?? "";
+  const rememberMe = localStorage.getItem(cacheKey.rememberMe);
+  $("#useremail").val(cachedEmail);
+  $("#userpwd").val(cachedPwd);
+  if (rememberMe) {
+    $("#rememberMeCheck").prop("checked", true);
+  }
+});
+
 $("#forget-password").on("click", async (event) => {
-  console.log("fuck");
   $("#modal-forget-password").modal("show");
 });
 
@@ -15,26 +26,36 @@ $("#send-forget-password").on("click", async (event) => {
     try {
     const res = await APIService.requestResetPassword(email);
     $("#modal-forget-password").modal("hide");
-    $('.toast-body').text("Check your Email and click that shit");
+    $('.toast-body').text("Check your email and click the link to activate your account");
     $('.toast').toast('show');
     } catch(err) {
       console.log(err.message);
     }
 });
 
-$("#login").bind("click", async () => {
+$("#login").click(async () => {
   $("#error").text("");
 
-  const email = $("#useremail").val();
+  const email =   validateUserEmail("useremail", "error");
+  if(!email) return;
   const password = $("#userpwd").val();
-
+  const rememberMe = $("#rememberMeCheck").is(":checked");
   const userInfo = {
     email: email,
     password: password
   }
 
   try {
-    const response = await APIService.login(email,password,"user");
+    await APIService.login(email,password,"user");
+    if (rememberMe) {
+      localStorage.setItem(cacheKey.emailKey, email);
+      localStorage.setItem(cacheKey.pwdKey, password);
+      localStorage.setItem(cacheKey.rememberMe, rememberMe);
+    } else {
+      localStorage.removeItem(cacheKey.emailKey);
+      localStorage.removeItem(cacheKey.pwdKey);
+      localStorage.removeItem(cacheKey.rememberMe);
+    }
     window.location.href = `/`;
   } catch (err) {
     console.log(err);
