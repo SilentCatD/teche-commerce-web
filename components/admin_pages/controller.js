@@ -27,8 +27,8 @@ const AdminPageController = {
   editProduct: async (req, res) => {
     const { id } = req.params;
     const product = await ProductService.fetchProduct(id);
-    let brands = await BrandService.modelQueryAll();
-    let categories = await CategotyService.modelQueryAll();
+    let brands = await BrandService.brandQueryAll();
+    let categories = await CategotyService.categoryQueryAll();
 
     brands = product.brand
       ? brands.filter((brand) => {

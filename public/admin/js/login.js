@@ -2,18 +2,9 @@ import APIService from "../../utils/api_service.js";
 import { cacheKey, sleep } from "../../utils/common.js";
 
 $(document).ready(async function () {
-  const cachedEmail = localStorage.getItem(cacheKey.adminEmailKey) ?? "";
-  const cachedPwd = localStorage.getItem(cacheKey.adminPwdKey) ?? "";
-  const rememberMe = localStorage.getItem(cacheKey.adminRememberMe);
-  const autoLogin = localStorage.getItem(cacheKey.adminAutoLogin);
-  if (autoLogin) {
-    try {
-      await APIService.login(cachedEmail, cachedPwd, "admin");
-      window.location.replace("/admin/home");
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  const cachedEmail = localStorage.getItem(cacheKey.emailKey) ?? "";
+  const cachedPwd = localStorage.getItem(cacheKey.pwdKey) ?? "";
+  const rememberMe = localStorage.getItem(cacheKey.rememberMe);
   await sleep(50);
 
   $("#emailInput").val(cachedEmail);
@@ -77,21 +68,19 @@ function validatePassword() {
 
 async function loginFormSubmit(email, pwd, rememberMe) {
   try {
-    await APIService.login(email, pwd, "admin");
+    await APIService.login(email, pwd, 'admin');
     $("#serverError").text("");
     if (rememberMe) {
-      localStorage.setItem(cacheKey.adminEmailKey, email);
-      localStorage.setItem(cacheKey.adminPwdKey, pwd);
-      localStorage.setItem(cacheKey.adminRememberMe, rememberMe);
-      localStorage.setItem(cacheKey.adminAutoLogin, true);
+      localStorage.setItem(cacheKey.emailKey, email);
+      localStorage.setItem(cacheKey.pwdKey, pwd);
+      localStorage.setItem(cacheKey.rememberMe, rememberMe);
     } else {
-      localStorage.removeItem(cacheKey.adminEmailKey);
-      localStorage.removeItem(cacheKey.adminPwdKey);
-      localStorage.removeItem(cacheKey.adminRememberMe);
+      localStorage.removeItem(cacheKey.emailKey);
+      localStorage.removeItem(cacheKey.pwdKey);
+      localStorage.removeItem(cacheKey.rememberMe);
     }
     window.location.replace("/admin/home");
   } catch (err) {
-    console.log(err);
     $("#serverError").text(err.message);
   }
 }

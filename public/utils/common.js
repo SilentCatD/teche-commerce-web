@@ -2,10 +2,9 @@ import APIService from "./api_service.js";
 import TokenService from "./token_service.js";
 
 const cacheKey = {
-  adminEmailKey: "admin-email-cache",
-  adminPwdKey: "admin-pwd-cache",
-  adminRememberMe: "admin-remember-me",
-  adminAutoLogin: "admin-auto-login",
+  emailKey: "email-cache",
+  pwdKey: "pwd-cache",
+  rememberMe: "remember-me",
 };
 
 async function sleep(ms, callback = null) {
@@ -15,36 +14,26 @@ async function sleep(ms, callback = null) {
   }
 }
 
-function clearCache({ role = "both", form = true, autoLogin = true }) {
-  if (role == "admin" || role == "both") {
-    TokenService.accessToken.del("admin");
-    TokenService.refreshToken.del("admin");
-    if (form) {
-      localStorage.removeItem(cacheKey.adminEmailKey);
-      localStorage.removeItem(cacheKey.adminPwdKey);
-      localStorage.removeItem(cacheKey.adminRememberMe);
-    }
-    if (autoLogin) {
-      localStorage.removeItem(cacheKey.adminAutoLogin);
-    }
-  }
-
-  if (role == "user" || role == "both") {
-    TokenService.accessToken.del("user");
-    TokenService.refreshToken.del("user");
+function clearCache(form = false) {
+  TokenService.accessToken.del();
+  TokenService.refreshToken.del();
+  if (form) {
+    localStorage.removeItem(cacheKey.emailKey);
+    localStorage.removeItem(cacheKey.pwdKey);
+    localStorage.removeItem(cacheKey.rememberMe);
   }
 }
 
-function backToLogin(role, router) {
-  clearCache({ role: role, form: false, autoLogin: true });
+function backToLogin(router) {
+  clearCache();
   window.location.replace(router);
 }
 
 
 async function goBackToLoginIfNotAdmin(){
-  const isAdmin = await APIService.isAdmin();
-  if (!isAdmin) {
-    backToLogin("admin", "/admin");
+  const role = await APIService.getRole();
+  if (role != 'admin') {
+    backToLogin("/admin");
   }
 }
 

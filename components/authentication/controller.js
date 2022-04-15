@@ -9,33 +9,13 @@ import EmailVerificationService from "../email_verification/service.js";
 import CommonMiddleWares from "../common/middleware.js";
 import AuthorizationController from "../authorization/controller.js";
 
-
-const issueThirdPartyToken = async (req,res,next) => {
-  const userInfo = req.user;
-  let user = await User.findOne({ email: userInfo.email});
-  if(!user) {
-    user = await UserService.createThirdPartyUser(userInfo.name, userInfo.email);
-  }
-  const accessToken = AuthoriztionService.issueAccessToken(
-    user.id,
-    accessTokenExpiraion
-  );
-  const refreshToken = await AuthoriztionService.issueRefreshToken(user.id);
-  res.data = ({
-    accessToken: accessToken,
-    refreshToken: refreshToken,
-  });
-  next();
-};
-
-
-const  AuthenticationController = {
+const AuthenticationController = {
   registerUser: [
     CommonMiddleWares.accountRegisterRequirement,
     async (req, res) => {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(400).json({ success: false, msg: errors.array()[0].msg});
       }
       const { email, name, password } = req.body;
       const newUser = await UserService.createUserWithRole(
@@ -58,7 +38,7 @@ const  AuthenticationController = {
     async (req, res) => {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(400).json({ success: false, msg: errors.array()[0].msg });
       }
       const { email, name, password } = req.body;
       console.log(email, name, password);
@@ -94,29 +74,12 @@ const  AuthenticationController = {
         }
         return true;
       }),
-      body("password")
-      .exists()
-      .bail()
-      .notEmpty({ignore_whitespace: true})
-      .withMessage("field can't be empty")
-      .trim(),
-    body("role")
+    body("password")
       .exists()
       .bail()
       .notEmpty({ ignore_whitespace: true })
       .withMessage("field can't be empty")
-      .bail()
-      .isIn(["user", "admin"])
-      .withMessage("field must be either 'user' or 'admin'")
-      .bail()
-      .trim()
-      .custom(async (role, { req, loc, path }) => {
-        const user = await User.findOne({ email: req.body.email });
-        if (user.role != role) {
-          throw new Error("role does not match");
-        }
-        return true;
-      }),
+      .trim(),
     async (req, res) => {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -145,6 +108,7 @@ const  AuthenticationController = {
         accessToken: accessToken,
         refreshToken: refreshToken,
         expiresIn: accessTokenExpiraion,
+        role: user.role,
       });
     },
   ],
@@ -158,20 +122,12 @@ const  AuthenticationController = {
     },
   ],
 
-  isAdmin: [
-    AuthorizationController.isAdmin,
+  getRole: [
+    AuthorizationController.role,
     async (req, res) => {
-      res.status(200).send({ success: true, msg: "account is admin" });
+      res.status(200).send({ success: true, data: req.role });
     },
   ],
-
-  isUser: [
-    AuthorizationController.isUser,
-    async (req, res) => {
-      res.status(200).send({ success: true, msg: "account is user" });
-    },
-  ],
-
   isValidAccount: [
     AuthorizationController.isValidAccount,
     async (req, res) => {
@@ -179,14 +135,31 @@ const  AuthenticationController = {
     },
   ],
 
-  loginByFacebookAccount: [
-    passport.authenticate('facebook', { failureRedirect: '/login' }),
-    issueThirdPartyToken,
-  ],
   loginByGoogleAccount: [
-    passport.authenticate('google', { failureRedirect: '/login' }),
-    issueThirdPartyToken,
-  ]
+    passport.authenticate("google", { failureRedirect: "/login" }),
+    async (req, res, next) => {
+      const userInfo = req.user;
+      let user = await User.findOne({ email: userInfo.email });
+      if (!user) {
+        user = await UserService.createThirdPartyUser(
+          userInfo.name,
+          userInfo.email
+        );
+      }
+      const accessToken = AuthoriztionService.issueAccessToken(
+        user.id,
+        accessTokenExpiraion
+      );
+      const refreshToken = await AuthoriztionService.issueRefreshToken(user.id);
+      res.data = {
+        success: true,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        role: user.role,
+      };
+      next();
+    },
+  ],
 };
 
 export default AuthenticationController;

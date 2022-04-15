@@ -5,12 +5,12 @@ let userData;
 
 async function fetchAndDisplayUserEmail(){
     try{
-        userData = await APIService.userInfo('admin');
-        $("#userEmail").text(userData.email);
+        userData = await APIService.userInfo();
+        $("#userEmail").text(userData.name);
 
     }catch(e){
         console.log(e);
-        backToLogin('admin', '/admin');
+        backToLogin('/admin');
     }
 }
 
@@ -19,7 +19,7 @@ $(document).ready(function () {
 
   $("#logoutBtn").click(async function (e) {
     e.preventDefault();
-    await APIService.logout("admin");
-    backToLogin('admin', '/admin');
+    await APIService.logout();
+    backToLogin('/admin');
   });
 });

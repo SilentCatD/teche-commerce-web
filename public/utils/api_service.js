@@ -1,11 +1,6 @@
 import Request from "./request.js";
 import TokenService from "./token_service.js";
 
-function roleAssert(role) {
-  if (!["admin", "user"].includes(role)) {
-    throw new Error("invalid role");
-  }
-}
 
 async function urlToFile(url) {
   const res = await fetch(url, { mode: "cors" });
@@ -50,38 +45,36 @@ function queryAllParamsFormat(
 
 const APIService = {
   login: async (email, password, role) => {
-    roleAssert(role);
     const url = "/api/v1/auth/login";
     const body = {
       email: email,
       password: password,
-      role: role,
     };
     const res = await Request.post({
       url: url,
       body: body,
-      role: "public",
     });
+    if(res.data.role!=role){
+      throw new Error("you don't have enough right to access this site!");
+    }
     const accessToken = res.data.accessToken;
     const refreshToken = res.data.refreshToken;
-    TokenService.accessToken.set(role, accessToken);
-    TokenService.refreshToken.set(role, refreshToken);
+    TokenService.accessToken.set(accessToken);
+    TokenService.refreshToken.set(refreshToken);
   },
-  logout: async (role) => {
-    roleAssert(role);
+  logout: async () => {
     const url = "/api/v1/auth/logout";
     try {
       await Request.get({
         useToken: true,
         url: url,
-        role: role,
-        token: TokenService.refreshToken.get(role),
+        token: TokenService.refreshToken.get(),
       });
     } catch (e) {
       console.log(e);
     } finally {
-      TokenService.accessToken.del(role);
-      TokenService.refreshToken.del(role);
+      TokenService.accessToken.del();
+      TokenService.refreshToken.del();
     }
   },
   isValidAccount: async () => {
@@ -94,33 +87,18 @@ const APIService = {
     }
   },
 
-  isUser: async () => {
-    try {
-      const url = "/api/v1/auth/is-user";
-      await Request.get({ url: url, useToken: true, role: "user" });
-      return true;
-    } catch (e) {
-      return false;
-    }
-  },
-
-  isAdmin: async () => {
-    try {
-      const url = "/api/v1/auth/is-admin";
-      await Request.get({ url: url, useToken: true, role: "admin" });
-      return true;
-    } catch (e) {
-      console.log(e);
-      return false;
-    }
-  },
-
-  userInfo: async (role) => {
-    const url = "/api/v1/user";
-    let res = await Request.get({ url: url, useToken: true, role: role });
+  getRole: async () => {
+    const url = "/api/v1/auth/role";
+    const res = await Request.get({ url: url, useToken: true});
     return res.data.data;
   },
-  userInfoEdit: async (role, userInfo) => {
+
+  userInfo: async () => {
+    const url = "/api/v1/user";
+    let res = await Request.get({ url: url, useToken: true});
+    return res.data.data;
+  },
+  userInfoEdit: async (userInfo) => {
     try {
       const url = "/api/v1/user";
       const body = userInfo;
@@ -129,7 +107,6 @@ const APIService = {
         url: url,
         body: body,
         useToken: true,
-        role: role,
       });
       return res.data;
     } catch (e) {
@@ -137,8 +114,8 @@ const APIService = {
       return e.message;
     }
   },
-  haveTokens: async (role) => {
-    const token = TokenService.refreshToken.get(role);
+  haveTokens: async () => {
+    const token = TokenService.refreshToken.get();
     if (token) return true;
   },
   createProduct: async ({
@@ -167,7 +144,6 @@ const APIService = {
       url: url,
       body: body,
       headers: headers,
-      role: "admin",
       useToken: true,
     });
   },
@@ -277,7 +253,7 @@ const APIService = {
   },
   deleteProduct: async (id) => {
     const url = `/api/v1/product/${id}`;
-    await Request.delete({ url, role: "admin", useToken: true });
+    await Request.delete({ url, useToken: true });
   },
 
   editProduct: async ({
@@ -307,7 +283,7 @@ const APIService = {
     const url = `/api/v1/product/${id}`;
     const body = formData;
     const headers = { "Content-Type": "multipart/form-data" };
-    await Request.put({ url, body, headers, role: "admin", useToken: true });
+    await Request.put({ url, body, headers,  useToken: true });
   },
 
   fetchProduct: async (id) => {
@@ -330,35 +306,34 @@ const APIService = {
       body,
       headers,
       useToken: true,
-      role: "admin",
     });
   },
   deleteBrand: async (id) => {
     const url = `/api/v1/brand/${id}`;
-    await Request.delete({ url, role: "admin", useToken: true });
+    await Request.delete({ url,  useToken: true });
   },
   createCategory: async ({ categoryName }) => {
     const body = { categoryName };
     const url = "/api/v1/category";
-    await Request.post({ url, body, role: "admin", useToken: true });
+    await Request.post({ url, body,  useToken: true });
   },
 
   deleteCategory: async (id) => {
     const url = `/api/v1/category/${id}`;
-    await Request.delete({ url, role: "admin", useToken: true });
+    await Request.delete({ url,  useToken: true });
   },
 
   createComment: async(productId, rating,description) => {
     const body = {productId,rating,description};
     const url = "/api/v1/comment";
     console.log(body);
-    await Request.post({url,body,role:"user",useToken:true});
+    await Request.post({url,body,useToken:true});
   },
 
   createAdminAccount: async (email, name, password) => {
     const url = `/api/v1/auth/register-admin`;
     const body = { email, name, password };
-    await Request.post({ url, body, useToken: true, role: "admin" });
+    await Request.post({ url, body, useToken: true});
   },
 };
 

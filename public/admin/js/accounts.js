@@ -2,7 +2,8 @@ import APIService from "../../utils/api_service.js";
 import { goBackToLoginIfNotAdmin, sleep } from "../../utils/common.js";
 
 $(document).ready(async function () {
-  await goBackToLoginIfNotAdmin(), await sleep(50);
+  await goBackToLoginIfNotAdmin();
+  await sleep(50);
   $("#spinner").removeClass("show");
 
   $("#emailInput").on("input propertychange", function (e) {
@@ -33,15 +34,17 @@ $(document).ready(async function () {
     toggleFormInput(true);
     let result;
     try {
+      $("#serverError").text("");
       await APIService.createAdminAccount(email, name, pwd);
       result = true;
     } catch (e) {
+      $("#serverError").text(e.message);
       result = false;
     }
     toggleBtnLoading(false);
     toggleFormInput(false);
     if (result) {
-      displayAlert(true, "Category added");
+      displayAlert(true, "Account added");
       clearAllInput();
     } else {
       displayAlert(false, "Something went wrong");

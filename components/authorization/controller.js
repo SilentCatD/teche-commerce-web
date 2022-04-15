@@ -27,8 +27,9 @@ const refreshTokenVerify = [
       if (!tokenId) {
         throw new Error("invalid token id");
       }
-
+      console.log(tokenId);
       const token = await AuthoriztionService.validateRefreshToken(tokenId);
+      console.log(token);
       if (!token) {
         throw new Error("invalid refresh-token (revoked)");
       }
@@ -56,8 +57,10 @@ const AuthorizationController = {
           refreshToken: newRefreshToken,
           accessToken: newAccessToken,
           expiresIn: expiredIn,
+          role: req.user.role,
         });
       } catch (e) {
+        console.log(e);
         return res.status(500).send("something went wrong");
       }
     },
@@ -71,6 +74,15 @@ const AuthorizationController = {
   isValidRefreshToken: [
     // dùng để logout
     refreshTokenVerify,
+  ],
+
+  role: [
+    accessTokenVerify,
+    async (req, res, next) => {
+      const role = req.user.role;
+      req.role = role;
+      return next();
+    },
   ],
 
   isUser: [

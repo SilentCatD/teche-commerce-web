@@ -17,6 +17,7 @@ AuthenticationController.loginByGoogleAccount,
 function(req, res) {
     res.cookie("accessToken",res.data.accessToken);
     res.cookie("refreshToken",res.data.refreshToken);
+    res.cookie("role", res.data.role);
     res.redirect("/");
   });
 

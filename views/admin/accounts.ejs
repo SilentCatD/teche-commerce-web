@@ -100,7 +100,7 @@
                                                         <div class="mb-3">
                                                             <label for="nameInput"
                                                                 class="form-label">Name</label>
-                                                            <input type="password" class="form-control"
+                                                            <input type="text" class="form-control"
                                                                 id="nameInput">
                                                             <div class="invalid-feedback" id="nameErrorMsg"></div>
                                                         </div>
@@ -111,7 +111,8 @@
                                                                 id="passwordInput">
                                                             <div class="invalid-feedback" id="passwordErrorMsg"></div>
                                                         </div>
-                                                        
+                                                        <div class="text-md-start text-center text-danger mb-3" id="serverError">
+                                                        </div>
                                                         <button type="submit" class="btn btn-primary w-50" id="accountSubmit">
                                                             <span class="spinner-border spinner-border-sm d-none"
                                                                 role="status" aria-hidden="true"
@@ -160,6 +161,7 @@
     <%-include('partials/include_js.ejs') %> 
     <script src="/admin/js/alert.js"></script>
     <script src="https://unpkg.com/validator@latest/validator.min.js"></script>
+    <script type="module" src="/admin/js/navbar.js"></script>
     <script type="module" src="/admin/js/accounts.js"></script>
 </body>
 

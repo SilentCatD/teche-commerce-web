@@ -1,55 +1,41 @@
-function formatPathAccessToken(role){
-    return `${role}-access-token`;
+function formatPathAccessToken() {
+  return `access-token`;
 }
 
-function formatPathRefreshToken(role){
-    return `${role}-refresh-token`;
-}
-
-function assertRole(role){
-    if(!['admin', 'user'].includes(role)){
-        throw new Error("invalid token role");
-    }
+function formatPathRefreshToken() {
+  return `refresh-token`;
 }
 
 const TokenService = {
-    accessToken: {
-        get: (role) => {
-            assertRole(role);
-            const key = formatPathAccessToken(role);
-            return localStorage.getItem(key);
-            
-        },
-        set: (role, token) =>{
-            assertRole(role);
-            const key = formatPathAccessToken(role);
-            localStorage.setItem(key, token);
-        },
-        del: (role)=>{
-            assertRole(role);
-            const key = formatPathAccessToken(role);
-            localStorage.removeItem(key);
-        }
+  accessToken: {
+    get: () => {
+      const key = formatPathAccessToken();
+      return localStorage.getItem(key);
     },
+    set: (token) => {
+      const key = formatPathAccessToken();
+      localStorage.setItem(key, token);
+    },
+    del: () => {
+      const key = formatPathAccessToken();
+      localStorage.removeItem(key);
+    },
+  },
 
-    refreshToken: {
-        get:(role) =>{
-            assertRole(role);
-            const key = formatPathRefreshToken(role);
-            return localStorage.getItem(key);
-        },
-        set: (role, token) => {
-            assertRole(role);
-            const key = formatPathRefreshToken(role);
-            localStorage.setItem(key, token);
-        },
-        del: (role)=>{
-            assertRole(role);
-            const key = formatPathRefreshToken(role);
-            localStorage.removeItem(key);
-        }
-    }
-
-}
+  refreshToken: {
+    get: () => {
+      const key = formatPathRefreshToken();
+      return localStorage.getItem(key);
+    },
+    set: (token) => {
+      const key = formatPathRefreshToken();
+      localStorage.setItem(key, token);
+    },
+    del: () => {
+      const key = formatPathRefreshToken();
+      localStorage.removeItem(key);
+    },
+  },
+};
 
 export default TokenService;
