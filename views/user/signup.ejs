@@ -34,32 +34,35 @@
 
     <div class="wrapper">
         <div class="card">
-            <form action="" class="d-flex flex-column" method="">
+            <div class="d-flex flex-column" method="">
                 <div class="h3 text-center text-white">Signup</div>
                 <div class="d-flex align-items-center input-field"> 
                     <span class="far fa-user p-2"></span>
-                    <input type="text" placeholder="Email" required class="form-control" id="useremail" autocomplete="off"> 
+                    <input type="text" placeholder="Email" class="form-control" id="useremail" autocomplete="off">
                 </div>
-                <div class="d-flex align-items-center input-field my-3"> 
+                <p class="text-danger text-break" id="email-error"></p> 
+
+                <div class="d-flex align-items-center input-field"> 
                     <span class="far fa-user p-2"></span>
-                    <input type="text" placeholder="Your name" required class="form-control" id="username" autocomplete="off"> 
+                    <input type="text" placeholder="Your name" class="form-control" id="username" autocomplete="off"> 
                 </div>
-                <div class="d-flex align-items-center input-field mb-4"> 
+                <p class="text-danger text-break" id="name-error"></p>
+                <div class="d-flex align-items-center input-field "> 
                     <span class="fas fa-lock p-2"></span> 
-                    <input type="password" placeholder="Password" required class="form-control" id="userpwd">
+                    <input type="password" placeholder="Password" class="form-control" id="userpwd">
                     <span class="input-group-text" id="password_show_hide">
                         <i class="fas fa-eye" id="show_eye"></i>
                         <i class="fas fa-eye-slash d-none" id="hide_eye"></i>
                       </span> 
                 </div>
+                <p class="text-danger text-break mb-0" id="password-error"> </p>
                 <div class="d-flex align-items-center">
                     <p class="text-danger text-break" id="error"></p>
                 </div>
-                <div class="my-3"> <input type="button" value="Signup" id="signup" class="btn btn-primary"></input></div>
+                <div class="my-3"> <div id="signup" class="btn btn-primary">Sign Up</div></div>
                 <div class="mt-sm-0 mt-3"><a href="/login">You already have account?</a></div>
-
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 

@@ -18,7 +18,7 @@ authRouter.route('/token').get(AuthorizationController.getNewAccessToken); // re
 authRouter.route('/resend-activate-email').post(EmailVerificationController.resendActivationEmail); // email
 authRouter.route('/active/:hash').put(EmailVerificationController.verifyEmail); // active account hash
 authRouter.route('/send-reset-password-email').post(EmailVerificationController.sendResetPasswordEmail); // email
-authRouter.route('/reset-password/:hash').put();
+authRouter.route('/reset-password/:hash').put(EmailVerificationController.verifyResetPassword); //hash, new password
 authRouter.route('/role').get(AuthenticationController.getRole);
 authRouter.route('/is-valid-account').get(AuthenticationController.isValidAccount);
 export default authRouter;

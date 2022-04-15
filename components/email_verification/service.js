@@ -34,7 +34,7 @@ const EmailVerificationService = {
       to: `${email}`, // list of receivers
       subject: "PASSWORD RESET", // Subject line
       text: "Click the link bellow to reset your email, this link will expire after 7 days", // plain text body
-      html: `<b>Click this shit: ${process.env.HOST_URL}/api/v1/auth/reset-password/${hash}</b>`, // html body, should send link to html front end, this is direct api link
+      html: `<b>Click this shit: ${process.env.HOST_URL}/reset-password/${hash}</b>`, // html body, should send link to html front end, this is direct api link
     });
   },
 
@@ -54,18 +54,32 @@ const EmailVerificationService = {
   },
 
   activateUserAccount: async (hash) => {
+    try {
     const na_account = await UnactivatedAccount.findOne({hash: hash});
+    if(!na_account) {
+      throw new Error("Document not found");
+    }
     const userId = na_account.userId;
     await UserService.activeUserAccount(userId);
     await na_account.remove();
     await UnactivatedAccount.deleteMany({userId: userId});
+  } catch (e) {
+    throw e;
+  }
   },
 
   resetUserPassword: async (hash, password)=>{
+    try {
     const request = await ResetPasswordRequest.findOne({hash: hash});
-    const userId = na_account.userId;
+    if(!request) {
+      throw new Error("Document not found");
+    }
+    const userId = request.userId;
     await UserService.resetUserPassword(userId, password);
     await request.remove();
+    } catch (e) {
+      throw e;
+    }
   }
 
 };

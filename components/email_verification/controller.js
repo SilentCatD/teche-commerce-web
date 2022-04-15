@@ -92,12 +92,16 @@ const EmailVerificationController = {
         return res.status(400).json({ errors: errors.array() });
       }
       const { hash } = req.params;
+      try {
       await EmailVerificationService.activateUserAccount(hash);
       res.status(200).end("account activated");
+      } catch (e) {
+        return res.status(404).json({ errors: e.message });
+      }
     },
   ],
 
-  sendResetPassword: [
+  verifyResetPassword: [
     param("hash")
       .exists()
       .bail()
@@ -129,9 +133,14 @@ const EmailVerificationController = {
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
       }
-      const { hash , password} = req.params;
+      const { hash} = req.params;
+      const {password} = req.body;
+      try {
       await EmailVerificationService.resetUserPassword(hash, password);
       res.status(200).end("password reset ok");
+      } catch (e) {
+        return res.status(404).json({ errors: e.message });
+      }
     },
   ],
 };

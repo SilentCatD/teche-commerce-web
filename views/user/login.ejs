@@ -22,17 +22,27 @@
 </head>
 
 <body>
+
+  <div class="toast" data-autohide="false" >
+    <div class="toast-header">
+      <strong class="mr-auto text-primary">Teche</strong>
+      <small class="text-muted">You have 7 day to save your shit</small>
+      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+    </div>
+    <div class="toast-body"></div>
+  </div>
+
     <div class="wrapper">
         <div class="card">
             <div  class="d-flex flex-column"">
                 <div class="h3 text-center text-white">Login</div>
                 <div class="d-flex align-items-center input-field my-3 mb-4"> 
                     <span class="far fa-user p-2"></span>
-                    <input type="text" placeholder="Email" required class="form-control" id="useremail" autocomplete="off"> 
+                    <input type="text" placeholder="Email"  class="form-control" id="useremail" autocomplete="off"> 
                 </div>
                 <div class="d-flex align-items-center input-field mb-4"> 
                     <span class="fas fa-lock p-2"></span> 
-                    <input type="password" placeholder="Password" required class="form-control" id="userpwd">
+                    <input type="password" placeholder="Password"  class="form-control" id="userpwd">
                     <span class="input-group-text" id="password_show_hide">
                         <i class="fas fa-eye" id="show_eye"></i>
                         <i class="fas fa-eye-slash d-none" id="hide_eye"></i>
@@ -42,7 +52,9 @@
                     <div class="d-flex align-items-center">
                         <p class="text-danger text-break" id="error"></p>
                     </div>
-                    <div class="mt-sm-0 mt-3"><a href="/not-implement">Forgot password?</a></div>
+                    <div class="mt-sm-0 mt-3"><a data-bs-toggle="modal" id="forget-password" >Forgot password?</a>
+                
+                    </div>
                 </div>
                 <div class="my-3">
                      <input type="button" value="Login" class="btn btn-primary" id="login"></input>
@@ -53,20 +65,44 @@
             <div class="position-relative border-bottom my-3 line"> <span class="connect">or connect with</span> </div>
             <div class="text-center py-3 connections"> 
                 <a href="/api/v1/auth/login/google"  class="px-2"> 
-                    <img src="https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-suite-everything-you-need-know-about-google-newest-0.png" alt=""> 
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1200px-Google_%22G%22_Logo.svg.png" alt=""> 
                 </a> 
             </div>
         </div>
     </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal-forget-password" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Forget Password</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="d-flex align-items-center input-field my-3 mb-4"> 
+                <span class="far fa-user p-2"></span>
+                <input type="text" placeholder="Email"  class="form-control" id="user-email-forget" autocomplete="off"> 
+            </div>
+            <p class="text-danger text-break" id="forget-error"></p>
+          Check your mail after send this
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" id="send-forget-password" class="btn btn-primary">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
     <!-- Js Plugins -->
     <%-include('partials/script') %>
     <script src="https://unpkg.com/validator@latest/validator.min.js"></script>
     <scprit scr="/user/js/utils/validator.js"></scprit>
     <script type="module" src="/user/js/login.js"></script>
-
-    
-
 </body>
 
 </html>
