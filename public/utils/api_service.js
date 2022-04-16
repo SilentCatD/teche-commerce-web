@@ -136,9 +136,10 @@ const APIService = {
       return e.message;
     }
   },
-  haveTokens: async () => {
+  haveTokens: () => {
     const token = TokenService.refreshToken.get();
     if (token) return true;
+    return false;
   },
   createProduct: async ({
     productName,
@@ -348,7 +349,6 @@ const APIService = {
   createComment: async(productId, rating,description) => {
     const body = {productId,rating,description};
     const url = "/api/v1/comment";
-    console.log(body);
     await Request.post({url,body,useToken:true});
   },
 

@@ -1,9 +1,10 @@
 import APIService from "../../utils/api_service.js";
 
 $(document).ready(async function () {
-  if (await APIService.haveTokens("user")) {
+  if (APIService.haveTokens("user")) {
     try {
       const userInfo = await APIService.userInfo();
+      console.log(userInfo);
       $("#login-header").hide();
       $("#login-humberger").hide();
       $(".join-us").text("Click into icon to edit your profile");
@@ -28,7 +29,7 @@ $(document).ready(async function () {
       "<a class='text-primary' href='signup'>Do you want join us <bold>Register Now!</bold></a>"
     );
     $(".header__top__left__edit").html("");
-    $(".join-us").on("click", async function () {
+    $(".join-us").on("click",function () {
       window.location.replace(`/signup`);
     });
   }

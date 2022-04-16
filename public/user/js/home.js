@@ -1,15 +1,15 @@
 
 import TokenService from "../../utils/token_service.js";
 
-$(document).ready(async function () {
+$(document).ready(function () {
     let accessToken = getCookie("accessToken");
     let refreshToken = getCookie("refreshToken");
     
     if(accessToken) {
-      TokenService.accessToken.set("user", accessToken);
+      TokenService.accessToken.set(accessToken);
     }
     if(refreshToken) {
-        TokenService.refreshToken.set("user", refreshToken);
+        TokenService.refreshToken.set(refreshToken);
     }
     delete_cookie("accessToken");
     delete_cookie("refreshToken");

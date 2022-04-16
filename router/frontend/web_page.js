@@ -17,6 +17,7 @@ webPageRouter.get("/login",async (req, res) => {
 webPageRouter.get('/login/google/callback',
 AuthenticationController.loginByGoogleAccount,
 function(req, res) {
+    console.log(res.data);
     res.cookie("accessToken",res.data.accessToken);
     res.cookie("refreshToken",res.data.refreshToken);
     res.cookie("role", res.data.role);
@@ -64,7 +65,7 @@ webPageRouter.get('/details/:id', async (req, res)=>{
     console.log(id);
     try{
         const product = await ProductService.fetchProduct(id);
-        const params = {title: `Teche ${product.name}`, product: product};
+        const params = {title: `Teche ${product.name}`, product: product,tab:"none"};
         res.render('user/shop-details',params);
     }
     catch(e){
