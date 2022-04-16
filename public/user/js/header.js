@@ -13,6 +13,9 @@ $(document).ready(async function () {
         e.preventDefault();
         window.location.href = '/profile';
       });
+      $(".logout").hover(function(){
+        $(this).css("cursor", "pointer");
+      })
       $(".logout").on("click", async function () {
         await APIService.logout("user");
         window.location.reload();
