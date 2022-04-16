@@ -39,7 +39,7 @@ $(document).ready(async function () {
     pageConfiguration.query = query;
     await REinit()
   });
-  $('.filter_checkbox input').change(function (e) { 
+  $('.filter_checkbox input').change(async function (e) { 
     e.preventDefault();
     let checked  = $(this).is(":checked");
     if(checked){
@@ -62,6 +62,7 @@ $(document).ready(async function () {
         pageConfiguration.categories[id] = true;
       }
     }
+    await REinit();
   });
 });
 
@@ -237,6 +238,8 @@ async function FetchProduct() {
     sort: pageConfiguration.sortOption,
     order_by: pageConfiguration.orderOption,
     query: pageConfiguration.query,
+    brands: Object.keys(pageConfiguration.brands),
+    categories: Object.keys(pageConfiguration.categories),
   });
   let productsData = response;
 

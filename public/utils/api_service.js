@@ -178,8 +178,8 @@ const APIService = {
     range_field,
     min,
     max,
-    brand,
-    category,
+    brands,
+    categories,
     query,
   } = {}) => {
     const url = "/api/v1/product";
@@ -193,12 +193,12 @@ const APIService = {
       max,
       query
     );
-    if (brand) {
-      searchParams.set("brand", brand);
-    }
-    if (category) {
-      searchParams.set("category", category);
-    }
+    brands.forEach((brand)=>{
+      searchParams.append('brands',brand);
+    });
+    categories.forEach((category)=>{
+      searchParams.append('categories', category);
+    });
     const res = await Request.get({ url: url, params: searchParams });
     return res.data.data;
   },

@@ -46,11 +46,19 @@ const ProductService = {
     }));
   },
 
-  productQueryAll: async (range, limit, page, sortParams, brand, category, query) => {
+  productQueryAll: async (range, limit, page, sortParams, brands, categories, query) => {
+    const brandsParams = {};
+    const categoriesParams = {};
+    if(brands && brands.length > 0){
+      brandsParams['brand'] = {"$in": brands};
+    }
+    if(categories && categories.length > 0){
+      categoriesParams['category'] = {"$in": categories};
+    }
     let queryParams = {
       ...range,
-      ...(brand && {brand: mongoose.Types.ObjectId(brand)}),
-      ...(category && {category: mongoose.Types.ObjectId(category)}),
+      ...(brandsParams && brandsParams),
+      ...(categoriesParams && categoriesParams),
       ...(query  && {$text: {$search: query}}),
     };
     const totalCount = await Product.countDocuments(queryParams);

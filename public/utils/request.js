@@ -22,7 +22,6 @@ async function tokenReset() {
 }
 
 async function request(url, params, body, headers, method, useToken, token) {
-
   let reqHeaders;
   if (useToken) {
     let reqToken = TokenService.accessToken.get();
