@@ -37,6 +37,16 @@ $(document).ready(async function () {
     pageConfiguration.query = query;
     await REinit()
   });
+  $('.filter_checkbox input').change(function (e) { 
+    e.preventDefault();
+    let checked  = $(this).is(":checked");
+    if(checked){
+      
+      $(this).parent().parent().addClass('sidebar__item__color');
+    }else{
+      $(this).parent().parent().removeClass('sidebar__item__color');
+    }
+  });
 });
 
 async function REinit() {

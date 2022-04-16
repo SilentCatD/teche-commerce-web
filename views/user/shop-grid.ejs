@@ -54,32 +54,28 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="sidebar__item">
-                            <h4>Filter</h4>
-                            <div class="sidebar__item__size">
-                                <label for="large">
-                                    💸On Sales
-                                    <input type="radio" id="large">
-                                </label>
-                            </div>
-                            <div class="sidebar__item__size">
-                                <label for="medium">
-                                    🔥Hot
-                                    <input type="radio" id="medium">
-                                </label>
-                            </div>
-                            <div class="sidebar__item__size">
-                                <label for="small">
-                                    ✨Popular
-                                    <input type="radio" id="small">
-                                </label>
-                            </div>
-                            <div class="sidebar__item__size">
-                                <label for="tiny">
-                                    🌟High Rate
-                                    <input type="radio" id="tiny">
-                                </label>
-                            </div>
+            
+                        <div class="sidebar__item sidebar__item__color--option">
+                            <h4>Brands</h4>
+                            <% for( let index = 0; index < brands.length; index++ ) { %>
+                                <div class="sidebar__item__size filter_checkbox">
+                                    <label for="<%= brands[index].id %> ">
+                                        <%= brands[index].name %> 
+                                        <input type="checkbox" id="<%= brands[index].id %> ">
+                                    </label>
+                                </div>
+                            <% } %>
+                        </div>
+                        <div class="sidebar__item sidebar__item__color--option">
+                            <h4>Categories</h4>
+                            <% for( let index = 0; index < categories.length; index++ ) { %>
+                                <div class="sidebar__item__size filter_checkbox">
+                                    <label for="<%= categories[index].id %> ">
+                                        <%= categories[index].name %> 
+                                        <input type="checkbox" id="<%= categories[index].id %> ">
+                                    </label>
+                                </div>
+                            <% } %>
                         </div>
                     </div>
                 </div>
@@ -137,6 +133,7 @@
 
     <script src="/user/js/breadcrumb.js"></script>
     <script type='module' src="/user/js/header.js"></script>
+    <script  type="module" src="user/js/hero.js"></script>
     <script type="module" src="/user/js/shop-grid.js"></script>
 
 

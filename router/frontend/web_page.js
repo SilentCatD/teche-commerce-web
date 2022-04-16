@@ -3,6 +3,8 @@ import __dirname from "../../dirname.js";
 import ProductService from "../../components/product/service.js";
 import EmailVerificationService from "../../components/email_verification/service.js";
 import AuthenticationController from "../../components/authentication/controller.js";
+import BrandService from "../../components/brand/service.js";
+import CategotyService from "../../components/category/service.js";
 
 const webPageRouter = express.Router();
 
@@ -40,14 +42,10 @@ webPageRouter.get('/', async (req, res)=>{
 
 
 webPageRouter.get('/shop', async (req, res)=>{
-    try{
-        const params = {title: "Teche Shop", tab: 'shop'};
-        res.render('user/shop-grid',params);
-    }
-    catch(e){
-        console.log(e);
-        res.status(404).send();
-    }
+    const brands = (await BrandService.brandQueryAll(null, null, 1, null, null)).items;
+    const categories = (await CategotyService.categoryQueryAll(null, null, 1, null, null)).items;
+    const params = {title: "Teche Shop", tab: 'shop', brands: brands, categories: categories};
+    res.render('user/shop-grid',params);
 });
 
 webPageRouter.get('/contact', async (req, res)=>{
