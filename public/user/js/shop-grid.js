@@ -15,6 +15,8 @@ let pageConfiguration = {
 
   total_slider_item: 9,
   item_per_slider: 3,
+  categories: {},
+  brands: {},
 };
 
 $(document).ready(async function () {
@@ -41,10 +43,24 @@ $(document).ready(async function () {
     e.preventDefault();
     let checked  = $(this).is(":checked");
     if(checked){
-      
       $(this).parent().parent().addClass('sidebar__item__color');
     }else{
       $(this).parent().parent().removeClass('sidebar__item__color');
+    }
+    const type = $(this).attr('class');
+    const id = $(this).attr('id');
+    if(type=='brand'){
+      if(id in pageConfiguration.brands){
+        delete pageConfiguration.brands[id];
+      }else{
+        pageConfiguration.brands[id] = true;
+      }
+    }else if(type=='category'){
+      if(id in pageConfiguration.categories){
+        delete pageConfiguration.categories[id];
+      }else{
+        pageConfiguration.categories[id] = true;
+      }
     }
   });
 });
