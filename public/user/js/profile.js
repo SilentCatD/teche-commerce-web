@@ -1,9 +1,11 @@
 import APIService from "../../utils/api_service.js";
 import { validateUserName, validateUserPassword } from "./utils/validate.js";
+import {getUserInfo} from "./initialize.js";
+
 
 $(document).ready(async function () {
+  const userInfo = await getUserInfo();
   try {
-    const userInfo = await APIService.userInfo("user");
     if (userInfo) {
       $(".alert").hide();
       $("#edit-name").val(userInfo.name);
@@ -28,7 +30,6 @@ $(document).ready(async function () {
             name: $("#edit-name").val(),
           };
           const res = await APIService.userInfoEdit("user", newUserInfo);
-          console.log(res);
           showAlert(res);
         }  else {
           showAlert("You have some invalid field");

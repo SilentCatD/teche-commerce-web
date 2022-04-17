@@ -9,7 +9,7 @@ let pageConfiguration = {
   sortOption: "createdAt",
   totalItems: -1,
   itemInPage: -1,
-  query: "",
+  query: query,
   item_per_page: 12,
   pagination_size: 5,
 
@@ -79,7 +79,6 @@ async function REinit() {
   clearPage();
 
   await FetchProduct();
-
   // await fetchLatestProduct()
   await renderCompenent.renderPaginationPage(pageConfiguration);
 
