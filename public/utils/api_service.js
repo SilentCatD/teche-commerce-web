@@ -194,9 +194,11 @@ const APIService = {
       max,
       query
     );
-    brands.forEach((brand)=>{
+    if(brands)
+      brands.forEach((brand)=>{
       searchParams.append('brands',brand);
     });
+    if(categories)
     categories.forEach((category)=>{
       searchParams.append('categories', category);
     });
