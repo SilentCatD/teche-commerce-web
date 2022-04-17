@@ -17,6 +17,8 @@ let pageConfiguration = {
   item_per_slider: 3,
   categories: {},
   brands: {},
+  minPrice: 0,
+  maxPrice: 2000,
 };
 
 $(document).ready(async function () {
@@ -62,6 +64,13 @@ $(document).ready(async function () {
         pageConfiguration.categories[id] = true;
       }
     }
+    await REinit();
+  });
+  $('.price-range').on('slidechange',async function (e, ui) { 
+    e.preventDefault();
+    const priceRange = ui.values;
+    pageConfiguration.minPrice = priceRange[0];
+    pageConfiguration.maxPrice = priceRange[1];
     await REinit();
   });
 });
@@ -240,6 +249,9 @@ async function FetchProduct() {
     query: pageConfiguration.query,
     brands: Object.keys(pageConfiguration.brands),
     categories: Object.keys(pageConfiguration.categories),
+    range_field: 'price',
+    min: pageConfiguration.minPrice,
+    max: pageConfiguration.maxPrice,
   });
   let productsData = response;
 
