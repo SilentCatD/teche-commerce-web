@@ -64,7 +64,7 @@ $(document).ready(async function () {
 
     }
   } catch (e) {
-    window.location.href = "/";
+    window.location.replace('/login');
   }
 });
 
