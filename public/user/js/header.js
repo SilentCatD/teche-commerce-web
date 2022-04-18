@@ -1,10 +1,12 @@
 import APIService from "../../utils/api_service.js";
+import {getUserInfo} from"./initialize.js";
+
+
 
 $(document).ready(async function () {
-  if (APIService.haveTokens("user")) {
+  const userInfo = await getUserInfo();
+  if (userInfo) {
     try {
-      const userInfo = await APIService.userInfo();
-      console.log(userInfo);
       $("#login-header").hide();
       $("#login-humberger").hide();
       $(".join-us").text("Click into icon to edit your profile");

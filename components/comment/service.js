@@ -48,7 +48,7 @@ const CommentService = {
             rating: rating,
             description: description,
         }
-        docId =  await CommomDatabaseServies.createDocument(Comment,commentDocObject);
+        docId =  await Comment.create(commentDocObject);
         await session.commitTransaction();
         session.endSession();
         return docId;
@@ -63,7 +63,7 @@ const CommentService = {
         const session = await Comment.startSession();
         session.startTransaction();
         try {
-            await CommomDatabaseServies.deleteDocument(Comment,commentId,false);
+            await Comment.deleteOne({_id:commentId});
             if(productId) 
                 await ProductService.rateProduct(productId,-rating);
             await session.commitTransaction();

@@ -17,7 +17,6 @@ webPageRouter.get("/login",async (req, res) => {
 webPageRouter.get('/login/google/callback',
 AuthenticationController.loginByGoogleAccount,
 function(req, res) {
-    console.log(res.data);
     res.cookie("accessToken",res.data.accessToken);
     res.cookie("refreshToken",res.data.refreshToken);
     res.cookie("role", res.data.role);
@@ -45,7 +44,7 @@ webPageRouter.get('/', async (req, res)=>{
 webPageRouter.get('/shop', async (req, res)=>{
     const brands = (await BrandService.brandQueryAll(null, null, 1, null, null)).items;
     const categories = (await CategotyService.categoryQueryAll(null, null, 1, null, null)).items;
-    const params = {title: "Teche Shop", tab: 'shop', brands: brands, categories: categories};
+    const params = {title: "Teche Shop", tab: 'shop', brands: brands, categories: categories,query:req.query.query};
     res.render('user/shop-grid',params);
 });
 
