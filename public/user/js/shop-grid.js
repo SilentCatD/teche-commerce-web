@@ -3,18 +3,15 @@ import APIService from "../../utils/api_service.js";
 let pageConfiguration = {
   currentPage: 1,
   totalPage: -1,
-  reRenderPagination: true,
-
-  orderOption: "desc",
-  sortOption: "createdAt",
   totalItems: -1,
   itemInPage: -1,
-  query: query,
-  item_per_page: 12,
+  item_per_page: 3,
   pagination_size: 5,
 
-  total_slider_item: 9,
-  item_per_slider: 3,
+  //Sort
+  orderOption: "desc",
+  sortOption: "createdAt",
+  query: query,
   categories: {},
   brands: {},
   minPrice: 0,
@@ -23,6 +20,7 @@ let pageConfiguration = {
 
 $(document).ready(async function () {
   await REinit();
+
   setBreadCrumb("Shop", null);
   $("#sortSelect").change(async function (e) {
     e.preventDefault();
@@ -30,17 +28,20 @@ $(document).ready(async function () {
     await REinit();
   });
 
+
   $("#orderBySelect").change( async function (e) {
     e.preventDefault();
     pageConfiguration.orderOption = $(this).val();
     await REinit();
   });
+
   $('#searchBtn').click(async function (e) { 
     e.preventDefault(); 
     const query = $('#searchBox').val().trim();
     pageConfiguration.query = query;
     await REinit()
   });
+
   $('.filter_checkbox input').change(async function (e) { 
     e.preventDefault();
     let checked  = $(this).is(":checked");
@@ -49,6 +50,7 @@ $(document).ready(async function () {
     }else{
       $(this).parent().parent().removeClass('sidebar__item__color');
     }
+
     const type = $(this).attr('class');
     const id = $(this).attr('id');
     if(type=='brand'){
@@ -66,6 +68,7 @@ $(document).ready(async function () {
     }
     await REinit();
   });
+
   $('.price-range').on('slidechange',async function (e, ui) { 
     e.preventDefault();
     const priceRange = ui.values;
@@ -73,107 +76,70 @@ $(document).ready(async function () {
     pageConfiguration.maxPrice = priceRange[1];
     await REinit();
   });
+
 });
 
 async function REinit() {
-  clearPage();
-
+  $("#product-list").empty();
   await FetchProduct();
-  // await fetchLatestProduct()
-  await renderCompenent.renderPaginationPage(pageConfiguration);
-
-  $(`#pagination_${pageConfiguration.currentPage}`).css({
-    color: "blue",
-    "border-color": "blue",
-  });
+  renderCompenent.renderPaginationPage(pageConfiguration);
 }
 
-const API_CALL = {
-  fetchProduct: async (page, limit) => {
-    try {
-      let query = `limit=${limit}&page=${page}`;
-      let request = {
-        method: "get",
-        url: `/api/v1/product?${query}`,
-      };
-      let res = await axios(request);
-      return res;
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  fetchLatestProduct: async (limit) => {
-    try {
-      let query = `limit=${limit}&sort=createAt`;
-      let request = {
-        method: "get",
-        url: `/api/v1/product?${query}`,
-      };
-      let res = await axios(request);
-      return res;
-    } catch (e) {
-      console.log(e);
-    }
-  },
-};
-
 const renderCompenent = {
-  renderPaginationPage: async function (pageConfiguration) {
-    if (pageConfiguration.currentPage != 1) {
-      renderHTMLElement.renderPaginationLeft();
+  renderPaginationPage: function () {
+    const pages = [];
+    let  generated= 0;
+    let startAt = pageConfiguration.currentPage - Math.floor(5/2);
+    let curr = startAt;
+    if(pageConfiguration.currentPage!=1) {
+      pages.push(`<a data-move-page ="left" class='page-item'>◀</a>`);
     }
-    let lost = 0;
-    for (
-      let i =
-        pageConfiguration.currentPage -
-        Math.floor((pageConfiguration.pagination_size - 1) / 2);
-      i < pageConfiguration.currentPage;
-      i++
-    ) {
-      if (i < 1) {
-        lost++;
+    while (generated < pageConfiguration.pagination_size) {
+      if (curr > pageConfiguration.totalPage) {
+        startAt--;
+        if(startAt<1) break;
+        pages.splice(1, 0,
+          `<a class="page-item"  href="#">${startAt}</a>`
+        );
+        generated++;
         continue;
-      } else renderHTMLElement.renderPagination(i);
+      }
+      if (curr > 0) {
+        if (curr == pageConfiguration.currentPage) {
+          pages.push(
+            `<a class="page-item bg-info" href="#">${curr}</a>`
+          );
+        } else {
+          pages.push(
+            `<a  class="page-item" href="#">${curr}</a>`
+          );
+        }
+        generated++;
+      }
+      curr++;
     }
-
-    renderHTMLElement.renderPagination(pageConfiguration.currentPage);
-
-    for (
-      let i = pageConfiguration.currentPage + 1;
-      i <=
-      pageConfiguration.currentPage +
-        Math.floor((pageConfiguration.pagination_size - 1) / 2) +
-        lost;
-      i++
-    ) {
-      if (i > pageConfiguration.totalPage) break;
-      renderHTMLElement.renderPagination(i);
+    if(pageConfiguration.currentPage < pageConfiguration.totalPage) {
+      pages.push(`<a data-move-page ="right" class='page-item' >▶</a>`);
     }
-
-    if (pageConfiguration.currentPage != pageConfiguration.totalPage) {
-      renderHTMLElement.renderPaginationRight();
+    console.log(pages);
+    $("#pagination-section").html(pages.join("\n"));
+    $(".page-item").click(async function (e) {
+      e.preventDefault();
+      if($(this).data("move-page")=="left") {
+        pageConfiguration.currentPage-=1;
+      } else if($(this).data("move-page")=="right") {
+        pageConfiguration.currentPage+=1;
+      } else {
+        pageConfiguration.currentPage = $(this).text().trim();
     }
+    await REinit();
+    });
   },
   renderProductList: function (products) {
       products.forEach((product) => {
       renderHTMLElement.renderProductItem(product);
     });
     $("#total-items-found").text(`${products.length}`);
-  },
-  renderProductSlider: async function (products) {
-    let j = 0;
-    for (let i = 0; i < products.length; i++) {
-      if (i % item_per_slider == 0) {
-        j++;
-        $("#slider_latest_product").append(
-          `<div class="latest-prdouct__slider__item" id="slider_latest_product_item_${j}">
-                    </div>`
-        );
-      }
-      $(`#slider_latest_product_item_${j}`).append(
-        renderHTMLElement.renderSliderItem(products[i])
-      );
-    }
   },
   setPagination: async function () {
     $(".product__pagination");
@@ -206,38 +172,6 @@ const renderHTMLElement = {
 </div> `
     );
   },
-  renderSliderItem(product, imageURL) {
-    return `<a href="#" class="latest-product__item">
-        <div class="latest-product__item__pic">
-            <img src=${imageURL} alt="">
-        </div>
-        <div class="latest-product__item__text">
-            <h6> ${product.name} </h6>
-            <span>${product.price} </span>
-        </div>
-    </a>`;
-  },
-  renderPagination(page) {
-    $("#pagination").append(`<a  id="pagination_${page}">${page}</a>`);
-    $(`#pagination_${page}`).on("click", function () {
-      pageConfiguration.currentPage = page;
-      REinit();
-    });
-  },
-  renderPaginationLeft() {
-    $("#pagination").append(`<a id='move_left_page'>◀</a>`);
-    $("#move_left_page").on("click", function () {
-      pageConfiguration.currentPage = pageConfiguration.currentPage - 1;
-      REinit();
-    });
-  },
-  renderPaginationRight() {
-    $("#pagination").append(`<a id='move_right_page'>▶</a>`);
-    $("#move_right_page").on("click", function () {
-      pageConfiguration.currentPage = pageConfiguration.currentPage + 1;
-      REinit();
-    });
-  },
 };
 async function FetchProduct() {
   let response = await APIService.fetchAllProduct({
@@ -261,7 +195,3 @@ async function FetchProduct() {
   pageConfiguration.totalItems = productsData["total-items"];
 }
 
-function clearPage() {
-  $("#pagination").empty();
-  $("#product-list").empty();
-}

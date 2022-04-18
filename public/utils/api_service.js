@@ -253,8 +253,7 @@ const APIService = {
     const res = await Request.get({ url: url, params: searchParams });
     return res.data.data;
   },
-  fetchAllComment: async ({
-    productId,
+  fetchAllComment: async (productId,{
     page,
     limit,
     sort = "createdAt",
