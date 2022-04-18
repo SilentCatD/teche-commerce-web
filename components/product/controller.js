@@ -55,41 +55,44 @@ const ProductController = {
   fetchAllProduct: [
     CommonMiddleWares.apiQueryParamsExtract,
     query("brands")
-      .if(query("brands").exists()).toArray()
+      .if(query("brands").exists())
+      .toArray()
       .custom(async (brandIds) => {
-        try{
-          await Promise.all(brandIds.map(async (brandId) => {
-            const result = await Brand.findById(brandId);
-            if(!result){
-              throw Error("brand not existed");
-            }
-          }));
-        }
-        catch(e){
+        try {
+          await Promise.all(
+            brandIds.map(async (brandId) => {
+              const result = await Brand.findById(brandId);
+              if (!result) {
+                throw Error("brand not existed");
+              }
+            })
+          );
+        } catch (e) {
           console.log(e);
-          throw new Error("invalid brand"); 
+          throw new Error("invalid brand");
         }
         return true;
       }),
     query("categories")
-      .if(query("categories").exists()).toArray()
+      .if(query("categories").exists())
+      .toArray()
       .custom(async (categoryIds) => {
-        try{
-          await Promise.all(categoryIds.map(async (categoryIds) => {
-            const result = await Category.findById(categoryIds);
-            if(!result){
-              throw Error("category not existed");
-            }
-          }));
-        }
-        catch(e){
+        try {
+          await Promise.all(
+            categoryIds.map(async (categoryIds) => {
+              const result = await Category.findById(categoryIds);
+              if (!result) {
+                throw Error("category not existed");
+              }
+            })
+          );
+        } catch (e) {
           console.log(e);
-          throw new Error("invalid category"); 
+          throw new Error("invalid category");
         }
         return true;
       }),
     async (req, res) => {
-      
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res
@@ -97,8 +100,17 @@ const ProductController = {
           .json({ success: false, msg: errors.array()[0].msg });
       }
       try {
-        const { limit, page, sortParams, range, brands, categories, query } = req.query;
-        const result = await ProductService.productQueryAll(range, limit, page, sortParams, brands, categories, query);
+        const { limit, page, sortParams, range, brands, categories, query } =
+          req.query;
+        const result = await ProductService.productQueryAll(
+          range,
+          limit,
+          page,
+          sortParams,
+          brands,
+          categories,
+          query
+        );
         res.status(200).json({ success: true, data: result });
       } catch (e) {
         console.log(e);
@@ -131,11 +143,15 @@ const ProductController = {
       .bail()
       .trim()
       .custom(async (productId) => {
-        const exist = await Product.exists({ _id: productId });
-        if (!exist) {
+        try {
+          const exist = await Product.exists({ _id: productId });
+          if (!exist) {
+            throw new Error();
+          }
+          return true;
+        } catch (e) {
           throw new Error("product not existed");
         }
-        return true;
       }),
     async (req, res) => {
       try {
@@ -167,11 +183,15 @@ const ProductController = {
       .bail()
       .trim()
       .custom(async (productId) => {
-        const exist = await Product.exists({ _id: productId });
-        if (!exist) {
+        try {
+          const exist = await Product.exists({ _id: productId });
+          if (!exist) {
+            throw new Error();
+          }
+          return true;
+        } catch (e) {
           throw new Error("product not existed");
         }
-        return true;
       }),
     async (req, res) => {
       try {
