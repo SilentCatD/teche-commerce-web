@@ -7,13 +7,15 @@ if(APIService.haveTokens()) {
     userInfo = await APIService.userInfo();
 } 
 
+export async function updateUserInfo() {
+    userInfo = await APIService.userInfo();
+}
+
 export async function getUserInfo() {
     if(userInfo) {
-        console.log("Non-virgin");
         return userInfo;
     }
     if(APIService.haveTokens()) {
-        console.log("Virgin");
         userInfo = await APIService.userInfo();
     } 
     return userInfo;

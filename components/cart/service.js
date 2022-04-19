@@ -48,7 +48,6 @@ const CartService = {
             throw new Error('product is out of stock');
         }
       }
-      console.log(cart);
       await cart.save();
       await session.commitTransaction();
     } catch (e) {

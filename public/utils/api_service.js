@@ -358,6 +358,21 @@ const APIService = {
     const body = { email, name, password };
     await Request.post({ url, body, useToken: true});
   },
+  getUserCart: async () => {
+    try {
+    const url = '/api/v1/cart';
+    const response = await Request.get({url,useToken:true});
+    return response.data;
+    } catch (err) {
+      console.log(err);
+      return err.msg;
+    }
+  },
+  addProductToCart: async(productId, amount) => {
+      const url = '/api/v1/cart';
+      const body = {productId, amount};
+      await Request.post({url,body,useToken:true});
+  }
 };
 
 export default APIService;
