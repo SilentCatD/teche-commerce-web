@@ -7,44 +7,48 @@ const CartService = {
     return cart;
   },
   getCart: async (userId)=>{
-    let cart = await Cart.findOne({ userId: userId }).populate('items.product');
+    let cart = await Cart.findOne({ userId: userId }).populate('items.productId');
     if(!cart){
         cart = await CartService.createCart(userId);
     }
+    console.log(cart);
     return cart;
   },
-  addProduct: async (userId, productId) => {
+  addProduct: async (userId, productId,amount) => {
     const session = await Cart.startSession();
     session.startTransaction();
     try {
-      let cart = await Cart.findOne({ userId: userId }).populate('items.product').session(session);
+      let cart = await Cart.findOne({ userId: userId }).session(session);
       if(!cart){
         cart = await CartService.createCart(userId);
       }
-      const items = cart.items;
       let existed = false;
-      items.map((item) => {
-        if (item.product.id == productId) {
-          existed == true;
-          if(item.product.inStock > 0){
-            item.amount++;
+      cart.items =  await Promise.all(cart.items.map(async (item) => {
+        if (item.productId == productId) {
+          existed = true;
+          const product = await Product.findById(productId);
+          if(product.inStock - ( item.amount+ amount) >= 0){
+            item.amount+=amount;
           }
           else{
             throw new Error('product is out of stock');
           }
+          console.log(item);
+          return item;
         }
-      });
+      }));
       if (!existed) {
         const product = await Product.findById(productId);
-        if(product.inStock > 0){
+        if(product.inStock - amount >= 0){
             cart.items.push({
-                productId: productId,
-                amount: 1,
+              productId: productId,
+                amount: amount,
               });
         }else{
             throw new Error('product is out of stock');
         }
       }
+      console.log(cart);
       await cart.save();
       await session.commitTransaction();
     } catch (e) {
@@ -58,7 +62,7 @@ const CartService = {
     const session = await Cart.startSession();
     session.startTransaction();
     try {
-      let cart = await Cart.findOne({ userId: userId }).populate('items.product').session(session);
+      let cart = await Cart.findOne({ userId: userId }).populate('items.productId').session(session);
       if(!cart){
           cart = await CartService.createCart(userId);
       }

@@ -4,7 +4,7 @@ import { body, validationResult } from "express-validator";
 import Product from "../product/model.js";
 
 const validateBody = [
-    body("product")
+    body("productId")
       .exists()
       .withMessage("must provide product id")
       .custom(async (productId) => {
@@ -18,6 +18,16 @@ const validateBody = [
           throw new Error("product not exist");
         }
       }),
+      body("amount")
+      .exists()
+      .bail()
+      .notEmpty({ ignore_whitespace: true })
+      .withMessage("field can't be empty")
+      .bail()
+      .trim()
+      .isInt({min:1})
+      .withMessage("field must be integer in range [1...]")
+      .toInt(),
 ]
 
 const CartController = {
@@ -45,10 +55,12 @@ const CartController = {
           .json({ success: false, msg: errors.array()[0].msg });
       }
       try {
-        const { product } = req.body;
+        const { productId,amount } = req.body;
         const userId = req.user.id;
-        await CartService.addProduct(userId, product);
+        console.log(productId);
+        await CartService.addProduct(userId, productId,amount);
       } catch (e) {
+        console.log(e);
         return res
           .status(500)
           .json({ success: false, msg: `something went wrong ${e.message}` });
@@ -66,9 +78,9 @@ const CartController = {
           .json({ success: false, msg: errors.array()[0].msg });
       }
       try {
-        const { product } = req.body;
+        const { productId,amount } = req.body;
         const userId = req.user.id;
-        await CartService.removeProduct(userId, product);
+        await CartService.removeProduct(userId, productId);
       } catch (e) {
         return res
           .status(500)
