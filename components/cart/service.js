@@ -33,9 +33,8 @@ const CartService = {
           else{
             throw new Error('product is out of stock');
           }
-          console.log(item);
-          return item;
         }
+        return item;
       }));
       if (!existed) {
         const product = await Product.findById(productId);
