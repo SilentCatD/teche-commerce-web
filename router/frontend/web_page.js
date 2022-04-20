@@ -36,7 +36,8 @@ webPageRouter.get('/', async (req, res)=>{
     const latestProducts = (await ProductService.productQueryAll(null, 6, 1, {"createdAt": -1}, null, null, null)).items;
     const topRatedProducts = (await ProductService.productQueryAll(null, 6, 1, {"rateAverage": -1}, null, null, null)).items;
     const topViewProducts = (await ProductService.productQueryAll(null, 6, 1, {"viewCount": -1}, null, null, null)).items;
-    const params = {title: "Teche Home", tab: 'home',latestProducts : latestProducts, topRatedProducts :topRatedProducts, topViewProducts :topViewProducts};
+    const categories = (await CategotyService.categoryQueryAll(null, null, 1, null, null)).items;
+    const params = {title: "Teche Home", tab: 'home',latestProducts : latestProducts, topRatedProducts :topRatedProducts, topViewProducts :topViewProducts,categories: categories};
     res.render('user/index',params);
 });
 
@@ -49,13 +50,21 @@ webPageRouter.get('/shop', async (req, res)=>{
 });
 
 webPageRouter.get('/contact', async (req, res)=>{
-    const params = {title: "Teche Contact", tab: 'contact'};
+    const categories = (await CategotyService.categoryQueryAll(null, null, 1, null, null)).items;
+    const params = {title: "Teche Contact", tab: 'contact',categories: categories};
     res.render('user/contact',params);
 });
 
 webPageRouter.get('/profile',async (req, res)=>{
-    const params = {title: "Teche Profile", tab: 'none'};
+    const categories = (await CategotyService.categoryQueryAll(null, null, 1, null, null)).items;
+    const params = {title: "Teche Profile", tab: 'none',categories: categories};
     res.render('user/profile', params);
+})
+
+webPageRouter.get('/cart',async (req, res)=>{
+    const categories = (await CategotyService.categoryQueryAll(null, null, 1, null, null)).items;
+    const params = {title: "Teche Shopping", tab: 'none',categories: categories};
+    res.render('user/shopping-cart', params);
 })
 
 
@@ -63,8 +72,9 @@ webPageRouter.get('/details/:id', async (req, res)=>{
     const {id} = req.params;
     console.log(id);
     try{
+        const categories = (await CategotyService.categoryQueryAll(null, null, 1, null, null)).items;
         const product = await ProductService.fetchProduct(id);
-        const params = {title: `Teche ${product.name}`, product: product,tab:"none"};
+        const params = {title: `Teche ${product.name}`, product: product,tab:"none",categories: categories};
         res.render('user/shop-details',params);
     }
     catch(e){

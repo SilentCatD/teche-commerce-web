@@ -22,6 +22,9 @@ $(document).ready(async function () {
         await APIService.logout("user");
         window.location.reload();
       });
+      $(".fa-shopping-bag").on("click",function() {
+        window.location.href =  `/cart`;
+      });
     } catch (e) {
       console.log(e);
     }
