@@ -7,6 +7,7 @@ cartRouter
   .route("/")
   .get(CartController.getCart)
   .post(CartController.addItem)
+  .put(CartController.updateItem)
   .delete(CartController.removeItem);
 
 export default cartRouter;

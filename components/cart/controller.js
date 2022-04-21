@@ -25,8 +25,8 @@ const validateBody = [
       .withMessage("field can't be empty")
       .bail()
       .trim()
-      .isInt({min:1})
-      .withMessage("field must be integer in range [1...]")
+      .isInt({min:-1})
+      .withMessage("field must be integer in range [-1 ...]")
       .toInt(),
 ]
 
@@ -58,7 +58,33 @@ const CartController = {
         const { productId,amount } = req.body;
         const userId = req.user.id;
         console.log(productId);
-        await CartService.addProduct(userId, productId,amount);
+        await CartService.addItem(userId, productId,amount);
+        return res
+        .status(200)
+        .json({ success: true, msg: "Add success"});
+      } catch (e) {
+        console.log(e);
+        return res
+          .status(500)
+          .json({ success: false, msg: `${e.message}` });
+      }
+    },
+  ],
+  updateItem: [
+    AuthorizationController.isValidAccount,
+    validateBody,
+    async (req, res) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res
+          .status(400)
+          .json({ success: false, msg: errors.array()[0].msg });
+      }
+      try {
+        const { productId,amount } = req.body;
+        const userId = req.user.id;
+        console.log(productId);
+        await CartService.updateItem(userId, productId,amount);
         return res
         .status(200)
         .json({ success: true, msg: "Add success"});

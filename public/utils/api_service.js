@@ -353,6 +353,11 @@ const APIService = {
     await Request.post({url,body,useToken:true});
   },
 
+  deleteComment: async(commentId) => {
+    const url = `/api/v1/comment/${commentId}`;
+    await Request.delete({url,useToken:true});
+  },
+
   createAdminAccount: async (email, name, password) => {
     const url = `/api/v1/auth/register-admin`;
     const body = { email, name, password };
@@ -368,11 +373,26 @@ const APIService = {
       return err.msg;
     }
   },
-  addProductToCart: async(productId, amount) => {
+  addCartItem: async(productId, amount) => {
       const url = '/api/v1/cart';
       const body = {productId, amount};
       await Request.post({url,body,useToken:true});
   },
+  increaseCartItem: async(productId) => {
+    const url = '/api/v1/cart';
+    const body = {productId, amount:1};
+    await Request.post({url,body,useToken:true});
+  },
+  decreaseCartItem: async(productId, amount) => {
+  const url = '/api/v1/cart';
+  const body = {productId, amount:-1};
+  await Request.post({url,body,useToken:true});
+  },
+  updateCartItem: async(productId, amount) => {
+    const url = '/api/v1/cart';
+    const body = {productId, amount};
+    await Request.put({url,body,useToken:true});
+    },
   removeCartItem: async(productId) => {
     const url = '/api/v1/cart';
     const body = {productId};

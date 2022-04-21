@@ -13,7 +13,8 @@ const CartService = {
     }
     return cart;
   },
-  addProduct: async (userId, productId,amount) => {
+  // using for add product, add same product again, add or remove product by 1 
+  addItem: async (userId, productId,amount) => {
     const session = await Cart.startSession();
     session.startTransaction();
     try {
@@ -22,28 +23,33 @@ const CartService = {
         cart = await CartService.createCart(userId);
       }
       let existed = false;
+      const product = await Product.findById(productId);
       cart.items =  await Promise.all(cart.items.map(async (item) => {
         if (item.productId == productId) {
           existed = true;
-          const product = await Product.findById(productId);
+          if(item.amount < 1) {
+            throw new Error("Congratulation! You are fking wizard (by messing frontend js or database)");
+          }
           if(product.inStock - ( item.amount+ amount) >= 0){
             item.amount+=amount;
           }
           else{
-            throw new Error('product is out of stock');
+            throw new Error(`product is out of stock (remain ${product.inStock})`);
           }
         }
         return item;
       }));
       if (!existed) {
-        const product = await Product.findById(productId);
-        if(product.inStock - amount >= 0){
+        if(amount >0) {
+          throw new Error("Congratulation! You are fking wizard (by messing frontend js or database)");
+        }
+        if(product.inStock  >= amount){
             cart.items.push({
               productId: productId,
                 amount: amount,
               });
         }else{
-            throw new Error('product is out of stock');
+          throw new Error(`product is out of stock (remain ${product.inStock})`);
         }
       }
       await cart.save();
@@ -66,6 +72,42 @@ const CartService = {
       const cartItem = cart.items.find(element => element.productId == productId);
       // await cart.items.pull({productId:productId}); 
       await cart.items.pull(cartItem); 
+      await cart.save();
+      await session.commitTransaction();
+    } catch (e) {
+      await session.abortTransaction();
+      throw e;
+    } finally {
+      await session.endSession();
+    }
+  },
+  // If you want check immediately in frontend
+  updateItem: async (userId, productId,amount) => {
+    const session = await Cart.startSession();
+    session.startTransaction();
+    try {
+      if(amount <= 0) {
+        throw new Error("Congratulation! You are fking wizard (by messing frontend js or database)");
+      }
+      let cart = await Cart.findOne({ userId: userId }).session(session);
+      if(!cart){
+        cart = await CartService.createCart(userId);
+      }
+      let existed = false;
+      const product = await Product.findById(productId);
+      cart.items =  await Promise.all(cart.items.map(async (item) => {
+        if (item.productId == productId) {
+          existed = true;
+          if(product.inStock >= amount ){
+            item.amount=amount;
+          }
+          else{
+            throw new Error(`product is out of stock (remain ${product.inStock})`);
+          }
+        }
+        return item;
+      }));
+      // this never happen
       await cart.save();
       await session.commitTransaction();
     } catch (e) {

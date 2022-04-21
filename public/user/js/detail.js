@@ -48,7 +48,7 @@ $(function(){
     $('#notificate-add-to-cart').text("");
     $('#notificate-add-to-cart').show();
     try{
-      await APIService.addProductToCart(product.id,amount);
+      await APIService.addCartItem(product.id,amount);
       $('#notificate-add-to-cart').addClass('text-success');
       $('#notificate-add-to-cart').text("Add Success");
       setTimeout(function(){
@@ -108,7 +108,7 @@ sendReviewBtn.click(async function (e) {
     await APIService.createComment(product.id,rating,description);
     product = await APIService.fetchProduct(product.id);
     detailController.renderProduct(product);
-    REinit(currentPage);
+    await REinit(currentPage);
     } catch (e) {
       console.log(e);
     }
@@ -129,6 +129,19 @@ sendReviewBtn.click(async function (e) {
     currentPage = result["current-page"];
     const totalPage = result["total-pages"];
     detailController.renderPagination(currentPage,totalPage);
+
+    $(".fa-trash").click(async (e) => {
+      try{
+        console.log($(this).parent().data("comment-id"));
+        await APIService.deleteComment("625c27e794f860e7634bf77e");
+        product = await APIService.fetchProduct(product.id);
+        detailController.renderProduct(product);
+        await REinit(currentPage);
+      } catch(e) {
+        console.log(e);
+      }
+    })
+
   }
 
 const detailController = {
@@ -166,7 +179,7 @@ const detailController = {
         $(`#${listId}`).append(detailController.renderComment(comments[i]));
       }
     },
-    renderComment: (comment) => { return`<li>
+    renderComment: (comment) => { return`<li id=${comment.id}>
         <div class="d-flex">
             <div class="left">
                 <span>
@@ -185,14 +198,10 @@ const detailController = {
                         </svg>
                         ${comment.rating}
                     </span>
-                      <div class="ml-auto">
-                      <button class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                        :
-                      </button>
-                      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li class="my-1 py-0 fs-5 text-danger" data-id="${comment.id}">Edit</li>
-                        <li class="my-1 py-0 display-6 text-info" data-id="${comment.id}">Delete</li>
-                      </ul>
+                      <div data-comment-id="${comment.id}" class="ml-auto">
+                      <i class="fa fa-edit"></i>
+                      <i class="fa fa-trash"  aria-hidden="true"></i>
+
                       </div>
                 </h4>
                 <div class="country d-flex align-items-center">

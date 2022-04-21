@@ -9,52 +9,71 @@ $(document).ready(async function () {
     await REInit();
 
         // assign button
-        $(".inc").click(function(e){
+        $(".inc").click(async function(e){
             e.preventDefault();
             const productId = $(this).parent().data("product-id");
             const cartItem = CART_INFO.items.find(element => element.productId._id == productId)
             let productInputAmount  = $(this).parent().find(".amount");
             
-            if(productInputAmount.val() >= cartItem.productId.inStock) {
-                $(".inc").prop('disabled',true);
-            } else {
+            // if(productInputAmount.val() < cartItem.productId.inStock) {
+            //     productInputAmount.val(parseFloat(productInputAmount.val()) + 1 );
+            //     cartItem.amount+=1;
+            // }
+
+            try {
+                const response = await APIService.increaseCartItem(productId); 
                 productInputAmount.val(parseFloat(productInputAmount.val()) + 1 );
                 cartItem.amount+=1;
-                $(".inc").prop('disabled',false);
+            } catch(e) {
+                $(`#item-error-${productId}`).text(e.message);
             }
     
-            const oldPrice = parseFloat($(`#total-price-${productId}`).text().trim().substring(1));
+            const oldPrice = parseFloat($(`#item-price-${productId}`).text().trim().substring(1));
             const newPrice = productInputAmount.val()*cartItem.productId.price;
             changeTotalPrice(productId,newPrice,newPrice-oldPrice);
         })
     
-        $(".dec").click(function(e){
+        $(".dec").click(async function(e){
             e.preventDefault();
             const productId = $(this).parent().data("product-id");
             const cartItem = CART_INFO.items.find(element => element.productId._id == productId)
             let productInputAmount  = $(this).parent().find(".amount");
-            if(productInputAmount.val() <= 1) {
-                $(".dec").prop('disabled',true);
-            } else {
+
+            
+            if(productInputAmount.val() <=1) return;
+            
+            try {
+                const response = await APIService.decreaseCartItem(productId); 
                 productInputAmount.val(parseFloat(productInputAmount.val()) - 1 );
                 cartItem.amount-=1;
-                $(".dec").prop('disabled',false);
+            } catch(e) {
+                $(`#item-error-${productId}`).text(e.message);
             }
-            const oldPrice = parseFloat($(`#total-price-${productId}`).text().trim().substring(1));
+            
+            const oldPrice = parseFloat($(`#item-price-${productId}`).text().trim().substring(1));
             const newPrice = productInputAmount.val()*cartItem.productId.price;
             changeTotalPrice(productId,newPrice,newPrice-oldPrice);
-        })
+        });
     
-        $(".amount").change(function(){
+        $(".amount").change(async function(){
             const productId = $(this).parent().data("product-id");
             const cartItem = CART_INFO.items.find(element => element.productId._id == productId);
             
             const amount = $(this).val();
-            if(amount <=0) $(this).val(1);
-            else if( amount >=cartItem.productId.inStock) $(this).val(cartItem.productId.inStock);
+            if(amount <=0) {
+                $(this).val(1);
+                amount = 1; 
+            }
+            // else if( amount >=cartItem.productId.inStock) $(this).val(cartItem.productId.inStock);
+            try {
+                const response = await APIService.updateCartItem(productId,amount);
+                $(this).val(amount);
+            } catch (e) {
+                $(`#item-error-${productId}`).text(e.message);
+            }
     
-            const oldPrice = parseFloat($(`#total-price-${productId}`).text().trim().substring(1));
-            const newPrice = amount*cartItem.productId.price;
+            const oldPrice = parseFloat($(`#item-price-${productId}`).text().trim().substring(1));
+            const newPrice = $(this).val()*cartItem.productId.price;
             changeTotalPrice(productId,newPrice,newPrice-oldPrice);
           });
 
@@ -77,7 +96,7 @@ $(document).ready(async function () {
             const productId = $("#removeCartItemConfirm").data("product-id");
             console.log(productId);
             await APIService.removeCartItem(productId);
-            const totalPrice = parseFloat($(`#total-price-${productId}`).text().trim().substring(1));
+            const totalPrice = parseFloat($(`#item-price-${productId}`).text().trim().substring(1));
             changeTotalPrice(null,null,-totalPrice);
             $(`#item-${productId}`).remove();
             $('#removeCartItem').modal('hide');
@@ -110,7 +129,7 @@ async function REInit() {
 function changeTotalPrice(productId,newPrice,inc){
     $(`#cart-total`).text(`$${parseFloat($(`#cart-total`).text().trim().substring(1)) + inc}`);
     $(`#sub-total`).text(`$${parseFloat($(`#sub-total`).text().trim().substring(1)) + inc}`);
-    $(`#total-price-${productId}`).text(`$${newPrice}`);
+    $(`#item-price-${productId}`).text(`$${newPrice}`);
 }
 function renderCartItem(item) {
     return `<tr id="item-${item.productId._id}">
@@ -125,16 +144,18 @@ function renderCartItem(item) {
         <div class="quantity">
         <div class="pro-qty" data-product-id="${item.productId._id}" >
             <span class="dec qtybtn">-</span>
-            <input class= "amount" type="input" value="${item.amount}">
+            <input class= "amount" type="number" value="${item.amount}">
             <span class="inc qtybtn">+</span>
         </div>
         </div>
     </td>
-    <td id="total-price-${item.productId._id}" class="shoping__cart__total">
+    <td id="item-price-${item.productId._id}" class="shoping__cart__total">
         $${item.productId.price * item.amount}
     </td>
     <td class="shoping__cart__item__close">
         <span class="icon_close" data-product-id="${item.productId._id}"></span>
     </td>
-</tr>`
+</tr>
+<td class="text-nowrap py-0 text-danger" id="item-error-${item.productId._id}"></td>
+`
 }
