@@ -372,7 +372,12 @@ const APIService = {
       const url = '/api/v1/cart';
       const body = {productId, amount};
       await Request.post({url,body,useToken:true});
-  }
+  },
+  removeCartItem: async(productId) => {
+    const url = '/api/v1/cart';
+    const body = {productId};
+    await Request.delete({url,body,useToken:true});
+}
 };
 
 export default APIService;

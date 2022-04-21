@@ -6,8 +6,6 @@ const CART_INFO = {
 };
 $(document).ready(async function () {
     setBreadCrumb("Shopping-cart", null);
-    CART_INFO.items = (await APIService.getUserCart()).data.items;
-
     await REInit();
 
         // assign button
@@ -59,30 +57,63 @@ $(document).ready(async function () {
             const newPrice = amount*cartItem.productId.price;
             changeTotalPrice(productId,newPrice,newPrice-oldPrice);
           });
+
+        $('.icon_close').click(
+            function() 
+            {
+             $('#removeCartItem').modal('show');
+             $("#removeCartItemConfirm").data("product-id", $(this).data("product-id"));
+            });
+
+        $("#removeCartItemCancel").click(function(){
+            $('#removeCartItem').modal('hide');
+        })
+        $(".close").click(function(){
+            $('#removeCartItem').modal('hide');
+        })
+
+        $('#removeCartItemConfirm').click(async ()=>{
+            try {
+            const productId = $("#removeCartItemConfirm").data("product-id");
+            console.log(productId);
+            await APIService.removeCartItem(productId);
+            const totalPrice = parseFloat($(`#total-price-${productId}`).text().trim().substring(1));
+            changeTotalPrice(null,null,-totalPrice);
+            $(`#item-${productId}`).remove();
+            $('#removeCartItem').modal('hide');
+            
+            } catch (e) {
+                $(".modal-body").text(e.msg);
+            }
+        });
 })
 
 async function REInit() {
+    CART_INFO.items = (await APIService.getUserCart()).data.items;
     // render
+    console.log(CART_INFO)
     if(CART_INFO.items.length > 0){
         let totalPrice = 0;
+        let renderItems = "";
         CART_INFO.items.forEach((item) => {
-            $("#cart-items tbody").append(renderCartItem(item));
+            renderItems+=renderCartItem(item);
             totalPrice += item.productId.price*item.amount;
         });
+        $("#cart-items tbody").html(renderItems);
         CART_INFO.totalPrice = totalPrice;
+        $(`#cart-total`).text(`$${totalPrice}.00`);
+        $(`#sub-total`).text(`$${totalPrice}.00`);
     }
 }
 
 
 function changeTotalPrice(productId,newPrice,inc){
-    console.log(newPrice);
-    console.log(inc);
-    $(`#total-price-${productId}`).text(`$${newPrice}`);
     $(`#cart-total`).text(`$${parseFloat($(`#cart-total`).text().trim().substring(1)) + inc}`);
     $(`#sub-total`).text(`$${parseFloat($(`#sub-total`).text().trim().substring(1)) + inc}`);
+    $(`#total-price-${productId}`).text(`$${newPrice}`);
 }
 function renderCartItem(item) {
-    return `<tr>
+    return `<tr id="item-${item.productId._id}">
     <td class="shoping__cart__item" >
         <img src="${item.productId.images[0]}" style="background: gray; alt="">
         <h5>${item.productId.name}</h5>
@@ -103,7 +134,7 @@ function renderCartItem(item) {
         $${item.productId.price * item.amount}
     </td>
     <td class="shoping__cart__item__close">
-        <span class="icon_close" data-product-id="${item.productId.id}"></span>
+        <span class="icon_close" data-product-id="${item.productId._id}"></span>
     </td>
 </tr>`
 }

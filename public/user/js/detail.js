@@ -45,18 +45,19 @@ $(function(){
 
   addToCartBtn.click(async function() {
     const amount = $("#amount").val();
+    $('#notificate-add-to-cart').text("");
+    $('#notificate-add-to-cart').show();
     try{
       await APIService.addProductToCart(product.id,amount);
-
       $('#notificate-add-to-cart').addClass('text-success');
-      $('#notificate-add-to-cart').text("Add Sucess");
+      $('#notificate-add-to-cart').text("Add Success");
       setTimeout(function(){
         $('#notificate-add-to-cart').fadeOut();
         $('#notificate-add-to-cart').removeClass('text-success');
       },1000)
     } catch(e) {
       $('#notificate-add-to-cart').addClass('text-danger');
-      $('#notificate-add-to-cart').text("Add Failed");
+      $('#notificate-add-to-cart').text(e.message);
       setTimeout(function(){
         $('#notificate-add-to-cart').fadeOut();
         $('#notificate-add-to-cart').removeClass('text-danger');
@@ -123,7 +124,6 @@ sendReviewBtn.click(async function (e) {
   
   async function REinit(page) {
     const result  = await detailController.fetchAllComment(2,page);
-    console.log(result);
     $("#reviews-list").empty();
     detailController.renderCommentList("reviews-list",result.items);
     currentPage = result["current-page"];

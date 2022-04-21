@@ -59,17 +59,19 @@ const CartController = {
         const userId = req.user.id;
         console.log(productId);
         await CartService.addProduct(userId, productId,amount);
+        return res
+        .status(200)
+        .json({ success: true, msg: "Add success"});
       } catch (e) {
         console.log(e);
         return res
           .status(500)
-          .json({ success: false, msg: `something went wrong ${e.message}` });
+          .json({ success: false, msg: `${e.message}` });
       }
     },
   ],
   removeItem: [
     AuthorizationController.isValidAccount,
-    validateBody,
     async (req, res) => {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -78,13 +80,16 @@ const CartController = {
           .json({ success: false, msg: errors.array()[0].msg });
       }
       try {
-        const { productId,amount } = req.body;
+        const { productId } = req.body;
         const userId = req.user.id;
-        await CartService.removeProduct(userId, productId);
+        await CartService.removeItem(userId, productId);
+        return res
+        .status(200)
+        .json({ success: true, msg: "remove item success"});
       } catch (e) {
         return res
           .status(500)
-          .json({ success: false, msg: `something went wrong ${e.message}` });
+          .json({ success: false, msg: `${e.message}` });
       }
     },
   ],

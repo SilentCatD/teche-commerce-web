@@ -11,7 +11,6 @@ const CartService = {
     if(!cart){
         cart = await CartService.createCart(userId);
     }
-    console.log(cart);
     return cart;
   },
   addProduct: async (userId, productId,amount) => {
@@ -56,30 +55,17 @@ const CartService = {
       await session.endSession();
     }
   },
-  removeProduct: async (userId, productId) => {
+  removeItem: async (userId, productId) => {
     const session = await Cart.startSession();
     session.startTransaction();
     try {
-      let cart = await Cart.findOne({ userId: userId }).populate('items.productId').session(session);
+      let cart = await Cart.findOne({ userId: userId }).session(session);
       if(!cart){
           cart = await CartService.createCart(userId);
       }
-      const products = cart.items;
-      let existed = false;
-      await Promise.all(products.map(async (product) => {
-        if (product.product == productId) {
-          existed == true;
-          
-          if(product.amount >1){
-            product.amount--;
-          }else{
-            await cart.items.id(product._id).remove();
-          }
-        }
-      }));
-      if (!existed) {
-        throw new Error('product not existed in cart');
-      }
+      const cartItem = cart.items.find(element => element.productId == productId);
+      // await cart.items.pull({productId:productId}); 
+      await cart.items.pull(cartItem); 
       await cart.save();
       await session.commitTransaction();
     } catch (e) {
