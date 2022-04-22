@@ -434,6 +434,28 @@
     <%- include("partials/footer") %>
     <%-include('partials/script') %>
 
+
+    <!-- Modal -->
+<div class="modal" id="deleteCommentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="exampleModalLabel">Are you sure</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h6>Your comment will be deleted</h6>
+        </div>
+        <div class="modal-footer">
+          <button id="deleteCommentCancel"type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+          <button id="deleteCommentConfirm" type="button" class="btn btn-danger">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
     <script type="module" src="/user/js/header.js"></script>
     <script src="/user/js/breadcrumb.js"></script>
     <script type="module" src="/user/js/detail.js"></script>

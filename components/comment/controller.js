@@ -33,7 +33,7 @@ const CommentController = {
         }
     ],
     deleteComment: [
-        // AuthorizationController.isValidAccount,
+        AuthorizationController.isValidAccount,
         param("commentId")
         .exists()
         .bail()
@@ -57,9 +57,11 @@ const CommentController = {
             }
             const {commentId} = req.params;
             try{
-                console.log(commentId);
                 const comment = await CommentService.fetchComment(commentId);
                 const exists = await Product.exists({_id:comment.productId});
+                if((comment.userId != req.user.id) || (req.user.role == "admin")) {
+                    throw new Error("You are wizard!");
+                }
                 if(exists) {
                     await CommentService.deleteComment(comment.productId,comment.id,comment.rating);
                 } else {
@@ -67,15 +69,54 @@ const CommentController = {
                 }
                 res.status(200).end("Delete success");
             }catch (e) {
-                console.log(e);
+                console.log(e.message);
                 res.status(500).json({
                     success: false, 
-                    msg:`can't delete comment ${commentId}`
+                    msg:`cant not delete comment, ${e.message}`,
                 })
             }
     },
     ],
-    editComment: [async(req, res) => {
+    editComment: [
+        AuthorizationController.isValidAccount,
+        param("commentId")
+        .exists()
+        .bail()
+        .notEmpty({ ignore_whitespace: true })
+        .withMessage("field can't be empty")
+        .bail()
+        .trim()
+        .custom(async (commentId) => {
+          const comment = await Comment.exists({_id:commentId});
+          if (!comment) {
+            throw new Error("comment not existed");
+          }
+          return true;
+        }),
+        CommonMiddleWares.createEditCommentRequirement,
+        async(req, res) => {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res
+                  .status(400)
+                  .json({ success: false, msg: errors.array()[0].msg });
+            }
+            const {productId,rating,description} = req.body;
+            const {commentId} = req.params;
+            try{
+                const comment = await CommentService.fetchComment(commentId);
+                if((comment.userId != req.user.id) ) {
+                    throw new Error("You are wizard!");
+                }
+                await CommentService.editComment(productId,commentId,rating,comment.rating,description);
+                res.status(200).end("Edit success");
+            }catch (e) {
+                console.log(e.message);
+                res.status(500).json({
+                    success: false, 
+                    msg:`cant not delete comment, ${e.message}`,
+                })
+            }
 
     },
     ],

@@ -353,6 +353,12 @@ const APIService = {
     await Request.post({url,body,useToken:true});
   },
 
+  editComment: async(productId,commentId, rating,description) => {
+    const body = {productId,rating,description};
+    const url = `/api/v1/comment/${commentId}`;
+    await Request.put({url,body,useToken:true});
+  },
+
   deleteComment: async(commentId) => {
     const url = `/api/v1/comment/${commentId}`;
     await Request.delete({url,useToken:true});
