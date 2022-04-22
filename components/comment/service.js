@@ -76,16 +76,16 @@ const CommentService = {
             throw e;
         }
     },
-    editComment: async(productId,commentId,rating,newRating,description) => {
+    editComment: async(productId,commentId,newRating,description) => {
         const session = await Comment.startSession();
         session.startTransaction();
         try {
             let comment = await Comment.findOne({_id:commentId});
-            comment.rating = newRating;
-            comment.description = description;
-            await ProductService.rateProduct(productId,-rating);
+            await ProductService.rateProduct(productId,-comment.rating);
             // 👉🏿👈🏿 ( behold my lazy trick)
             await ProductService.rateProduct(productId,newRating);
+            comment.rating = newRating;
+            comment.description = description;
             await comment.save();
             await session.commitTransaction();
             session.endSession();

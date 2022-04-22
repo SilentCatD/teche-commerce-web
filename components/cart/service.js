@@ -40,7 +40,7 @@ const CartService = {
         return item;
       }));
       if (!existed) {
-        if(amount >0) {
+        if(amount <=0) {
           throw new Error("Congratulation! You are fking wizard (by messing frontend js or database)");
         }
         if(product.inStock  >= amount){

@@ -8,7 +8,7 @@ import {Comment} from "./model.js";
 import Product from "../product/model.js";
 
 
-import { body,param, validationResult, query } from "express-validator";
+import {param, validationResult } from "express-validator";
 
 const CommentController = {
     createComment: [
@@ -108,7 +108,7 @@ const CommentController = {
                 if((comment.userId != req.user.id) ) {
                     throw new Error("You are wizard!");
                 }
-                await CommentService.editComment(productId,commentId,rating,comment.rating,description);
+                await CommentService.editComment(productId,commentId,rating,description);
                 res.status(200).end("Edit success");
             }catch (e) {
                 console.log(e.message);
