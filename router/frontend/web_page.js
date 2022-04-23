@@ -70,7 +70,6 @@ webPageRouter.get('/cart',async (req, res)=>{
 
 webPageRouter.get('/details/:id', async (req, res)=>{
     const {id} = req.params;
-    console.log(id);
     try{
         const categories = (await CategotyService.categoryQueryAll(null, null, 1, null, null)).items;
         const product = await ProductService.fetchProduct(id);

@@ -196,7 +196,7 @@
                             <% for( let carouselSet = 0; carouselSet < Math.floor(latestProducts.length / 3); carouselSet++, latestSet+=3) { %>
                                 <div class="latest-prdouct__slider__item">
                                 <% for( let index = latestSet; index < latestSet + 3 && index < latestProducts.length; index++ ) { %>
-                                    <a href="#" class="latest-product__item">
+                                    <a href="/details/<%= latestProducts[index].id %>" class="latest-product__item">
                                         <div class="latest-product__item__pic">
                                             <img style="width: 110px; background: <%= latestProducts[index].images.length > 0 ? `url(${latestProducts[index].images[0]})` : 'gray' %> ; object-fit: cover;">
                                         </div>
@@ -219,7 +219,7 @@
                             <% for( let carouselSet = 0; carouselSet < Math.floor(topRatedProducts.length / 3); carouselSet++, ratedSet+=3) { %>
                                 <div class="latest-prdouct__slider__item">
                                 <% for( let index = ratedSet; index < ratedSet + 3 && index < topRatedProducts.length; index++ ) { %>
-                                    <a href="#" class="latest-product__item">
+                                    <a  href="/details/<%= topRatedProducts[index].id %>" class="latest-product__item">
                                         <div class="latest-product__item__pic">
                                             <img style="width: 110px; background: <%= topRatedProducts[index].images.length > 0 ? `url(${topRatedProducts[index].images[0]})` : 'gray' %> ; object-fit: cover;">
                                         </div>
@@ -242,7 +242,7 @@
                             <% for( let carouselSet = 0; carouselSet < Math.floor(topViewProducts.length / 3); carouselSet++, viewSet+=3) { %>
                                 <div class="latest-prdouct__slider__item">
                                 <% for( let index = viewSet; index < viewSet + 3 && index < topViewProducts.length; index++ ) { %>
-                                    <a href="#" class="latest-product__item">
+                                    <a href="/details/<%= topViewProducts[index].id %>" class="latest-product__item">
                                         <div class="latest-product__item__pic">
                                             <img style="width: 110px; background: <%= topViewProducts[index].images.length > 0 ? `url(${topViewProducts[index].images[0]})` : 'gray' %> ; object-fit: cover;">
                                         </div>
