@@ -1,9 +1,22 @@
 import AuthorizationController from "../authorization/controller.js";
 import UserService from "./service.js";
 import AuthenticationService from "../authentication/service.js";
-import {validationResult, body } from "express-validator";
-
+import {query, validationResult, body } from "express-validator";
+import CommonMiddleWares from "../common/middleware.js";
 const UserController = {
+
+  fetchAllUser: [
+    AuthorizationController.isAdmin,
+    CommonMiddleWares.apiQueryParamsExtract,
+    query('type').if(query('type').exists()).notEmpty().withMessage("field can't be empty").custom((type)=>{
+      const options = ['both', 'user', 'admin'];
+      return true;
+    }),
+    async (req, res)=>{
+
+    }
+  ],
+
   fetchUserInfo: [
     AuthorizationController.isValidAccount,
     async (req, res) => {
@@ -13,7 +26,9 @@ const UserController = {
       user.id = req.user.id;
       user.role = req.user.role;
       user.usePassword = req.user.hash ? true: false;
-      user.avatar = req.user.avatar.firebaseUrl;
+      if(req.user.avatar){
+        user.avatar = req.user.avatar.firebaseUrl;
+      }
       res.status(200).json({ success: true, data: user });
     },
   ],

@@ -3,6 +3,7 @@
 
 <head>
     <%-include('partials/head.ejs', {title: title}) %> 
+    <link rel="stylesheet" href="/admin/css/table_data.css">
 </head>
 
 <body>
@@ -137,18 +138,14 @@
             <!-- Admin Account Create End -->
 
             <!-- Account info Secion Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="row vh-100 bg-light rounded align-items-sm-start justify-content-center mx-0">
-
-                </div>
-            </div>
+            <%-include('partials/data_table.ejs') %>
             <!-- Account info Section End -->
             <%-include('partials/footer.ejs') %> 
             <!-- Footer End -->
             <!-- Content End -->
             <!-- Back to Top -->
             <%-include('partials/back_to_top_btn.ejs') %> 
-
+    
         </div>
         <!-- Content End -->
 
@@ -159,10 +156,11 @@
 
     <!-- JavaScript Libraries -->
     <%-include('partials/include_js.ejs') %> 
-    <script src="/admin/js/alert.js"></script>
+    <script type="module" src="/admin/js/alert.js"></script>
     <script src="https://unpkg.com/validator@latest/validator.min.js"></script>
     <script type="module" src="/admin/js/sidebar.js"></script>
     <script type="module" src="/admin/js/navbar.js"></script>
+    <script type="module" src="/admin/js/data_table.js"></script>
     <script type="module" src="/admin/js/accounts.js"></script>
 </body>
 
