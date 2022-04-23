@@ -25,12 +25,13 @@
             <div class="row">
               <!-- left column -->
               <div class="col-md-3">
-                <div class="text-center">
-                  <img src="https://bootdey.com/img/Content/avatar/avatar7.png" class="avatar img-circle img-thumbnail" alt="avatar">
-                  <h6>User Image Not Implement</h6>
-                  
-                  <!-- <input type="file" class="form-control"> -->
-                </div>
+                  <div class="text-center mb-3">
+                  <img style="height: 250px; width: 250px; object-fit: contain;" id="userAvatar" src="https://firebasestorage.googleapis.com/v0/b/teche-commerce-a2c6a.appspot.com/o/images%2FdefaultUImg.png?alt=media&token=201eb321-6ba9-4589-8d98-2edb59d2e736" class="avatar img-circle img-thumbnail" alt="avatar">                    
+                  <input accept="image/png,image/jpeg" type="file" class="form-control mt-3" id="userAvatarInput">
+                  </div>
+                  <div class="text-center">
+                      <div class="btn btn-primary" id="avatarSubmit">Update User Image</div>
+                  </div>
               </div>
               
               <!-- edit form column -->
