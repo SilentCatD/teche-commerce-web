@@ -178,6 +178,7 @@ const ProductService = {
     }
   },
 
+
   rateProduct: async (id, rate) => {
     const session = await Product.startSession();
     session.startTransaction();
@@ -215,6 +216,31 @@ const ProductService = {
     }
   },
 
+  editProductStock: async (
+    id,
+    unit,
+  ) => {
+    const session = await Product.startSession();
+    session.startTransaction();
+    try {
+      const product = await Product.findById(
+        mongoose.Types.ObjectId(id)
+      )
+      
+      if(product.inStock + unit < 0) {
+        throw new Error("OutStock (The fuck)!")
+      }
+      product.inStock+=unit;
+
+      await product.save();
+      await session.commitTransaction();
+    } catch (e) {
+      await session.abortTransaction();
+      throw e;
+    } finally {
+      await session.endSession();
+    }
+  },
   getRelated: async(id, limit)=>{
     if(!limit){
       limit = 6;

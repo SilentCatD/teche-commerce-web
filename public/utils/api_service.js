@@ -445,6 +445,11 @@ const APIService = {
     const body = { productId };
     await Request.delete({ url, body, useToken: true });
   },
+  createOrder: async(delivery) => {
+    const url = "/api/v1/order";
+    const body = {delivery};
+    await Request.post({url,body,useToken:true});
+  }
 };
 
 export default APIService;

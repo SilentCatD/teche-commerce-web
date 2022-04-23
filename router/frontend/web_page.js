@@ -63,8 +63,14 @@ webPageRouter.get('/profile',async (req, res)=>{
 
 webPageRouter.get('/cart',async (req, res)=>{
     const categories = (await CategotyService.categoryQueryAll(null, null, 1, null, null)).items;
-    const params = {title: "Teche Shopping", tab: 'none',categories: categories};
+    const params = {title: "Teche Cart", tab: 'none',categories: categories};
     res.render('user/shopping-cart', params);
+})
+
+webPageRouter.get('/checkout',async (req, res)=>{
+    const categories = (await CategotyService.categoryQueryAll(null, null, 1, null, null)).items;
+    const params = {title: "Teche Checkout", tab: 'none',categories: categories};
+    res.render('user/checkout', params);
 })
 
 
