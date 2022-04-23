@@ -14,7 +14,8 @@ $(document).ready(async function () {
             const productId = $(this).parent().data("product-id");
             const cartItem = CART_INFO.items.find(element => element.productId._id == productId)
             let productInputAmount  = $(this).parent().find(".amount");
-            
+            $(`#item-error-${productId}`).text("");
+
             // if(productInputAmount.val() < cartItem.productId.inStock) {
             //     productInputAmount.val(parseFloat(productInputAmount.val()) + 1 );
             //     cartItem.amount+=1;
@@ -39,6 +40,7 @@ $(document).ready(async function () {
             const cartItem = CART_INFO.items.find(element => element.productId._id == productId)
             let productInputAmount  = $(this).parent().find(".amount");
 
+            $(`#item-error-${productId}`).text("");
             
             if(productInputAmount.val() <=1) return;
             
@@ -55,21 +57,23 @@ $(document).ready(async function () {
             changeTotalPrice(productId,newPrice,newPrice-oldPrice);
         });
     
-        $(".amount").change(async function(){
+        $(".amount").on("change",async function(){
             const productId = $(this).parent().data("product-id");
             const cartItem = CART_INFO.items.find(element => element.productId._id == productId);
-            
             const amount = $(this).val();
             if(amount <=0) {
                 $(this).val(1);
                 amount = 1; 
             }
+            $(`#item-error-${productId}`).text("");
             // else if( amount >=cartItem.productId.inStock) $(this).val(cartItem.productId.inStock);
             try {
                 const response = await APIService.updateCartItem(productId,amount);
                 $(this).val(amount);
+                cartItem.amount = amount;
             } catch (e) {
                 $(`#item-error-${productId}`).text(e.message);
+                $(this).val(cartItem.amount);
             }
     
             const oldPrice = parseFloat($(`#item-price-${productId}`).text().trim().substring(1));
@@ -108,9 +112,12 @@ $(document).ready(async function () {
 })
 
 async function REInit() {
+    try {
     CART_INFO.items = (await APIService.getUserCart()).data.items;
-    // render
-    console.log(CART_INFO)
+    } catch(e) {
+        console.log(e);
+    }
+
     if(CART_INFO.items.length > 0){
         let totalPrice = 0;
         let renderItems = "";

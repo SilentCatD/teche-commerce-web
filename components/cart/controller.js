@@ -37,10 +37,25 @@ const CartController = {
       const userId = req.user.id;
       try {
         const cartData = await CartService.getCart(userId);
+      
         return res.status(200).json({ success: true, data: cartData });
       } catch (e) {
         console.log(e);
-        return res.status(500).json({ success: false, msg: e.message });
+        return res.status(500).json({ success: false, msg: "Something went wrong" });
+      }
+    },
+  ],
+  getBasicCartInfo: [
+    AuthorizationController.isValidAccount,
+    async (req, res) => {
+      const userId = req.user.id;
+      try {
+        const cartData = await CartService.getBasicCartInfo(userId);
+      
+        return res.status(200).json({ success: true, data: cartData });
+      } catch (e) {
+        console.log(e);
+        return res.status(500).json({ success: false, msg: "Something went wrong" });
       }
     },
   ],
@@ -66,7 +81,7 @@ const CartController = {
         console.log(e);
         return res
           .status(500)
-          .json({ success: false, msg: `${e.message}` });
+          .json({ success: false, msg: "Something went wrong" });
       }
     },
   ],
@@ -92,7 +107,7 @@ const CartController = {
         console.log(e);
         return res
           .status(500)
-          .json({ success: false, msg: `${e.message}` });
+          .json({ success: false, msg: "Something went wrong"});
       }
     },
   ],
@@ -115,7 +130,20 @@ const CartController = {
       } catch (e) {
         return res
           .status(500)
-          .json({ success: false, msg: `${e.message}` });
+          .json({ success: false, msg: "Something went wrong" });
+      }
+    },
+  ],
+  getCart: [
+    AuthorizationController.isValidAccount,
+    async (req, res) => {
+      const userId = req.user.id;
+      try {
+        const cartData = await CartService.getCart(userId);
+        return res.status(200).json({ success: true, data: cartData });
+      } catch (e) {
+        console.log(e);
+        return res.status(500).json({ success: false, msg: "Something went wrong" });
       }
     },
   ],

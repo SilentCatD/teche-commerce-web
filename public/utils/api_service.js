@@ -369,14 +369,14 @@ const APIService = {
     await Request.post({ url, body, useToken: true});
   },
   getUserCart: async () => {
-    try {
     const url = '/api/v1/cart';
     const response = await Request.get({url,useToken:true});
     return response.data;
-    } catch (err) {
-      console.log(err);
-      return err.msg;
-    }
+  },
+  getUserCartInfo: async() => {
+    const url = '/api/v1/cart/basic';
+    const response = await Request.get({url,useToken:true});
+    return response.data.data;
   },
   addCartItem: async(productId, amount) => {
       const url = '/api/v1/cart';

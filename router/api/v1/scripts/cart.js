@@ -10,4 +10,8 @@ cartRouter
   .put(CartController.updateItem)
   .delete(CartController.removeItem);
 
+
+cartRouter
+  .route("/basic")
+  .get(CartController.getBasicCartInfo)
 export default cartRouter;
