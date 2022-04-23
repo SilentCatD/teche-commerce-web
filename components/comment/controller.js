@@ -21,7 +21,7 @@ const CommentController = {
                     return res.status(400).json({msg:errors.array()[0].msg});
                 }
                 const {productId,rating,description} = req.body;
-                const docId = await CommentService.createComment(req.user.id, req.user.email,req.user.name, productId, rating, description);
+                const docId = await CommentService.createComment(req.user.id,productId, rating, description);
                 return res.status(200).json({success:true,msg:`comment created with ${docId}`})
             } catch(e) {
                 console.log(e);

@@ -284,7 +284,7 @@ const detailController = {
         <div class="d-flex">
             <div class="left">
                 <span>
-                    <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="profile-pict-img img-fluid" alt="" />
+                    <img src="${(comment.avatar) ? (comment.avatar) : "https://iptc.org/wp-content/uploads/2018/05/avatar-anonymous-300x300.png"}" class="profile-pict-img img-fluid" alt="" />
                 </span>
             </div>
             <div class="right">
@@ -302,10 +302,10 @@ const detailController = {
                     ${detailController.renderEditDeleteComment(userInfo,comment)}
                 </h4>
                 <div class="country d-flex align-items-center">
-                    <span>
-                        <img class="country-flag img-fluid" src="https://bootdey.com/img/Content/avatar/avatar6.png" />
+                    <span class="mr-1">
+                    <i class="fa fa-envelope" aria-hidden="true"></i> 
                     </span>
-                    <div class="country-name font-accent">${comment.userEmail}</div>
+                    <div class="country-name font-accent"> ${comment.userEmail}</div>
                 </div>
                 <div class="review-description">
                     <h5>

@@ -6,16 +6,19 @@ import mongoose from "mongoose";
 const CommentService = {
     returnData: (comment) => {
         if(!comment) return null;
+        let avatar = null;
+        if(comment.userId.avatar) avatar = comment.userId.avatar.firebaseUrl;
         return {
             id: comment.id,
             userId:comment.userId.toString(),
             productId: comment.productId,
-            userEmail: comment.userEmail,
-            userName: comment.userName,
+            userEmail: comment.userId.email,
+            userName: comment.userId.name,
             description: comment.description,
             rating: comment.rating,
             createdAt: comment.createdAt.toLocaleString('en-US'),
             updatedAt: comment.updatedAt.toLocaleString('en-US'),
+            avatar: avatar,
         }
     },
     fetchComment: async(id) => {
@@ -27,13 +30,13 @@ const CommentService = {
             productId: mongoose.Types.ObjectId(productId),
         };
         const totalDocs = await Comment.countDocuments(queryParams);
-        const comments = await Comment.find(queryParams).skip(limit*page-limit).limit(limit);
+        const comments = await Comment.find(queryParams).skip(limit*page-limit).limit(limit).populate("userId");
         const items = comments.map((comment)=> {
             return CommentService.returnData(comment);
         });
         return CommomDatabaseServies.queryAllFormat(totalDocs,limit,page,items);
     },
-    createComment: async(userId,userEmail,userName, productId,rating,description) => {
+    createComment: async(userId, productId,rating,description) => {
         let docId = null;
         const session = await Comment.startSession();
         session.startTransaction();
@@ -43,8 +46,6 @@ const CommentService = {
         
         let commentDocObject = {
             userId: userId,
-            userEmail: userEmail,
-            userName: userName,
             productId:productId,
             rating: rating,
             description: description,
