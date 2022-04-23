@@ -154,8 +154,8 @@ const ProductController = {
       }),
     query("limit")
       .if(query("limit").exists())
-      .isInt({ min: 1 })
-      .withMessage("query must be int >=1")
+      .isInt({ min: 1, max: 6 })
+      .withMessage("query must be int within range 1-6")
       .toInt(),
     async (req, res) => {
       try {

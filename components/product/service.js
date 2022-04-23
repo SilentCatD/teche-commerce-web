@@ -220,7 +220,19 @@ const ProductService = {
       limit = 6;
     }
     const product = await Product.findById(id);
-    const relatedProducts = await ProductService.productQueryAll(null, limit, 1, null, [product.brand], [product.category]);
+    let relatedProducts = await ProductService.productQueryAll(null, limit, 1, null, [product.brand], [product.category]);
+    let lost = 0;
+    relatedProducts.items = relatedProducts.items.filter((item)=>{
+      if(item.id!=product.id){
+        lost++;
+        return true;
+      }
+      return false;
+    });
+    relatedProducts['total-items']-= lost;
+    delete relatedProducts['item-count'];
+    delete relatedProducts['total-pages'];
+    delete relatedProducts['current-page'];
     return relatedProducts;
   },
 };
