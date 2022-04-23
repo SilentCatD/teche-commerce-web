@@ -38,7 +38,6 @@ const ProductService = {
     return await Product.create(productDocObj);
   },
 
-  // Mising edit product,category holds
   deleteAllProduct: async () => {
     const products = await Product.find();
     await Promise.all(products.map( async (product)=>{
@@ -216,6 +215,14 @@ const ProductService = {
     }
   },
 
+  getRelated: async(id, limit)=>{
+    if(!limit){
+      limit = 6;
+    }
+    const product = await Product.findById(id);
+    const relatedProducts = await ProductService.productQueryAll(null, limit, 1, null, [product.brand], [product.category]);
+    return relatedProducts;
+  },
 };
 
 export default ProductService;

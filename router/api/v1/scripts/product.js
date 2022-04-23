@@ -15,4 +15,6 @@ productRouter.route('/:id')
     .get(ProductController.fetchProduct)
     .delete(ProductController.deleteProduct)
     .put(upload.any('images'),ProductController.editProduct);
+
+productRouter.get('/:id/related', ProductController.getRelatedProduct);
 export default productRouter;

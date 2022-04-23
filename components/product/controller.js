@@ -3,7 +3,6 @@ import Product from "./model.js";
 import Brand from "../brand/model.js";
 import Category from "../category/model.js";
 import CommonMiddleWares from "../common/middleware.js";
-import CommomDatabaseServies from "../common/services.js";
 import { param, validationResult, query } from "express-validator";
 import AuthorizationController from "../authorization/controller.js";
 
@@ -130,6 +129,51 @@ const ProductController = {
       } catch (e) {
         console.log(e);
         res.status(500).json({ success: false, msg: "something went wrong" });
+      }
+    },
+  ],
+
+  getRelatedProduct: [
+    param("id")
+      .exists()
+      .bail()
+      .notEmpty({ ignore_whitespace: true })
+      .withMessage("field can't be empty")
+      .bail()
+      .trim()
+      .custom(async (productId) => {
+        try {
+          const exist = await Product.exists({ _id: productId });
+          if (!exist) {
+            throw new Error();
+          }
+          return true;
+        } catch (e) {
+          throw new Error("product not existed");
+        }
+      }),
+    query("limit")
+      .if(query("limit").exists())
+      .isInt({ min: 1 })
+      .withMessage("query must be int >=1")
+      .toInt(),
+    async (req, res) => {
+      try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res
+            .status(400)
+            .json({ success: false, msg: errors.array()[0].msg });
+        }
+        const { id } = req.params;
+        const {limit} = req.query;
+        const result = await ProductService.getRelated(id, limit);
+        res.status(200).json({ success: true, data: result });
+      } catch (e) {
+        console.log(e);
+        res
+          .status(500)
+          .json({ success: false, msg: `something went wrong ${e}` });
       }
     },
   ],
