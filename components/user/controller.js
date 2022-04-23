@@ -19,7 +19,6 @@ const UserController = {
   ],
   editUserProfile: [
     AuthorizationController.isValidAccount,
-<<<<<<< HEAD
     body("name")
       .if(body("name").exists())
       .bail()
@@ -63,35 +62,6 @@ const UserController = {
         return res
           .status(400)
           .json({ success: false, msg: errors.array()[0].msg });
-=======
-    CommentService.accountEditRequireMent,
-    async (req,res) => {
-      try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-          return res
-            .status(400)
-            .json({ success: false, msg: errors.array()[0].msg });
-        }
-
-      const {name,oldPassword,password} = req.body;
-      const userID = req.user.id;
-
-      if(password) {
-        const isValidConfirmPassword = AuthenticationService.validPassword(
-          oldPassword,
-          req.user.hash,
-          req.user.salt
-        );
-        if(!isValidConfirmPassword)  {
-          return res
-          .status(400)
-          .json({ success: false, msg: "You enter wrong password"});
-        } 
-        await UserService.editUserProfile(userID,password,null);
-      } else {
-        await UserService.editUserProfile(userID,null,name);
->>>>>>> 6a18534b8da76a8c6d06d0d05fb3e87b3d8a2a67
       }
       try {
         let imageFile = req.file;
@@ -111,12 +81,7 @@ const UserController = {
           .status(200)
           .json({ success: true, msg: "edit user success" });
       } catch (err) {
-<<<<<<< HEAD
         res.status(500).end({ success: false, msg: err.message });
-=======
-        console.log(err);
-        res.status(500).end(err.message);
->>>>>>> 6a18534b8da76a8c6d06d0d05fb3e87b3d8a2a67
       }
     },
   ],
