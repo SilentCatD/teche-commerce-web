@@ -1,14 +1,17 @@
 import APIService from "../../utils/api_service.js";
 import { goBackToLoginIfNotAdmin, sleep } from "../../utils/common.js";
 import {pageConfig} from "../js/data_table.js";
+import displayAlert from "../js/alert.js";
 
 pageConfig.query = "";
 pageConfig.role = "user";
+pageConfig.sort = 'createdAt';
+pageConfig.order_by = 'desc';
 
 pageConfig.limit = 5;
 pageConfig.displayPage = 5;
 pageConfig.getItemsMethods = async()=>{
-  return await APIService.fetchAllAccounts({page: pageConfig.page, limit: pageConfig.limit, query: pageConfig.query, role: pageConfig.role});
+  return await APIService.fetchAllAccounts({page: pageConfig.page, limit: pageConfig.limit, query: pageConfig.query, role: pageConfig.role, sort: pageConfig.sort, order_by: pageConfig.order_by});
 }
 
 pageConfig.tableName = "Accounts";
@@ -59,6 +62,20 @@ $(document).ready(async function () {
   await goBackToLoginIfNotAdmin();
   await sleep(50);
   $("#spinner").removeClass("show");
+
+  $('#sortOption').change(function (e) { 
+    e.preventDefault();
+    const val = $(this).val().trim();
+    pageConfig.sort = val;
+    triggerReloadBtn();
+  });
+
+  $('#sortOrder').change(function (e) { 
+    e.preventDefault();
+    const val = $(this).val().trim();
+    pageConfig.order_by = val;
+    triggerReloadBtn();
+  });
 
   $('#searchForm').submit(function (e) { 
     e.preventDefault();

@@ -119,12 +119,12 @@
             <!-- Account control Start -->
             <div class="container-fluid pt-4 px-4">
                 <div class="row bg-light rounded align-items-center justify-content-center mx-0 p-4">
-                    <div class="col-md-6 col-sm-12">
+                    <div class="col-md-6 col-sm-12 mb-3">
                         <form class="d-md-flex ms-4 mb-md-0 mb-4 w-75 ms-md-0 ms-auto me-auto" novalidate id="searchForm">
                             <input class="form-control border-0" type="text" placeholder="Search" id="tableSearch">
                         </form>
                     </div>
-                    <div class="col-md-6 col-sm-12 text-md-end text-center">
+                    <div class="col-md-6 col-sm-12 text-md-end text-center mb-3">
                         <input type="radio" class="btn-check" value="user" name="accSwitch" id="userAccSwitch"
                             autocomplete="off" checked>
                         <label class="btn btn-outline-secondary" for="userAccSwitch">User Accounts</label>
@@ -132,6 +132,20 @@
                         <input type="radio" class="btn-check" value="admin" name="accSwitch" id="adminAccSwitch"
                             autocomplete="off">
                         <label class="btn btn-outline-secondary" for="adminAccSwitch">Admin Accounts</label>
+                    </div>
+                    <div class="col-md-6 col-sm-12 mb-3">
+                        <select class="form-select form-select-sm" id="sortOption" >
+                            <option selected value="createdAt">CreatedAt</option>
+                            <option value="name">Name</option>
+                            <option value="email">Email</option>
+                            <option value="active">Status</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-sm-12 mb-3">
+                        <select class="form-select form-select-sm"  id="sortOrder">
+                            <option selected value="desc">DESC</option>
+                            <option value="asc">ASC</option>
+                          </select>
                     </div>
                 </div>
             </div>

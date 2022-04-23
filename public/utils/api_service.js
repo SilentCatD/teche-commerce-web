@@ -124,6 +124,7 @@ const APIService = {
     if(active){
       searchParams.set('active', active);
     }
+    console.log(searchParams.toString());
     const url = "/api/v1/account";
     const res = await Request.get({ url: url, params: searchParams, useToken: true });
     return res.data.data;
