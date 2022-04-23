@@ -179,6 +179,27 @@ const CommonMiddleWares = {
       .isStrongPassword({ minSymbols: 0 })
       .withMessage("password not strong enough"),
   ],
+  accountEditRequireMent:[
+  body("name")
+    .if(body("oldPassword").exists()
+    .bail()
+    .notEmpty({ ignore_whitespace: true })
+    .withMessage("field can't be empty")
+    .bail()
+    .trim()
+    .isByteLength({ min: 3, max: 20 })
+    .withMessage("Name must in range [3, 20] Character"),)
+  ,
+  body("oldPassword")
+    .if(body("password").exists()
+    .trim()
+    .notEmpty({ ignore_whitespace: true })
+    .withMessage("field can't be empty")
+    .bail()
+    .isStrongPassword({ minSymbols: 0 })
+    .withMessage("password not strong enough"))
+  ],
+
   createEditCommentRequirement:[
     body("rating")
     .exists()

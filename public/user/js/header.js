@@ -7,6 +7,10 @@ $(document).ready(async function () {
   const userInfo = await getUserInfo();
   if (userInfo) {
     try {
+      const cartInfo = await APIService.getUserCartInfo();
+      console.log(cartInfo);
+      $("#cart-total-price").text(`$${cartInfo.total}`);
+      $("#cart-amount").text(cartInfo.amount);
       $("#login-header").hide();
       $("#login-humberger").hide();
       $(".join-us").text("Click into icon to edit your profile");

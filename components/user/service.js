@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 import ImageService from "../image/service.js";
 
 const UserService = {
-
   resetUserPassword: async(userId, password)=>{
     const saltHash = AuthenticationService.genPassword(password);
     const salt = saltHash.salt;
