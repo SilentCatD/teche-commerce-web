@@ -24,7 +24,7 @@ const UserService = {
     result.status = user.active ? 'active' : 'suspended';
     result.usePassword = user.hash ? true: false;
     if(user.avatar){
-      result.avatar = req.user.avatar.firebaseUrl;
+      result.avatar = user.avatar.firebaseUrl;
     }
     result.createdAt = user.createdAt;
     return result;
