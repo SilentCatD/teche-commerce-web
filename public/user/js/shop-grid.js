@@ -35,6 +35,8 @@ $(document).ready(async function () {
     await REinit();
   });
 
+  $("#searchBox").val(query);
+
   $('#searchBtn').click(async function (e) { 
     e.preventDefault(); 
     const query = $('#searchBox').val().trim();
