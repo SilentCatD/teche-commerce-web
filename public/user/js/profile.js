@@ -74,6 +74,8 @@ $(document).ready(async function () {
         $(".password-input").val("");
         $(".password-input").prop("disabled", true);
       }
+    }else{
+      window.location.replace("/");
     }
   } catch (e) {
     window.location.replace("/login");
