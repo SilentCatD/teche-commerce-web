@@ -1,5 +1,6 @@
 import APIService from "../../utils/api_service.js";
 import { goBackToLoginIfNotAdmin, sleep } from "../../utils/common.js";
+import { pageConfig } from "../js/data_table.js";
 
 let productsImages = [];
 let currentCarousel;
@@ -340,8 +341,6 @@ async function renderBrandsAndCategories() {
   $("#categorySelect").html(categoryOptions.join("\n"));
 }
 
-
-
 async function deleteProduct(id) {
   try {
     await APIService.deleteProduct(id);
@@ -430,24 +429,18 @@ function renderProductsCarousel() {
   bindCarousel();
 }
 
-getItemsMethods = async (limit, page) => {
-  return await APIService.fetchAllProduct({page, limit});
+pageConfig.getItemsMethods = async () => {
+  return await APIService.fetchAllProduct({
+    page: pageConfig.page,
+    limit: pageConfig.limit,
+  });
 };
 
-setLimit = () => {
-  return 6;
-};
+pageConfig.limit = 5;
 
-setDisplayPage = () => {
-  return 5;
-};
+pageConfig.displayPage = 5;
 
-initialPage = () => {
-  return 1;
-};
-
-renderTableHead = () => {
-  return `<tr>
+pageConfig.tableHead = `<tr>
     <th scope="col">ID</th>
     <th scope="col">Product Name</th>
     <th scope="col">Image</th>
@@ -459,9 +452,8 @@ renderTableHead = () => {
     <th scope="col">&nbsp;</th>
     </tr>
     `;
-};
 
-renderTableRow = (item) => {
+pageConfig.renderTableRow = (item) => {
   return `<tr>
   <td class="align-middle">${item.id}</td>
   <td class="align-middle">${item.name}</td>
@@ -501,7 +493,7 @@ renderTableRow = (item) => {
 `;
 };
 
-bindRowAction = () => {
+pageConfig.bindRowAction = () => {
   $(".manage-btn-delete").click(function (e) {
     e.preventDefault();
     const id = $(this).data("id");
@@ -513,6 +505,4 @@ bindRowAction = () => {
   });
 };
 
-setTableName = () => {
-  return "Products";
-};
+pageConfig.tableName = "Products";

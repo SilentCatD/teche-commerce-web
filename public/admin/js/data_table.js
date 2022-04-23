@@ -1,28 +1,37 @@
-let limit;
-let page;
-let totalPage;
-let displayPage;
-let items = [];
+export const pageConfig = {
+  limit: 6,
+  page: 1,
+  totalPage: undefined,
+  displayPage: 1, 
+  items: [],
+  renderTableRow: undefined,
+  bindRowAction: undefined,
+  getItemsMethods: undefined,
+  tableHead: undefined,
+  tableName: undefined,
+};
 
 function renderTable() {
   $(".table-fields tbody").html("");
-  for (let row = 0; row < items.length; row++) {
-    const item = items[row];
-    $(".table-fields tbody:last-child").append(renderTableRow(item));
+  for (let row = 0; row < pageConfig.items.length; row++) {
+    const item = pageConfig.items[row];
+    $(".table-fields tbody:last-child").append(pageConfig.renderTableRow(item));
   }
-  bindRowAction();
+  if(pageConfig.bindRowAction){
+    pageConfig.bindRowAction();
+  }
 }
 
 function renderPagination() {
   const pages = [];
-  if (page != 1) {
+  if (pageConfig.page != 1) {
     pages.push(`<li class="page-item"><a class="page-link">Previous</a></li>`);
   }
   let generated = 0;
-  let startAt = page - Math.floor(displayPage/2);
+  let startAt = pageConfig.page - Math.floor(pageConfig.displayPage/2);
   let curr = startAt;
-  while (generated < displayPage) {
-    if (curr > totalPage) {
+  while (generated < pageConfig.displayPage) {
+    if (curr > pageConfig.totalPage) {
       startAt--;
       if(startAt<1) break;
       pages.splice(1, 0,
@@ -32,7 +41,7 @@ function renderPagination() {
       continue;
     }
     if (curr > 0) {
-      if (curr == page) {
+      if (curr == pageConfig.page) {
         pages.push(
           `<li class="page-item active"><a class="page-link">${curr}</a></li>`
         );
@@ -46,7 +55,7 @@ function renderPagination() {
     curr++;
   }
 
-  if (page != totalPage) {
+  if (pageConfig.page != pageConfig.totalPage) {
     pages.push(`<li class="page-item"><a class="page-link">Next</a></li>`);
   }
   $(".pagination").html(pages.join("\n"));
@@ -60,13 +69,13 @@ function renderPagination() {
 async function tableLoadData() {
   $(".table-data").addClass("table-loading");
   $(".table-data").removeClass("table-loaded");
-  let res = await getItemsMethods(limit, page);
-  items = [];
-  totalPage = res["total-pages"];
+  let res = await pageConfig.getItemsMethods();
+  pageConfig.items = [];
+  pageConfig.totalPage = res["total-pages"];
   for (let i = 0; i < res["item-count"]; i++) {
-    items.push(res.items[i]);
+    pageConfig.items.push(res.items[i]);
   }
-  page = res["current-page"];
+  pageConfig.page = res["current-page"];
   renderTable();
   renderPagination();
   $(".table-data").removeClass("table-loading");
@@ -74,8 +83,8 @@ async function tableLoadData() {
 }
 
 function renderHead() {
-  $('.table-name').text(setTableName());
-  $(".table-fields thead").html(renderTableHead());
+  $('.table-name').text(pageConfig.tableName);
+  $(".table-fields thead").html(pageConfig.tableHead);
 }
 
 async function initialLoading() {
@@ -90,11 +99,11 @@ async function initialLoading() {
 async function switchPage(nextPage) {
   nextPage = nextPage.trim();
   if (nextPage == "Next") {
-    page++;
+    pageConfig.page++;
   } else if (nextPage == "Previous") {
-    page--;
+    pageConfig.page--;
   } else {
-    page = parseInt(nextPage);
+    pageConfig.page = parseInt(nextPage);
   }
   await tableLoadData();
 }
@@ -112,55 +121,6 @@ $(".table-load-trigger").click(async function (e) {
 });
 
 $(document).ready(async function () {
-  limit = setLimit();
-  if(limit <= 0){
-    limit = 1
-  }
-  displayPage = setDisplayPage();
-  if(displayPage <= 0 ){
-    displayPage = 1;
-  }
-  page = initialPage();
-  if(page <= 0){
-    page = 1;
-  }
   await initialLoading();
 });
 
-class NotImplementedError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = "NotImplementedError";
-  }
-}
-
-function setTableName(){
-  throw new NotImplementedError();
-}
-
-function renderTableRow(item) {
-  throw new NotImplementedError();
-}
-
-function setLimit() {
-  throw new NotImplementedError();
-}
-
-function setDisplayPage(){
-  throw new NotImplementedError();
-}
-
-function initialPage(){
-  throw new NotImplementedError();
-}
-
-function renderTableHead(){
-  throw new NotImplementedError();
-
-}
-
-function bindRowAction(){}
-
-async function getItemsMethods(limit, page){
-  throw new NotImplementedError();
-}
