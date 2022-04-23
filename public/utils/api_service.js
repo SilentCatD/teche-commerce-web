@@ -120,11 +120,10 @@ const APIService = {
     let res = await Request.get({ url: url, useToken: true});
     return res.data.data;
   },
-  userInfoEdit: async (userInfo) => {
+  userInfoEdit: async (name,oldPassword,password) => {
     try {
       const url = "/api/v1/user";
-      const body = userInfo;
-      // header is using automagic
+      const body = {name,oldPassword,password};
       let res = await Request.post({
         url: url,
         body: body,

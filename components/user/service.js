@@ -3,7 +3,6 @@ import User from "./model.js";
 import mongoose from "mongoose";
 
 const UserService = {
-
   resetUserPassword: async(userId, password)=>{
     const saltHash = AuthenticationService.genPassword(password);
     const salt = saltHash.salt;
