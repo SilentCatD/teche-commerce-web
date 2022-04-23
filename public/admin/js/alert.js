@@ -23,3 +23,4 @@ $(document).ready(function () {
   $("#success-alert").hide();
 });
 
+export default displayAlert;

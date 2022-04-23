@@ -1,5 +1,8 @@
 import APIService from "../../utils/api_service.js";
 import { goBackToLoginIfNotAdmin, sleep } from "../../utils/common.js";
+import {pageConfig} from '../js/data_table.js';
+import displayAlert from '../js/alert.js';
+
 
 $(document).ready(async function () {
   await goBackToLoginIfNotAdmin();
@@ -144,24 +147,17 @@ function displayImage(file) {
   }
 }
 
-getItemsMethods = async (limit, page) => {
-  return await APIService.fetchAllBrand({ limit, page });
+pageConfig.getItemsMethods = async () => {
+  return await APIService.fetchAllBrand({page: pageConfig.page, limit: pageConfig.limit});
 };
 
-setLimit = () => {
-  return 6;
-};
+pageConfig.limit = 5;
 
-setDisplayPage = () => {
-  return 5;
-};
+pageConfig.displayPage = 5;
 
-initialPage = () => {
-  return 1;
-};
 
-renderTableHead = () => {
-  return `<tr>
+pageConfig.tableHead =
+  `<tr>
   <th scope="col">ID</th>
   <th scope="col">Brand Name</th>
   <th scope="col">Brand Image</th>
@@ -171,9 +167,9 @@ renderTableHead = () => {
   <th scope="col">&nbsp;</th>
   </tr>
   `;
-};
 
-renderTableRow = (item) => {
+
+pageConfig.renderTableRow = (item) => {
   return `<tr>
   <td class="align-middle">${item.id}</td>
   <td class="align-middle">${item.name}</td>
@@ -205,18 +201,5 @@ renderTableRow = (item) => {
 `;
 };
 
-bindRowAction = () => {
-  $(".manage-btn-delete").click(function (e) {
-    e.preventDefault();
-    const id = $(this).data("id");
+pageConfig.tableName= "Brands";
 
-    $("#documentDelete").data("id", id);
-
-    // call func here
-    $("#page-modal").modal("show");
-  });
-};
-
-setTableName = () => {
-  return "Brands";
-};

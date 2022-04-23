@@ -1,3 +1,5 @@
+import displayAlert from "./alert.js";
+
 function deleteDocumentOnClick(model, deleteFunction) {
   $("#documentDelete").click(async function () {
     const id = $("#documentDelete").data("id");
@@ -12,4 +14,5 @@ function deleteDocumentOnClick(model, deleteFunction) {
   });
 }
 
+export default deleteDocumentOnClick;
 

@@ -23,7 +23,6 @@ const AdminPageController = {
     const param = { title: "Categories", active: ["store", "categories"] };
     res.render("admin/categories", param);
   },
-
   editProduct: async (req, res) => {
     const { id } = req.params;
     const product = await ProductService.fetchProduct(id);
@@ -69,6 +68,11 @@ const AdminPageController = {
     const param = { title: "Accounts", active: ["accounts"] };
     res.render("admin/accounts", param);
   },
+
+  profile: async(req, res)=>{
+    const param = { title: "Profile", active: [] };
+    res.render("admin/profile", param);
+  }
 
 };
 

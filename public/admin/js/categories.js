@@ -1,5 +1,8 @@
 import APIService from "../../utils/api_service.js";
 import { goBackToLoginIfNotAdmin, sleep } from "../../utils/common.js";
+import {pageConfig} from '../js/data_table.js';
+import displayAlert from '../js/alert.js';
+
 
 $(document).ready(async function () {
   await goBackToLoginIfNotAdmin();
@@ -106,24 +109,17 @@ async function deleteCategory(categoryId) {
   }
 }
 
-getItemsMethods = async (limit, page) => {
-  return await APIService.fetchAllCategory({ limit, page });
+pageConfig.getItemsMethods = async () => {
+  return await APIService.fetchAllCategory({ limit: pageConfig.limit, page: pageConfig.page });
 };
 
-setLimit = () => {
-  return 6;
-};
+pageConfig.limit = 5;
 
-setDisplayPage = () => {
-  return 5;
-};
+pageConfig.displayPage = 5;
 
-initialPage = () => {
-  return 1;
-};
 
-renderTableHead = () => {
-  return `<tr>
+pageConfig.tableHead = 
+  `<tr>
   <th scope="col">ID</th>
   <th scope="col">Categories Name</th>
   <th scope="col">Number of products</th>
@@ -132,9 +128,9 @@ renderTableHead = () => {
   <th scope="col">&nbsp;</th>
   </tr>
   `;
-};
 
-renderTableRow = (item) => {
+
+pageConfig.renderTableRow = (item) => {
   return `<tr>
   <td class="align-middle">${item.id}</td>
   <td class="align-middle">${item.name}</td>
@@ -157,18 +153,5 @@ renderTableRow = (item) => {
 `;
 };
 
-bindRowAction = () => {
-  $(".manage-btn-delete").click(function (e) {
-    e.preventDefault();
-    const id = $(this).data("id");
 
-    $("#documentDelete").data("id", id);
-
-    // call func here
-    $("#page-modal").modal("show");
-  });
-};
-
-setTableName = () => {
-  return "Categories";
-};
+pageConfig.tableName = 'Categories';
