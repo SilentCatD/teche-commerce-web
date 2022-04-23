@@ -349,6 +349,13 @@ const APIService = {
     return res.data.data;
   },
 
+  getRelatedProduct: async(id, limit) => {
+    const url = `/api/v1/product/${id}/related`;
+    const params = {limit};
+    const res = await Request.get({ url,params });
+    return res.data.data;
+  },
+
   createBrand: async ({ brandName, imgFile }) => {
     let formData = new FormData();
     if (imgFile) {

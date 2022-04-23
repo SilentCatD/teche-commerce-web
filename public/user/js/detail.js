@@ -1,5 +1,6 @@
 import APIService from "../../utils/api_service.js";
 import {getUserInfo} from"./initialize.js";
+import {updateUserCart} from "./header.js";
 
 let currentPage = 1;
 // T_T
@@ -83,6 +84,7 @@ $(function(){
     $('#notificate-add-to-cart').show();
     try{
       await APIService.addCartItem(product.id,amount);
+      await updateUserCart();
       $('#notificate-add-to-cart').addClass('text-success');
       $('#notificate-add-to-cart').text("Add Success");
       setTimeout(function(){
@@ -175,7 +177,11 @@ sendReviewBtn.click(async function (e) {
 // Reference UI and Javascript 
 // ref: https://bootsnipp.com/snippets/PjPa#reviews-anchor
 
+  const relatedProduct = await APIService.getRelatedProduct(product.id,4);
+
   detailController.renderProduct(product);
+  detailController.renderRelatedProducts(relatedProduct)  
+
 
   await REinit(1);
   });
@@ -236,10 +242,39 @@ const detailController = {
         $(`#progress-fill-${j+1}`).css("width",`${product.rates[j]*100/product.rateCount}%`)
       }
     },
+    renderRelatedProducts: (relatedProduct) => {
+      let relatedProductsHTML = "";
+      for(let i = 0 ; i < relatedProduct.items.length;i++) {
+        relatedProductsHTML+=detailController.renderRelatedProduct(relatedProduct.items[i]);
+      }
+      $("#related-product-list").html(relatedProductsHTML);
+    },
+    renderRelatedProduct:(product) => {
+      let imgURL;
+      if (product.images.length > 0) {
+        imgURL = product.images[0];
+      }
+      return  `<div class="col-lg-3 col-md-4 col-sm-6">
+      <div class="product__item">
+      <div class="product__item__pic set-bg" data-setbg=${imgURL}
+      style="background: ${imgURL ? `url(${imgURL});` : "gray;"}"
+          >
+          <ul class="product__item__pic__hover">
+              <li><a href="#"><i class="fa fa-heart"></i></a></li>
+              <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+              <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+          </ul>
+      </div>
+      <div class="product__item__text">
+          <h6><a href="/details/${product.id}">${product.name}</a></h6>
+          <h5>$${product.price}</h5>
+      </div>
+  </div>
+</div>`
+    },
     renderCommentList: (listId,comments,userInfo) => {
       $(`#${listId}`).empty();
       let commentsHTML = "";
-      console.log(userInfo);
       for(let i = 0 ; i < comments.length;i++) {
         commentsHTML+=detailController.renderComment(userInfo,comments[i]);
       }
@@ -249,7 +284,7 @@ const detailController = {
         <div class="d-flex">
             <div class="left">
                 <span>
-                    <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="profile-pict-img img-fluid" alt="" />
+                    <img src="${(comment.avatar) ? (comment.avatar) : "https://iptc.org/wp-content/uploads/2018/05/avatar-anonymous-300x300.png"}" class="profile-pict-img img-fluid" alt="" />
                 </span>
             </div>
             <div class="right">
@@ -267,15 +302,15 @@ const detailController = {
                     ${detailController.renderEditDeleteComment(userInfo,comment)}
                 </h4>
                 <div class="country d-flex align-items-center">
-                    <span>
-                        <img class="country-flag img-fluid" src="https://bootdey.com/img/Content/avatar/avatar6.png" />
+                    <span class="mr-1">
+                    <i class="fa fa-envelope" aria-hidden="true"></i> 
                     </span>
-                    <div class="country-name font-accent">${comment.userEmail}</div>
+                    <div class="country-name font-accent"> ${comment.userEmail}</div>
                 </div>
                 <div class="review-description">
-                    <p>
+                    <h5>
                     ${comment.description}
-                    </p>
+                    </h5>
                 </div>
                 <span class="publish py-3 d-inline-block w-100">Published at ${comment.updatedAt}</span>
                 <div class="helpful-thumbs">
@@ -306,7 +341,8 @@ const detailController = {
     },
     renderEditDeleteComment: (userInfo,comment) => {
       if(!userInfo) return "";
-      if(userInfo._id == comment.userId){
+      console.log(userInfo);
+      if(userInfo.id == comment.userId){
         return `
         <div data-comment-id="${comment.id}" class="ml-auto">
           <i class="fa fa-edit"></i>

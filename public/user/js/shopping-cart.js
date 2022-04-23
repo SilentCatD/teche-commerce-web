@@ -1,15 +1,17 @@
 import APIService from "../../utils/api_service.js";
+import { updateUserCart } from "./header.js";
 
 const CART_INFO = {
     items: null,
     totalPrice : 0,
 };
+
 $(document).ready(async function () {
     setBreadCrumb("Shopping-cart", null);
     await REInit();
 
         // assign button
-        $(".inc").click(async function(e){
+        $(".inc").on("click",async function(e){
             e.preventDefault();
             const productId = $(this).parent().data("product-id");
             const cartItem = CART_INFO.items.find(element => element.productId._id == productId)
@@ -34,7 +36,7 @@ $(document).ready(async function () {
             changeTotalPrice(productId,newPrice,newPrice-oldPrice);
         })
     
-        $(".dec").click(async function(e){
+        $(".dec").on("click",async function(e){
             e.preventDefault();
             const productId = $(this).parent().data("product-id");
             const cartItem = CART_INFO.items.find(element => element.productId._id == productId)
@@ -81,30 +83,34 @@ $(document).ready(async function () {
             changeTotalPrice(productId,newPrice,newPrice-oldPrice);
           });
 
-        $('.icon_close').click(
+        $('.icon_close').on("click",
             function() 
             {
              $('#removeCartItem').modal('show');
              $("#removeCartItemConfirm").data("product-id", $(this).data("product-id"));
             });
 
-        $("#removeCartItemCancel").click(function(){
+        $("#removeCartItemCancel").on("click",function(){
             $('#removeCartItem').modal('hide');
         })
         $(".close").click(function(){
             $('#removeCartItem').modal('hide');
         })
 
-        $('#removeCartItemConfirm').click(async ()=>{
+        $('#removeCartItemConfirm').on("click",async ()=>{
             try {
             const productId = $("#removeCartItemConfirm").data("product-id");
             console.log(productId);
             await APIService.removeCartItem(productId);
+            await updateUserCart();
+
             const totalPrice = parseFloat($(`#item-price-${productId}`).text().trim().substring(1));
             changeTotalPrice(null,null,-totalPrice);
             $(`#item-${productId}`).remove();
+            $(`#item-error-${productId}`).remove();
+
             $('#removeCartItem').modal('hide');
-            
+
             } catch (e) {
                 $(".modal-body").text(e.msg);
             }

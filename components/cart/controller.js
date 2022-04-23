@@ -81,7 +81,7 @@ const CartController = {
         console.log(e);
         return res
           .status(500)
-          .json({ success: false, msg: "Something went wrong" });
+          .json({ success: false, msg: e.message });
       }
     },
   ],
@@ -107,7 +107,7 @@ const CartController = {
         console.log(e);
         return res
           .status(500)
-          .json({ success: false, msg: "Something went wrong"});
+          .json({ success: false, msg: e.message });
       }
     },
   ],
@@ -130,7 +130,7 @@ const CartController = {
       } catch (e) {
         return res
           .status(500)
-          .json({ success: false, msg: "Something went wrong" });
+          .json({ success: false, msg: e.message });
       }
     },
   ],
