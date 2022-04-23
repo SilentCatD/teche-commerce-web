@@ -7,6 +7,9 @@ async function fetchAndDisplayUserEmail(){
     try{
         userData = await APIService.userInfo();
         $("#userName").text(userData.name);
+        if(userData.avatar){
+          $('#userAvatarNavbar').attr('src', userData.avatar);
+        }
 
     }catch(e){
         console.log(e);

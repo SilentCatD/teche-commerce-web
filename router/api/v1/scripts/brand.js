@@ -8,12 +8,12 @@ const upload = multer();
 brandRouter
   .route("/")
   .get(BrandController.fetchAllBrand)
-  .post(upload.any("images"), BrandController.createBrand)
+  .post(upload.single("image"), BrandController.createBrand)
   .delete(BrandController.deleteAllBrand);
 
 brandRouter
   .route("/:id").get(BrandController.fetchBrand)
   .delete(BrandController.deleteBrand)
-  .post(upload.any('images'),BrandController.editBrand);
+  .post(upload.any('image'),BrandController.editBrand);
 
 export default brandRouter;

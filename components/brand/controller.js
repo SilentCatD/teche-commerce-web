@@ -26,25 +26,15 @@ const BrandController = {
             .json({ success: false, msg: errors.array()[0].msg });
         }
         const { brandName } = req.body;
-        let brandImg = [];
-        if (req.files) {
-          brandImg = req.files;
-        }
-
-        if (brandImg.length > 1) {
-          return res
-            .status(400)
-            .json({ success: false, msg: "only 1 image for each brand" });
-        }
-        if (brandImg.length == 1) {
-          const type = brandImg[0].mimetype;
+        let brandImg = req.file;
+        if (brandImg) {
+          const type = brandImg.mimetype;
           if (!["image/png", "image/jpeg"].includes(type)) {
             return res.status(400).json({
               success: false,
               msg: "image must be of type png or jpeg",
             });
           }
-          brandImg = brandImg[0];
         }
 
         const id = await BrandService.createBrand(brandName, brandImg);

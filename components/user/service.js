@@ -1,6 +1,7 @@
 import AuthenticationService from "../authentication/service.js";
 import User from "./model.js";
 import mongoose from "mongoose";
+import ImageService from "../image/service.js";
 
 const UserService = {
 
@@ -58,7 +59,7 @@ const UserService = {
     user.active = false;
     await user.save();
   },
-  editUserProfile: async(id,password,name) => {
+  editUserProfile: async(id,password,name, imageFile) => {
     const session = await User.startSession();
     session.startTransaction();
     try {
@@ -76,6 +77,10 @@ const UserService = {
 
         user.hash = hash;
         user.salt = salt;
+      }
+      if(imageFile){
+        const imageObj = await ImageService.createImage(imageFile);
+        user.avatar = imageObj;
       }
       await user.save();
       await session.commitTransaction();

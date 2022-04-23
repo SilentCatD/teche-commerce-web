@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { imageSchema } from "../image/model.js";
 
 const userSchema = new mongoose.Schema({
    name: {
@@ -9,6 +10,7 @@ const userSchema = new mongoose.Schema({
    hash: String,
    salt: String,
    role: String, // 'user', 'admin'
+   avatar: imageSchema,
    active: {
       type: Boolean,
       default: false,

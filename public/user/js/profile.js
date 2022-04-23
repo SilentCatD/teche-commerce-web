@@ -29,7 +29,7 @@ $(document).ready(async function () {
           const newUserInfo = {
             name: $("#edit-name").val(),
           };
-          const res = await APIService.userInfoEdit("user", newUserInfo);
+          const res = await APIService.userInfoEdit(newUserInfo);
           showAlert(res);
         }  else {
           showAlert("You have some invalid field");
@@ -50,7 +50,7 @@ $(document).ready(async function () {
               verifyPassword: $("#user-password").val(),
               password: $("#edit-user-password").val(),
             };
-            const res = await APIService.userInfoEdit("user", newUserPassword);
+            const res = await APIService.userInfoEdit(newUserPassword);
             showAlert(res);
           }
         });

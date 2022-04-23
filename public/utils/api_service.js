@@ -120,20 +120,30 @@ const APIService = {
     let res = await Request.get({ url: url, useToken: true});
     return res.data.data;
   },
-  userInfoEdit: async (userInfo) => {
+  userInfoEdit: async ({name, oldPassword, newPassword, imgFile} = {}) => {
     try {
+      const formData = new FormData()
+      if(imgFile){
+        formData.append('image', imgFile);
+      }
+      if(name){
+        formData.append('name', name);
+      }
+      if(oldPassword){
+        formData.append('oldPassword', oldPassword);
+      }
+      if(newPassword){
+        formData.append('newPassword', newPassword);
+      }
       const url = "/api/v1/user";
-      const body = userInfo;
-      // header is using automagic
       let res = await Request.post({
         url: url,
-        body: body,
+        body: formData,
         useToken: true,
       });
       return res.data;
     } catch (e) {
-      console.log(e);
-      return e.message;
+      throw e;
     }
   },
   haveTokens: () => {
@@ -319,7 +329,7 @@ const APIService = {
   createBrand: async ({ brandName, imgFile }) => {
     let formData = new FormData();
     if (imgFile) {
-      formData.append("images", imgFile);
+      formData.append("image", imgFile);
     }
     formData.append("brandName", brandName);
     const url = "/api/v1/brand";

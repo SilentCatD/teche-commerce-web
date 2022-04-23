@@ -1,6 +1,9 @@
 import APIService from "../../utils/api_service.js";
 
 $(document).ready(async function () {
-    const userName = await APIService.userInfo();
-    $('#adminName').text(userName.name);
+    const userInfo = await APIService.userInfo();
+    $('#adminName').text(userInfo.name);
+    if(userInfo.avatar){
+        $('#userAvatarSidebar').attr('src', userInfo.avatar);
+    }
 });
