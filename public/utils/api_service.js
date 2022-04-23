@@ -1,7 +1,6 @@
 import Request from "./request.js";
 import TokenService from "./token_service.js";
 
-
 async function urlToFile(url) {
   const res = await fetch(url, { mode: "cors" });
   const blob = await res.blob();
@@ -54,7 +53,7 @@ const APIService = {
       url: url,
       body: body,
     });
-    if(res.data.role!= role && res.data.role!='admin'){
+    if (res.data.role != role && res.data.role != "admin") {
       throw new Error("you don't have enough right to access this site!");
     }
     const accessToken = res.data.accessToken;
@@ -77,27 +76,27 @@ const APIService = {
       TokenService.refreshToken.del();
     }
   },
-  requestResetPassword: async(email) => {
+  requestResetPassword: async (email) => {
     const url = "/api/v1/auth/send-reset-password-email";
     const body = {
       email: email,
-    }
+    };
     await Request.post({
-        url: url,
-        role: "public",
-        body: body,
-      })
-  },
-  verifyResetPassword: async(hash,password) => {
-    const url = `/api/v1/auth/reset-password/${hash}`;
-    const body = { 
-      password: password
-    }
-    await Request.put({
-      url:url,
-      role:"public",
+      url: url,
+      role: "public",
       body: body,
-    })
+    });
+  },
+  verifyResetPassword: async (hash, password) => {
+    const url = `/api/v1/auth/reset-password/${hash}`;
+    const body = {
+      password: password,
+    };
+    await Request.put({
+      url: url,
+      role: "public",
+      body: body,
+    });
   },
   isValidAccount: async () => {
     try {
@@ -109,31 +108,52 @@ const APIService = {
     }
   },
 
+  fetchAllAccounts: async ({
+    page,
+    limit,
+    sort = "createdAt",
+    order_by = "desc",
+    query,
+    role,
+    active
+  }={}) => {
+    const searchParams = queryAllParamsFormat(page, limit, sort, order_by, null, null, null, query);
+    if(role){
+      searchParams.set('role', role);
+    }
+    if(active){
+      searchParams.set('active', active);
+    }
+    const url = "/api/v1/account";
+    const res = await Request.get({ url: url, params: searchParams, useToken: true });
+    return res.data.data;
+  },
+
   getRole: async () => {
     const url = "/api/v1/auth/role";
-    const res = await Request.get({ url: url, useToken: true});
+    const res = await Request.get({ url: url, useToken: true });
     return res.data.data;
   },
 
   userInfo: async () => {
-    const url = "/api/v1/user";
-    let res = await Request.get({ url: url, useToken: true});
+    const url = `/api/v1/user/`;
+    let res = await Request.get({ url: url, useToken: true });
     return res.data.data;
   },
-  userInfoEdit: async ({name, oldPassword, newPassword, imgFile} = {}) => {
+  userInfoEdit: async ({ name, oldPassword, newPassword, imgFile } = {}) => {
     try {
-      const formData = new FormData()
-      if(imgFile){
-        formData.append('image', imgFile);
+      const formData = new FormData();
+      if (imgFile) {
+        formData.append("image", imgFile);
       }
-      if(name){
-        formData.append('name', name);
+      if (name) {
+        formData.append("name", name);
       }
-      if(oldPassword){
-        formData.append('oldPassword', oldPassword);
+      if (oldPassword) {
+        formData.append("oldPassword", oldPassword);
       }
-      if(newPassword){
-        formData.append('newPassword', newPassword);
+      if (newPassword) {
+        formData.append("newPassword", newPassword);
       }
       const url = "/api/v1/user";
       let res = await Request.post({
@@ -204,14 +224,14 @@ const APIService = {
       max,
       query
     );
-    if(brands)
-      brands.forEach((brand)=>{
-      searchParams.append('brands',brand);
-    });
-    if(categories)
-    categories.forEach((category)=>{
-      searchParams.append('categories', category);
-    });
+    if (brands)
+      brands.forEach((brand) => {
+        searchParams.append("brands", brand);
+      });
+    if (categories)
+      categories.forEach((category) => {
+        searchParams.append("categories", category);
+      });
     const res = await Request.get({ url: url, params: searchParams });
     return res.data.data;
   },
@@ -263,15 +283,18 @@ const APIService = {
     const res = await Request.get({ url: url, params: searchParams });
     return res.data.data;
   },
-  fetchAllComment: async (productId,{
-    page,
-    limit,
-    sort = "createdAt",
-    order_by = "desc",
-    range_field,
-    min,
-    max,
-  } = {}) => {
+  fetchAllComment: async (
+    productId,
+    {
+      page,
+      limit,
+      sort = "createdAt",
+      order_by = "desc",
+      range_field,
+      min,
+      max,
+    } = {}
+  ) => {
     const url = `/api/v1/comment/${productId}`;
     const searchParams = queryAllParamsFormat(
       page,
@@ -317,7 +340,7 @@ const APIService = {
     const url = `/api/v1/product/${id}`;
     const body = formData;
     const headers = { "Content-Type": "multipart/form-data" };
-    await Request.put({ url, body, headers,  useToken: true });
+    await Request.put({ url, body, headers, useToken: true });
   },
 
   fetchProduct: async (id) => {
@@ -344,76 +367,76 @@ const APIService = {
   },
   deleteBrand: async (id) => {
     const url = `/api/v1/brand/${id}`;
-    await Request.delete({ url,  useToken: true });
+    await Request.delete({ url, useToken: true });
   },
   createCategory: async ({ categoryName }) => {
     const body = { categoryName };
     const url = "/api/v1/category";
-    await Request.post({ url, body,  useToken: true });
+    await Request.post({ url, body, useToken: true });
   },
 
   deleteCategory: async (id) => {
     const url = `/api/v1/category/${id}`;
-    await Request.delete({ url,  useToken: true });
+    await Request.delete({ url, useToken: true });
   },
 
-  createComment: async(productId, rating,description) => {
-    const body = {productId,rating,description};
+  createComment: async (productId, rating, description) => {
+    const body = { productId, rating, description };
     const url = "/api/v1/comment";
-    await Request.post({url,body,useToken:true});
+    await Request.post({ url, body, useToken: true });
   },
 
-  editComment: async(productId,commentId, rating,description) => {
-    const body = {productId,rating,description};
+  editComment: async (productId, commentId, rating, description) => {
+    const body = { productId, rating, description };
     const url = `/api/v1/comment/${commentId}`;
-    await Request.put({url,body,useToken:true});
+    await Request.put({ url, body, useToken: true });
   },
 
-  deleteComment: async(commentId) => {
+  deleteComment: async (commentId) => {
     const url = `/api/v1/comment/${commentId}`;
-    await Request.delete({url,useToken:true});
+    await Request.delete({ url, useToken: true });
   },
 
   createAdminAccount: async (email, name, password) => {
     const url = `/api/v1/auth/register-admin`;
     const body = { email, name, password };
-    await Request.post({ url, body, useToken: true});
+    await Request.post({ url, body, useToken: true });
   },
   getUserCart: async () => {
-    const url = '/api/v1/cart';
-    const response = await Request.get({url,useToken:true});
+    const url = "/api/v1/cart";
+    const response = await Request.get({ url, useToken: true });
     return response.data;
   },
-  getUserCartInfo: async() => {
-    const url = '/api/v1/cart/basic';
-    const response = await Request.get({url,useToken:true});
+  getUserCartInfo: async () => {
+    const url = "/api/v1/cart/basic";
+    const response = await Request.get({ url, useToken: true });
     return response.data.data;
   },
-  addCartItem: async(productId, amount) => {
-      const url = '/api/v1/cart';
-      const body = {productId, amount};
-      await Request.post({url,body,useToken:true});
+  addCartItem: async (productId, amount) => {
+    const url = "/api/v1/cart";
+    const body = { productId, amount };
+    await Request.post({ url, body, useToken: true });
   },
-  increaseCartItem: async(productId) => {
-    const url = '/api/v1/cart';
-    const body = {productId, amount:1};
-    await Request.post({url,body,useToken:true});
+  increaseCartItem: async (productId) => {
+    const url = "/api/v1/cart";
+    const body = { productId, amount: 1 };
+    await Request.post({ url, body, useToken: true });
   },
-  decreaseCartItem: async(productId, amount) => {
-  const url = '/api/v1/cart';
-  const body = {productId, amount:-1};
-  await Request.post({url,body,useToken:true});
+  decreaseCartItem: async (productId, amount) => {
+    const url = "/api/v1/cart";
+    const body = { productId, amount: -1 };
+    await Request.post({ url, body, useToken: true });
   },
-  updateCartItem: async(productId, amount) => {
-    const url = '/api/v1/cart';
-    const body = {productId, amount};
-    await Request.put({url,body,useToken:true});
-    },
-  removeCartItem: async(productId) => {
-    const url = '/api/v1/cart';
-    const body = {productId};
-    await Request.delete({url,body,useToken:true});
-}
+  updateCartItem: async (productId, amount) => {
+    const url = "/api/v1/cart";
+    const body = { productId, amount };
+    await Request.put({ url, body, useToken: true });
+  },
+  removeCartItem: async (productId) => {
+    const url = "/api/v1/cart";
+    const body = { productId };
+    await Request.delete({ url, body, useToken: true });
+  },
 };
 
 export default APIService;

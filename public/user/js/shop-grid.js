@@ -121,7 +121,6 @@ const renderCompenent = {
     if(pageConfiguration.currentPage < pageConfiguration.totalPage) {
       pages.push(`<a data-move-page ="right" class='page-item' >▶</a>`);
     }
-    console.log(pages);
     $("#pagination-section").html(pages.join("\n"));
     $(".page-item").click(async function (e) {
       e.preventDefault();

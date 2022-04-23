@@ -123,3 +123,4 @@ function validateUserPassword(elementId, elementNotifyError) {
   $(`#${elementNotifyError}`).text("");
   return password;
 }
+

@@ -15,7 +15,9 @@ const userSchema = new mongoose.Schema({
       type: Boolean,
       default: false,
    },
-}, { autoCreate: false });
+}, { autoCreate: false, timestamps: true });
+
+userSchema.index({name: 'text', email: 'text'});
 
 const User = mongoose.model('User',userSchema);
 

@@ -2,6 +2,7 @@ import AuthenticationService from "../authentication/service.js";
 import User from "./model.js";
 import mongoose from "mongoose";
 import ImageService from "../image/service.js";
+import CommomDatabaseServies from "../common/services.js";
 
 const UserService = {
   resetUserPassword: async(userId, password)=>{
@@ -12,6 +13,43 @@ const UserService = {
     user.hash = hash;
     user.salt = salt;
     await user.save();
+  },
+
+  returnData: (user)=>{
+    const result = {};
+    result.name = user.name;
+    result.email = user.email;
+    result.id = user.id;
+    result.role = user.role;
+    result.status = user.active ? 'active' : 'suspended';
+    result.usePassword = user.hash ? true: false;
+    if(user.avatar){
+      result.avatar = req.user.avatar.firebaseUrl;
+    }
+    result.createdAt = user.createdAt;
+    return result;
+  },
+
+  fetchUser: async (id)=>{
+    const user = await User.findById(id);
+    return UserService.returnData(user);
+  },
+
+  fetchAllUser: async (limit, page, role, active, sortParams, query) => {
+    let queryParams = {
+      ...(typeof active != 'undefined' && {active: active}),
+      ...(role && {role: role}),
+      ...(query  && {$text: {$search: query}}),
+    };
+    const totalCount = await User.countDocuments(queryParams);
+    const users = await User.find(queryParams)
+      .skip(limit * page - limit)
+      .limit(limit)
+      .sort(sortParams);
+    const items =  users.map((user) => {
+      return UserService.returnData(user);
+    });
+    return CommomDatabaseServies.queryAllFormat(totalCount, limit, page, items);
   },
 
   createUserWithRole: async (email,name, password, role) => {

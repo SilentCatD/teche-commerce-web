@@ -2,6 +2,7 @@ import APIService from "../../utils/api_service.js";
 import { goBackToLoginIfNotAdmin, sleep } from "../../utils/common.js";
 import {pageConfig} from '../js/data_table.js';
 import displayAlert from '../js/alert.js';
+import deleteDocumentOnClick from '../js/modal.js';
 
 
 $(document).ready(async function () {

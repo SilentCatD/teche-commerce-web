@@ -1,10 +1,77 @@
 import APIService from "../../utils/api_service.js";
 import { goBackToLoginIfNotAdmin, sleep } from "../../utils/common.js";
+import {pageConfig} from "../js/data_table.js";
+
+pageConfig.query = "";
+pageConfig.role = "user";
+
+pageConfig.limit = 5;
+pageConfig.displayPage = 5;
+pageConfig.getItemsMethods = async()=>{
+  return await APIService.fetchAllAccounts({page: pageConfig.page, limit: pageConfig.limit, query: pageConfig.query, role: pageConfig.role});
+}
+
+pageConfig.tableName = "Accounts";
+
+pageConfig.tableHead = `<tr>
+    <th scope="col">ID</th>
+    <th scope="col">Name</th>
+    <th scope="col">Email</th>
+    <th scope="col">Role</th>
+    <th scope="col">Status</th>
+    <th scope="col">Created At</th>
+    <th scope="col">&nbsp;</th>
+    </tr>
+    `;
+
+pageConfig.renderTableRow = (item) => {
+  return `<tr>
+  <td class="align-middle">${item.id}</td>
+  <td class="align-middle">${item.name}</td>
+  <td class="align-middle">${item.email}</td>
+  <td class="align-middle">${item.role}</td>
+  <td class="align-middle">${item.status}</td>
+  <td class="align-middle">${item.createdAt}</td>
+
+  <td class="align-middle">
+  <div class="dropdown position-static">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+        Manage
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        <li><a href="/admin/edit-product/${
+          item.id
+        }" class="manage-btn-edit dropdown-item btn"  data-id='${
+    item.id
+  }'>Edit</a></li>
+        <li class="dropdown-divider"></li>
+        <li><a class="manage-btn-delete dropdown-item text-danger btn" data-id='${
+          item.id
+        }'>Remove</a></li>
+      </ul>
+    </div>
+</td>
+</tr>
+`;
+};
 
 $(document).ready(async function () {
   await goBackToLoginIfNotAdmin();
   await sleep(50);
   $("#spinner").removeClass("show");
+
+  $('#searchForm').submit(function (e) { 
+    e.preventDefault();
+    const query = $('#tableSearch').val().trim();
+    pageConfig.query = query;
+    triggerReloadBtn();
+  });
+
+  $("input[name='accSwitch']").click(function() {
+    var role = $(this).filter(':checked').val();
+    pageConfig.role = role;
+    triggerReloadBtn();
+  });
 
   $("#emailInput").on("input propertychange", function (e) {
     e.preventDefault();
@@ -139,4 +206,8 @@ function validateName() {
 
   $("#nameInput").removeClass("is-invalid");
   return input;
+}
+
+function triggerReloadBtn() {
+  $(".table-load-trigger").trigger("click");
 }
