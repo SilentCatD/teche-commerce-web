@@ -10,7 +10,7 @@ const CommentService = {
         if(comment.userId.avatar) avatar = comment.userId.avatar.firebaseUrl;
         return {
             id: comment.id,
-            userId:comment.userId.toString(),
+            userId:comment.userId.id,
             productId: comment.productId,
             userEmail: comment.userId.email,
             userName: comment.userId.name,
@@ -50,16 +50,15 @@ const CommentService = {
             rating: rating,
             description: description,
         }
-        docId =  await Comment.create(commentDocObject);
+        await Comment.create(commentDocObject);
         await session.commitTransaction();
-        session.endSession();
-        return docId;
     } catch (e) {
-        console.log(e);
         await session.abortTransaction();
-        session.endSession();
         throw e;
-    } 
+    } finally{
+        await session.endSession();
+        return;
+    }
     },
     deleteComment: async(productId,commentId,rating) => {
         const session = await Comment.startSession();
@@ -69,12 +68,12 @@ const CommentService = {
             if(productId) 
                 await ProductService.rateProduct(productId,-rating);
             await session.commitTransaction();
-            session.endSession();
-            return;
         } catch (e) {
             await session.abortTransaction();
-            await session.endSession();
             throw e;
+        } finally {
+            await session.endSession();
+            return;
         }
     },
     editComment: async(productId,commentId,newRating,description) => {
@@ -89,12 +88,13 @@ const CommentService = {
             comment.description = description;
             await comment.save();
             await session.commitTransaction();
-            session.endSession();
             return;
         } catch (e) {
             await session.abortTransaction();
-            await session.endSession();
             throw e;
+        } finally {
+            await session.endSession();
+            return;
         }
     },
     
