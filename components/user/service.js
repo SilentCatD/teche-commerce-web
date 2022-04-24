@@ -21,7 +21,7 @@ const UserService = {
     result.email = user.email;
     result.id = user.id;
     result.role = user.role;
-    result.status = user.active ? 'active' : 'unactive';
+    result.status = user.active ? 'active' : 'inactive';
     result.usePassword = user.hash ? true: false;
     if(user.avatar){
       result.avatar = user.avatar.firebaseUrl;

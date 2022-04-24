@@ -4,6 +4,102 @@ import { pageConfig } from "../js/data_table.js";
 import displayAlert from '../js/alert.js';
 import {modalConfig, documentOperation} from '../js/modal.js';
 
+
+
+pageConfig.query = "";
+
+pageConfig.limit = 5;
+
+pageConfig.displayPage = 5;
+
+pageConfig.brand = [];
+pageConfig.category = [];
+
+pageConfig.sort = 'createdAt';
+pageConfig.order_by = 'desc';
+
+pageConfig.getItemsMethods = async () => {
+  return await APIService.fetchAllProduct({
+    page: pageConfig.page,
+    limit: pageConfig.limit,
+    query: pageConfig.query,
+    sort: pageConfig.sort,
+    order_by: pageConfig.order_by,
+    brands: pageConfig.brand,
+    categories: pageConfig.category,
+  });
+};
+
+
+pageConfig.tableHead = `<tr>
+    <th scope="col">ID</th>
+    <th scope="col">Product Name</th>
+    <th scope="col">Image</th>
+    <th scope="col">Price</th>
+    <th scope="col">Status</th>
+    <th scope="col">Brand Name</th>
+    <th scope="col">Category Name </th>
+    <th scope="col">Created At</th>
+    <th scope="col">&nbsp;</th>
+    </tr>
+    `;
+
+pageConfig.renderTableRow = (item) => {
+  return `<tr>
+  <td class="align-middle">${item.id}</td>
+  <td class="align-middle">${item.name}</td>
+  <td class="align-middle">${
+    item.images.length > 0
+      ? `<img src=${item.images[0]} style="max-width:100px;max-height:100px; object-fit: contain;">`
+      : "Not avalable"
+  }</td>
+  <td class="align-middle">${item.price}</td>
+  <td class="align-middle">${item.status}</td>
+  <td class="align-middle">${
+    item.brand ? item.brand.name : "not available"
+  }</td>
+  <td class="align-middle">${
+    item.category ? item.category.name : "not available"
+  }</td>
+  <td class="align-middle">${item.createdAt}</td>
+  <td class="align-middle">
+  <div class="dropdown position-static">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+        Manage
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+        <li><a href="/admin/edit-product/${
+          item.id
+        }" class="manage-btn-edit dropdown-item btn"  data-id='${
+    item.id
+  }'>Edit</a></li>
+        <li class="dropdown-divider"></li>
+        <li><a class="manage-btn-delete dropdown-item text-danger btn" data-id='${
+          item.id
+        }'>Remove</a></li>
+      </ul>
+    </div>
+</td>
+</tr>
+`;
+};
+
+pageConfig.bindRowAction = () => {
+  $(".manage-btn-delete").click(function (e) {
+    e.preventDefault();
+    const id = $(this).data("id");
+
+    $("#documentOperation").data("id", id);
+
+    // call func here
+    $("#page-modal").modal("show");
+  });
+};
+
+pageConfig.tableName = "Products";
+
+
+
 modalConfig.modalBody = "Do you wish to delete this produdct?";
 modalConfig.modalHeader  = "Remove Product";
 modalConfig.modalOpName = "Remove";
@@ -15,8 +111,53 @@ let productsImages = [];
 let currentCarousel;
 $(document).ready(async function () {
   await goBackToLoginIfNotAdmin();
+  await renderBrandsAndCategories();
   await sleep(50);
   $("#spinner").removeClass("show");
+
+  $('#searchForm').submit(function (e) { 
+    e.preventDefault();
+    const query = $('#tableSearch').val().trim();
+    pageConfig.query = query;
+    triggerReloadBtn();
+  });
+
+  $('#sortOption').change(function (e) { 
+    e.preventDefault();
+    const val = $(this).val().trim();
+    pageConfig.sort = val;
+    triggerReloadBtn();
+  });
+
+  $('#sortOrder').change(function (e) { 
+    e.preventDefault();
+    const val = $(this).val().trim();
+    pageConfig.order_by = val;
+    triggerReloadBtn();
+  });
+
+  $('#brandOption').change(function (e) { 
+    e.preventDefault();
+    let val = $(this).val().trim();
+    if(val=='default'){
+      pageConfig.brand = [];
+    }else{
+      pageConfig.brand = [val];
+    }
+    triggerReloadBtn();
+  });
+
+  $('#categoryOption').change(function (e) { 
+    e.preventDefault();
+    let val = $(this).val().trim();
+    if(val=='default'){
+      pageConfig.category = [];
+    }else{
+      pageConfig.category = [val];
+    }
+    triggerReloadBtn();
+  });
+
 
   $("#file-input").change(function (e) {
     e.preventDefault();
@@ -348,16 +489,10 @@ async function renderBrandsAndCategories() {
 
   $("#brandSelect").html(brandOptions.join("\n"));
   $("#categorySelect").html(categoryOptions.join("\n"));
+  $("#brandOption").html(brandOptions.join("\n"));
+  $("#categoryOption").html(categoryOptions.join("\n"));
 }
 
-async function deleteProduct(id) {
-  try {
-    await APIService.deleteProduct(id);
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
 
 function addProductImages(el) {
   const index = $(el).data("img-index");
@@ -438,80 +573,3 @@ function renderProductsCarousel() {
   bindCarousel();
 }
 
-pageConfig.getItemsMethods = async () => {
-  return await APIService.fetchAllProduct({
-    page: pageConfig.page,
-    limit: pageConfig.limit,
-  });
-};
-
-pageConfig.limit = 5;
-
-pageConfig.displayPage = 5;
-
-pageConfig.tableHead = `<tr>
-    <th scope="col">ID</th>
-    <th scope="col">Product Name</th>
-    <th scope="col">Image</th>
-    <th scope="col">Price</th>
-    <th scope="col">Status</th>
-    <th scope="col">Brand Name</th>
-    <th scope="col">Category Name </th>
-    <th scope="col">Created At</th>
-    <th scope="col">&nbsp;</th>
-    </tr>
-    `;
-
-pageConfig.renderTableRow = (item) => {
-  return `<tr>
-  <td class="align-middle">${item.id}</td>
-  <td class="align-middle">${item.name}</td>
-  <td class="align-middle">${
-    item.images.length > 0
-      ? `<img src=${item.images[0]} style="max-width:100px;max-height:100px; object-fit: contain;">`
-      : "Not avalable"
-  }</td>
-  <td class="align-middle">${item.price}</td>
-  <td class="align-middle">${item.status}</td>
-  <td class="align-middle">${
-    item.brand ? item.brand.name : "not available"
-  }</td>
-  <td class="align-middle">${
-    item.category ? item.category.name : "not available"
-  }</td>
-  <td class="align-middle">${item.createdAt}</td>
-  <td class="align-middle">
-  <div class="dropdown position-static">
-      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-        Manage
-      </button>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-        <li><a href="/admin/edit-product/${
-          item.id
-        }" class="manage-btn-edit dropdown-item btn"  data-id='${
-    item.id
-  }'>Edit</a></li>
-        <li class="dropdown-divider"></li>
-        <li><a class="manage-btn-delete dropdown-item text-danger btn" data-id='${
-          item.id
-        }'>Remove</a></li>
-      </ul>
-    </div>
-</td>
-</tr>
-`;
-};
-
-pageConfig.bindRowAction = () => {
-  $(".manage-btn-delete").click(function (e) {
-    e.preventDefault();
-    const id = $(this).data("id");
-
-    $("#documentOperation").data("id", id);
-
-    // call func here
-    $("#page-modal").modal("show");
-  });
-};
-
-pageConfig.tableName = "Products";
