@@ -6,9 +6,9 @@ const orderRouter = express.Router();
 orderRouter
   .route("/")
   .get(OrderController.fetchAllOrder)
-  .post(OrderController.createOrder); // create order,
-  // .put(OrderController.changeState); // update order,
+  .post(OrderController.createOrder) // create order,
 
-
+orderRouter.route("/:orderId")
+  .put(OrderController.changeOrderState); // update order,
 
 export default orderRouter;

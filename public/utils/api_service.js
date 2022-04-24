@@ -470,6 +470,11 @@ const APIService = {
     const res = await Request.get({ url: url, params: searchParams, useToken: true });
     return res.data.data;
   },
+  changeOrderState: async(orderId,state)=>{
+    const url = `/api/v1/order/${orderId}`;
+    const body = {state};
+    await Request.put({url, body ,useToken: true});
+  },
 };
 
 export default APIService;

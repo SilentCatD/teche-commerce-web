@@ -2,9 +2,11 @@ import AuthorizationController from "../authorization/controller.js";
 import CommonMiddleWares from "../common/middleware.js";
 
 import OrderService from "./service.js";
+import Order from "./model.js";
 import Cart from "../cart/model.js";
 
-import { query,body, validationResult } from "express-validator";
+
+import { param,query,body, validationResult } from "express-validator";
 
 const deliveryValidator = [
     body("firstName")
@@ -139,7 +141,7 @@ const OrderController = {
           try {
             const { limit, page, sortParams, state} = req.query;
             const result = await OrderService.orderQueryAll(
-                req.user.id,
+                req.user,
                 limit,
                 page,
                 sortParams,
@@ -153,7 +155,59 @@ const OrderController = {
           }
         },
       ],
+      changeOrderState: [
+        AuthorizationController.isAdmin,
+        param("orderId")
+        .exists()
+        .bail()
+        .notEmpty({ ignore_whitespace: true })
+        .withMessage("field can't be empty")
+        .bail()
+        .trim()
+        .custom(async (orderId) => {
+          try {
+            const exist = await Order.exists({ _id: orderId });
+            if (!exist) {
+              throw new Error("Order not existed");
+            }
+            return true;
+          } catch (e) {
+            throw new Error("Order not existed");
+          }
+        }),
+        body("state")
+        .exists()
+        .bail()
+        .notEmpty({ ignore_whitespace: true })
+        .withMessage("field can't be empty")
+        .bail()
+        .trim()
+        .custom(async (state) => {
+          const options = ["new", "processing","shipping","completed"];
+          if (!options.includes(state)) {
+            throw new Error("invalid state");
+          }
+          return true;
+        }),
+        async (req,res) => {
+          try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+              return res
+                .status(400)
+                .json({ success: false, msg: errors.array()[0].msg });
+            }
+            const {orderId} = req.params;
+            const {state} = req.body;
+            await OrderService.changeOrderState(orderId,state);
+            res.status(200).json({success:true,msg:"Order state have been changed!"});
+        } catch (e) {
+            console.log(e);
+            res.status(500).json({success:false,msg:"Some thing wrong happened"});
+        }
+        }
 
+      ]
 };
 
 export default OrderController;
