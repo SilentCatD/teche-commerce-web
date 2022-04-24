@@ -9,9 +9,9 @@
 <body>
     <div class="container-xxl position-relative bg-white d-flex p-0">
         <!-- Spinner Start -->
-        <%- include('partials/page-model')%>
+        <%-include('partials/spinner.ejs') %> 
         <!-- Spinner End -->
-
+        <%- include('partials/page-model')%>
 
         <!-- Sidebar Start -->
         <%-include('partials/sidebar.ejs', {active: active}) %> 

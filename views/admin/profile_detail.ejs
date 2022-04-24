@@ -5,19 +5,16 @@
 
 <head>
     <%-include('partials/head.ejs', {title: title}) %> 
-    <link rel="stylesheet" href="/admin/css/add_img_carousel.css">
-    <link rel="stylesheet" href="/admin/css/form_loading_product.css">
+
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
 </head>
 
 <body>
-        <%- include('partials/page-model')%>     
 
 
 
     <div class="container-xxl position-relative bg-white d-flex p-0">
         <!-- Spinner Start -->
-        <%-include('partials/spinner.ejs') %> 
         <!-- Spinner End -->
 
 
@@ -32,9 +29,6 @@
         <%-include('partials/navbar.ejs') %> 
         <!-- Navbar End -->
 
-        <!--Alert Start-->
-        <%-include('partials/alert.ejs') %>
-        <!--Alert End-->
 
         <!-- Product Search Start-->
         <div class="container-fluid pt-4 px-4">
@@ -42,58 +36,56 @@
                     <!-- left column -->
                 <div class="col-md-3">
                     <div class="text-center mb-3">
-                    <img style="height: 250px; width: 250px; object-fit: contain;" id="userAvatar" src="https://firebasestorage.googleapis.com/v0/b/teche-commerce-a2c6a.appspot.com/o/images%2FdefaultUImg.png?alt=media&token=201eb321-6ba9-4589-8d98-2edb59d2e736" class="avatar img-circle img-thumbnail" alt="avatar">                    
-                    <input accept="image/png,image/jpeg" type="file" class="form-control mt-3" id="userAvatarInput">
-                    </div>
-                    <div class="text-center">
-                        <div class="btn btn-primary" id="avatarSubmit">Update User Image</div>
+                    <img style="height: 250px; width: 250px; object-fit: contain;" id="userAvatar" src="<%=user.avatar?  user.avatar : 'https://firebasestorage.googleapis.com/v0/b/teche-commerce-a2c6a.appspot.com/o/images%2FdefaultUImg.png?alt=media&token=201eb321-6ba9-4589-8d98-2edb59d2e736' %>" class="avatar img-circle img-thumbnail" alt="avatar">                    
                     </div>
                 </div>
                 
                 <!-- edit form column -->
                 <div class="col-md-9 personal-info">
-                    <h5 class="text-info mb-1">Edit User Info</h3>
-                    <form class="form-horizontal" role="form">
+                    <h5 class="text-info mb-1"> User Info</h3>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">ID:</label>
+                        <div class="col-lg-8">
+                        <input class="form-control" id="edit-email" type="text" value="<%= user.id %> " disabled>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label class="col-lg-3 control-label">Name:</label>
                         <div class="col-lg-8">
-                        <input class="form-control" id="edit-name" type="text" value="">
-                        <p id="edit-name-error" class="text-danger"></p>
+                        <input class="form-control" id="edit-name" type="text" value="<%= user.name %> " disabled>
                         </div>
                     </div>
+                   
                     <div class="form-group">
                         <label class="col-lg-3 control-label">Email:</label>
                         <div class="col-lg-8">
-                        <input class="form-control" id="edit-email" type="text" value="3rd User From Facebook or Google">
+                        <input class="form-control" id="edit-email" type="text" value="<%= user.email %> " disabled>
                         </div>
                     </div>
-            
+
                     <div class="form-group">
+                        <label class="col-lg-3 control-label">Status:</label>
                         <div class="col-lg-8">
-                        <div id="edit-info-submit" class="btn btn-primary">Edit info</div>
+                        <input class="form-control" id="edit-email" type="text" value="<%= user.status %> " disabled>
                         </div>
                     </div>
-            
-                    <h5 class="mt-5 mb-1 text-info">Edit User Password</h5>
+
                     <div class="form-group">
+                        <label class="col-lg-3 control-label">Role:</label>
                         <div class="col-lg-8">
-                        <div class="d-flex align-items-center input-field "> 
-                            <input class="form-control password-input" type="password" placeholder="Old Password"  id="old-user-password">
+                        <input class="form-control" id="edit-email" type="text" value="<%= user.role %> " disabled>
                         </div>
                     </div>
-                    <div class="col-lg-8">
-                        <div class="d-flex align-items-center input-field "> 
-                            <input class="form-control password-input" type="password" placeholder="New Password"  id="new-user-password">
-                        </div>
-                        <p id="edit-password-error" class="text-danger"></p>
-                    </div>
-                    </div>
+
                     <div class="form-group">
+                        <label class="col-lg-3 control-label">Created:</label>
                         <div class="col-lg-8">
-                        <div id="edit-password-submit" class="btn btn-primary">Change To New Password</div>
+                        <input class="form-control" id="edit-email" type="text" value="<%= user.createdAt %> " disabled>
                         </div>
                     </div>
-                    </form>
+                    
+
                 </div>
             </div>
         </div>
@@ -109,11 +101,8 @@
         <%-include('partials/include_js.ejs') %> 
         <script src="https://unpkg.com/validator@latest/validator.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script type="module" src="/admin/js/alert.js"></script>
-        <script type="module" src="/admin/js/modal.js"></script>
         <script type="module" src="/admin/js/sidebar.js"></script>
         <script type="module" src="/admin/js/navbar.js"></script>
-        <script type="module" src="/admin/js/profile.js"></script>
 
 </body>
 

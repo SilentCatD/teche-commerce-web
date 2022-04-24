@@ -51,7 +51,7 @@ pageConfig.renderTableRow = (item) => {
         Manage
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-        <li><a class="acc-detail dropdown-item btn" data-id='${
+        <li><a href="/admin/accounts/${item.id}" class="acc-detail dropdown-item btn" data-id='${
           item.id
         }'>Details</a></li>
         <li class="dropdown-divider"></li>
