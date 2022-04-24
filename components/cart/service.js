@@ -1,13 +1,35 @@
 import Cart from "./model.js";
 import Product from '../product/model.js';
 
+
+async function validCart(userId) {
+  let cart = null;
+  const session = await Cart.startSession();
+  session.startTransaction();
+  try {
+  cart = await Cart.findOne({ userId: userId }).populate('items.productId');
+  for(let i = 0 ; i < cart.items.length;i++) {
+    let item = cart.items[i];
+    if(!item.productId || item.productId.inStock <= 0) await cart.items.pull(item);  
+  };
+  await cart.save();
+  await session.commitTransaction();
+  } catch (e) {
+    await session.abortTransaction();
+  } 
+  finally {
+    await session.endSession();
+    return cart;
+  }
+}
+
 const CartService = {
   createCart: async (userId) => {
     const cart = await Cart.create({ userId: userId });
     return cart;
   },
   getCart: async (userId)=>{
-    let cart = await Cart.findOne({ userId: userId }).populate('items.productId');
+    let cart = await validCart(userId)
     if(!cart){
         cart = await CartService.createCart(userId);
     }
@@ -35,6 +57,8 @@ const CartService = {
       }
       let existed = false;
       const product = await Product.findById(productId);
+      if(!product)  throw new Error("Congratulation! Product just have been deleted");
+
       cart.items =  await Promise.all(cart.items.map(async (item) => {
         if (item.productId == productId) {
           existed = true;
@@ -95,6 +119,25 @@ const CartService = {
       await session.endSession();
     }
   },
+  clearCart: async (userId) => {
+    const session = await Cart.startSession();
+    session.startTransaction();
+    try {
+      let cart = await Cart.findOne({ userId: userId }).session(session);
+      if(!cart){
+          cart = await CartService.createCart(userId);
+      }
+      cart.items=[];      
+      await cart.save();
+      await session.commitTransaction();
+    } catch (e) {
+      await session.abortTransaction();
+      throw e;
+    } finally {
+      await session.endSession();
+    }
+  },
+
   // If you want check immediately in frontend
   updateItem: async (userId, productId,amount) => {
     const session = await Cart.startSession();

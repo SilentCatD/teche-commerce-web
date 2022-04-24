@@ -446,7 +446,7 @@ const APIService = {
   },
   createOrder: async(delivery) => {
     const url = "/api/v1/order";
-    const body = {delivery};
+    const body = {...delivery};
     await Request.post({url,body,useToken:true});
   },
   toggleActiveAccount: async(id)=>{

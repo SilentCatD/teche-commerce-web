@@ -37,10 +37,8 @@ const CartController = {
       const userId = req.user.id;
       try {
         const cartData = await CartService.getCart(userId);
-      
         return res.status(200).json({ success: true, data: cartData });
       } catch (e) {
-        console.log(e);
         return res.status(500).json({ success: false, msg: "Something went wrong" });
       }
     },

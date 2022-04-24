@@ -1,7 +1,7 @@
 import Cart from "../cart/model.js";
 import Order from "./model.js";
 import ProductService from "../product/service.js";
-
+import CartService from "../cart/service.js";
 
 const OrderService = {
     createOrder: async (userId,CartItems,delivery) => {
@@ -18,7 +18,8 @@ const OrderService = {
                    }
                 }));
         
-        const order = await Order.create({userId,orderDetails,delivery});
+        await Order.create({userId,orderDetails,delivery});
+        await CartService.clearCart(userId);
         await session.commitTransaction();
         } catch (e) {
             await session.abortTransaction();

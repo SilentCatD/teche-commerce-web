@@ -67,6 +67,11 @@ const deliveryValidator = [
       .trim()
       .isByteLength({ min: 9, max: 12 })
       .withMessage("Name must in range [9,12] Character"),
+      body("note")
+      .if(body("note").exists())
+      .isByteLength({max: 256 })
+      .withMessage("Shut the fuck up I'm not reading all that"),
+
 
 ]
 const OrderController = {
@@ -93,11 +98,18 @@ const OrderController = {
             next();
         },
         async (req,res) => {
-            const userId = req.user.id;
-            const userCartItems = req.cart;
-            const {firstName,lastName,country,address,townCity,postCode,phone,note} = req.body;
-            const delivery = {firstName,lastName,country,address,townCity,postCode,phone,note};
             try {
+                const errors = validationResult(req);
+                if (!errors.isEmpty()) {
+                  return res
+                    .status(400)
+                    .json({ success: false, msg: errors.array()[0].msg });
+                }
+                
+                const userId = req.user.id;
+                const userCartItems = req.cart;
+                const {firstName,lastName,country,address,townCity,postCode,phone,note} = req.body;
+                const delivery = {firstName,lastName,country,address,townCity,postCode,phone,note};
                 await OrderService.createOrder(userId,userCartItems,delivery);
                 res.status(200).json({success:true,msg:"Order have been created!"});
             } catch (e) {

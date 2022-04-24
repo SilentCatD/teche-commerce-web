@@ -41,3 +41,19 @@ export function validateUserPassword(elementId,elementNotifyError) {
     $(`#${elementNotifyError}`).text("");
     return password;
 }
+
+
+export function validateStringField(elementId,elementNotifyError,min,max) {
+    let name = $(`#${elementId}`).val().trim();
+
+    if(validator.isEmpty(name,{ignore_whitespace: true}) && min > 0) {
+        $(`#${elementNotifyError}`).text("This Field Can't Not Be Empty");
+        return false;
+    }
+    if(!validator.isByteLength(name,{min,max})) {
+        $(`#${elementNotifyError}`).text(`This Field must in range [${min}, ${max}] characters`);
+        return false;
+    }  
+    $(`#${elementNotifyError}`).text("");
+    return name;
+}
