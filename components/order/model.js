@@ -63,7 +63,7 @@ const OrderSchema = new mongoose.Schema({
     state: {
         type: String,
         required: true,
-        default: "new" // new -> prepared -> shipped -> completed
+        default: "new" // new -> processing -> shipped -> completed
     }
 }, {autoCreate: false,timestamps: true });
 

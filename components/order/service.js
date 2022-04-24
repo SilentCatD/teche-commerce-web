@@ -2,8 +2,20 @@ import Cart from "../cart/model.js";
 import Order from "./model.js";
 import ProductService from "../product/service.js";
 import CartService from "../cart/service.js";
+import CommomDatabaseServies from "../common/services.js";
 
 const OrderService = {
+    returnData: (order) => {
+        if(!order) return null;
+        return {
+            id: order.id,
+            items: order.orderDetails,
+            state: order.state,
+            delivery: order.delivery,
+            createdAt: order.createdAt.toLocaleString('en-US'),
+            updatedAt: order.updatedAt.toLocaleString('en-US'),
+        }
+    },
     createOrder: async (userId,CartItems,delivery) => {
         const session = await Order.startSession();
         session.startTransaction();
@@ -42,6 +54,23 @@ const OrderService = {
         } finally {
             await session.endSession();
         }
+    },
+    orderQueryAll: async (userId, limit, page, sortParams, state) =>  {
+        let queryParams = {
+            ...(state && {state: state}),
+            ... ({userId:userId}),
+          };
+        const totalCount = await Order.countDocuments(queryParams);
+        const orders = await Order.find(queryParams)
+          .skip(limit*page - limit)
+          .limit(limit)
+          .sort(sortParams);
+
+          const items = orders.map((order) => {
+            return OrderService.returnData(order);
+          });
+        return CommomDatabaseServies.queryAllFormat(totalCount, limit, page, items);
+
     }
   };
 

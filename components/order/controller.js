@@ -1,7 +1,10 @@
 import AuthorizationController from "../authorization/controller.js";
+import CommonMiddleWares from "../common/middleware.js";
+
 import OrderService from "./service.js";
-import { body, validationResult } from "express-validator";
 import Cart from "../cart/model.js";
+
+import { query,body, validationResult } from "express-validator";
 
 const deliveryValidator = [
     body("firstName")
@@ -88,10 +91,10 @@ const OrderController = {
                 let item = userCart.items[i];
                 // status code for handle checkout 
                 if (!item) {
-                    return res.status(401).json({ success: false, msg: "Some Product Have Been Delete, try to refresh Page" });
+                    return res.status(400).json({ success: false, msg: "Some Product Have Been Delete, try to refresh Page" });
                 }
                 if (item.amount > item.productId.inStock) {
-                    return res.status(402).json({ success: false, msg: "Some Product amount in your cart be outdated" });
+                    return res.status(400).json({ success: false, msg: "Some Product amount in your cart be outdated" });
                 }
             }
             req.cart = userCart.items;
@@ -118,9 +121,38 @@ const OrderController = {
             }
         }
     ],
-    // changeOrderState: [
-    //     async
-    // ]
+    fetchAllOrder: [
+        AuthorizationController.isValidAccount,
+        CommonMiddleWares.apiQueryParamsExtract,
+        query("state")
+        .if(query("state").exists())
+        .notEmpty()
+        .withMessage("field can't be empty")
+        .custom((state) => {
+          const options = ["new", "processing","shipping","completed"];
+          if (!options.includes(state)) {
+            throw new Error("invalid state");
+          }
+          return true;
+        }),
+        async (req, res) => {
+          try {
+            const { limit, page, sortParams, state} = req.query;
+            const result = await OrderService.orderQueryAll(
+                req.user.id,
+                limit,
+                page,
+                sortParams,
+                state);
+            res.status(200).json({ success: true, data: result });
+          } catch (e) {
+            console.log(e);
+            res
+              .status(500)
+              .json({ success: false, msg: `something went wrong ${e}` });
+          }
+        },
+      ],
 
 };
 

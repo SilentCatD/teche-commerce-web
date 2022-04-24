@@ -225,7 +225,7 @@ const ProductService = {
     try {
       const product = await Product.findById(
         mongoose.Types.ObjectId(id)
-      )
+      ).session(session);
       
       if(product.inStock + unit < 0) {
         throw new Error("OutStock (The fuck)!")

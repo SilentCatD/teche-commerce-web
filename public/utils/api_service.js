@@ -452,7 +452,24 @@ const APIService = {
   toggleActiveAccount: async(id)=>{
     const url = `/api/v1/account/toggle_active/${id}`;
     await Request.patch({url: url, useToken: true});
-  }
+  },
+
+  fetchAllOrder: async ({
+    page,
+    limit,
+    sort = "createdAt",
+    order_by = "desc",
+    state,
+  }={}) => {
+    const searchParams = queryAllParamsFormat(page, limit, sort, order_by, null, null, null, null);
+    if(state){
+      console.log("heheh");
+      searchParams.set('state', state);
+    }
+    const url = "/api/v1/order";
+    const res = await Request.get({ url: url, params: searchParams, useToken: true });
+    return res.data.data;
+  },
 };
 
 export default APIService;
