@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title><%=title%></title>
+        <%-include('partials/head') %>
+    </head>
+
+<body>
+    <!-- Page Preloder -->
+    <%-include('partials/preloader') %> 
+
+
+    <!-- Humberger Begin -->
+    <%-include('partials/humberger') %> 
+    <!-- Humberger End -->
+
+    <!-- Header Section Begin -->
+    <%-include('partials/header') %> 
+    <!-- Header Section End -->
+
+    <!-- Hero Section Begin -->
+    <%-include('items/hero/hero-without-banner') %>  
+    <!-- Hero Section End -->
+
+    <!-- Breadcrumb Section Begin -->
+    <%- include('items/breadcrumb') %>
+    <!-- Breadcrumb Section End -->
+
+    <!-- Product Section Begin -->
+    <section class="product spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9 col-md-7">
+                    <div class="filter__item">
+                        <div class="row">
+                            <div class="col-lg-5 col-md-4">
+                                <div class="filter__sort">
+                                    <span>Status</span>
+                                    <select id="sortSelect">
+                                        <option value="shipped">Newest</option>
+                                        <option value="process">Processing</option>
+                                        <option value="shipped">Shipping</option>
+                                        <option value="completed">Completed</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-5 col-md-4">
+                                <div class="filter__sort">
+                                    <span>Order By</span>
+                                    <select id="orderBySelect">
+                                        <option value="desc">Newest</option>
+                                        <option value="asc">Oldest</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-4">
+                                <div class="filter__found">
+                                    <h6><span id="total-items-found">x</span> Order Found</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="product-list">
+                    </div>
+                    <div id="pagination-section" class="product__pagination">
+                    </div>
+                </div>      
+            </div>
+        </div>
+    </section>
+    <!-- Product Section End -->
+
+    <!-- Footer Section Begin -->
+    <%- include("partials/footer") %>
+    <%-include('partials/script') %>
+
+    <script src="/user/js/breadcrumb.js"></script>
+    <script type='module' src="/user/js/header.js"></script>
+    <script  type="module" src="/user/js/hero.js"></script>
+
+
+    <!-- Footer Section End -->
+
+
+</body>
+
+</html>

@@ -8,6 +8,10 @@ $(document).ready(async function () {
     const response = await APIService.getUserCart();
     const userCart = response.data;
     const userInfo = await getUserInfo();
+    if(userCart.items.length <=0) {
+        window.location.href = "/cart";
+    }
+    
     let itemsHTML = "";
     let totalPrice = 0;
     for(let i = 0; i < userCart.items.length;i++){
@@ -32,7 +36,6 @@ $(document).ready(async function () {
         const phone = validateStringField("phone", "phone-error",9,12);
         const note = validateStringField("note", "note-error",0,256);
 
-
         if(firstName && lastName && country && address && townCity && postCode
             && phone && (note || note==="")) {
                 try {
@@ -41,13 +44,13 @@ $(document).ready(async function () {
                     if(note) {
                         delivery.note = note;
                     }
-                    await APIService.createOrder(delivery);
+                    const request = await APIService.createOrder(delivery);
                     modalCheckoutSuccess(userInfo,totalPrice,itemsHTML);
                     $("#order-notificate").modal("show");
 
-                } catch (e) {
+                } catch (error) {
                     alert(e.message);
-                    console.log(e);
+                    window.location.href = "/cart";
                 }
             }
         })

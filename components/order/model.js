@@ -65,7 +65,7 @@ const OrderSchema = new mongoose.Schema({
         required: true,
         default: "new" // new -> prepared -> shipped -> completed
     }
-}, {autoCreate: false});
+}, {autoCreate: false,timestamps: true });
 
 const Order = mongoose.model('Order', OrderSchema);
 

@@ -4,12 +4,17 @@ import { updateUserCart } from "./header.js";
 const CART_INFO = {
     items: null,
     totalPrice : 0,
+    length:0,
 };
 
 $(document).ready(async function () {
     setBreadCrumb("Shopping-cart", null);
     await REInit();
 
+    $("#proceed-checkout").on("click",function(e) {
+        if(CART_INFO.length <= 0) alert("Empty cart");
+        else window.location.href="/checkout";
+    })
         // assign button
         $(".inc").on("click",async function(e){
             e.preventDefault();
@@ -100,10 +105,9 @@ $(document).ready(async function () {
         $('#removeCartItemConfirm').on("click",async ()=>{
             try {
             const productId = $("#removeCartItemConfirm").data("product-id");
-            console.log(productId);
             await APIService.removeCartItem(productId);
             await updateUserCart();
-
+            CART_INFO.length--;
             const totalPrice = parseFloat($(`#item-price-${productId}`).text().trim().substring(1));
             changeTotalPrice(null,null,-totalPrice);
             $(`#item-${productId}`).remove();
@@ -120,6 +124,7 @@ $(document).ready(async function () {
 async function REInit() {
     try {
     CART_INFO.items = (await APIService.getUserCart()).data.items;
+    CART_INFO.length = CART_INFO.items.length;
     } catch(e) {
         console.log(e);
     }
