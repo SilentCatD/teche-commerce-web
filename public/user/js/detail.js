@@ -192,7 +192,9 @@ sendReviewBtn.click(async function (e) {
     const totalPage = result["total-pages"];
     const userInfo = await getUserInfo()
     detailController.renderCommentList("reviews-list",result.items,userInfo);
-    detailController.renderPagination(currentPage,totalPage);
+    if(result.items.length > 0) {
+      detailController.renderPagination(currentPage,totalPage);
+    }
 
     $(".fa-trash").click( function(e) {
       e.preventDefault();
@@ -341,7 +343,6 @@ const detailController = {
     },
     renderEditDeleteComment: (userInfo,comment) => {
       if(!userInfo) return "";
-      console.log(userInfo);
       if(userInfo.id == comment.userId){
         return `
         <div data-comment-id="${comment.id}" class="ml-auto">
@@ -399,7 +400,6 @@ const detailController = {
         if($(this).data("move-page")=="left") {
           await REinit(page-1);
         } else if($(this).data("move-page")=="right") {
-          console.log(page+1);
           await REinit(page+1);
         } else {
         const nextPage = $(this).text().trim();
