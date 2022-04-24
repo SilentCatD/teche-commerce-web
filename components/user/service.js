@@ -21,10 +21,12 @@ const UserService = {
     result.email = user.email;
     result.id = user.id;
     result.role = user.role;
-    result.status = user.active ? 'active' : 'suspended';
+    result.status = user.active ? 'active' : 'unactive';
     result.usePassword = user.hash ? true: false;
     if(user.avatar){
       result.avatar = user.avatar.firebaseUrl;
+    }else{
+      result.avatar = null;
     }
     result.createdAt = user.createdAt;
     return result;

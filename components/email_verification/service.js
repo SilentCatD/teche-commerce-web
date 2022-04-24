@@ -50,7 +50,6 @@ const EmailVerificationService = {
       text: "Click the link bellow to activate your email, this link will expire after 7 days", // plain text body
       html: `<b>Click this shit: ${process.env.HOST_URL}/active/${hash}</b>`, // html body, should send link to html front end, this is direct api link
     });
-    console.log(res);
   },
 
   activateUserAccount: async (hash) => {

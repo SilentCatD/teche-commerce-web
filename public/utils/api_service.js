@@ -124,7 +124,6 @@ const APIService = {
     if(active){
       searchParams.set('active', active);
     }
-    console.log(searchParams.toString());
     const url = "/api/v1/account";
     const res = await Request.get({ url: url, params: searchParams, useToken: true });
     return res.data.data;
@@ -449,6 +448,10 @@ const APIService = {
     const url = "/api/v1/order";
     const body = {delivery};
     await Request.post({url,body,useToken:true});
+  },
+  toggleActiveAccount: async(id)=>{
+    const url = `/api/v1/account/toggle_active/${id}`;
+    await Request.patch({url: url, useToken: true});
   }
 };
 

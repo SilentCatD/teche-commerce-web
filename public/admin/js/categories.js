@@ -2,15 +2,22 @@ import APIService from "../../utils/api_service.js";
 import { goBackToLoginIfNotAdmin, sleep } from "../../utils/common.js";
 import {pageConfig} from '../js/data_table.js';
 import displayAlert from '../js/alert.js';
-import deleteDocumentOnClick from '../js/modal.js';
+import {modalConfig, documentOperation} from '../js/modal.js';
 
+modalConfig.modalBody = "Do you wish to delete this category?";
+modalConfig.modalHeader  = "Remove Category";
+modalConfig.modalOpName = "Remove";
+modalConfig.operation = async(id)=>{
+  console.log(id);
+  // await APIService.deleteCategory(id);
+}
 
 $(document).ready(async function () {
   await goBackToLoginIfNotAdmin();
   await sleep(50);
   $("#spinner").removeClass("show");
 
-  deleteDocumentOnClick("Category", deleteCategory);
+  documentOperation("Category deleted", "Something went wrong");
 
   $("#categorySubmit").click(async function (e) {
     e.preventDefault();
@@ -153,6 +160,19 @@ pageConfig.renderTableRow = (item) => {
 </tr>
 `;
 };
+
+pageConfig.bindRowAction = () => {
+  $(".manage-btn-delete").click(function (e) {
+    e.preventDefault();
+    const id = $(this).data("id");
+
+    $("#documentOperation").data("id", id);
+
+    // call func here
+    $("#page-modal").modal("show");
+  });
+};
+
 
 
 pageConfig.tableName = 'Categories';

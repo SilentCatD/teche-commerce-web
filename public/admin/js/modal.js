@@ -1,18 +1,34 @@
 import displayAlert from "./alert.js";
 
-function deleteDocumentOnClick(model, deleteFunction) {
-  $("#documentDelete").click(async function () {
-    const id = $("#documentDelete").data("id");
-    $("#documentDelete").removeData("id");
-    if (await deleteFunction(id)) {
-      displayAlert(true, `${model} Deleted`);
-    } else {
-      displayAlert(false, "Something fuckup");
+const modalConfig = {
+  modalHeader: undefined,
+  modalBody: undefined,
+  modalOpName: undefined,
+  operation: undefined,
+};
+
+$(document).ready(function () {
+  $('#modalBody').text(modalConfig.modalBody);
+  $('#modalHeader').text(modalConfig.modalHeader);
+  $('#documentOperation').text(modalConfig.modalOpName);
+});
+
+function documentOperation(successText, failText) {
+  $("#documentOperation").click(async function () {
+    const id = $("#documentOperation").data("id");
+    $("#documentOperation").removeData("id");
+    try{
+      await modalConfig.operation(id);
+      displayAlert(true, successText);
+    }
+     catch(e) {
+      console.log(e);
+      displayAlert(false, failText);
     }
     $("#page-modal").modal("hide");
     $(".table-load-trigger").click();
   });
 }
 
-export default deleteDocumentOnClick;
+export {modalConfig, documentOperation};
 

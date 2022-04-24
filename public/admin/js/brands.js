@@ -2,15 +2,21 @@ import APIService from "../../utils/api_service.js";
 import { goBackToLoginIfNotAdmin, sleep } from "../../utils/common.js";
 import {pageConfig} from '../js/data_table.js';
 import displayAlert from '../js/alert.js';
-import deleteDocumentOnClick from '../js/modal.js';
+import {modalConfig, documentOperation} from '../js/modal.js';
 
+modalConfig.modalBody = "Do you wish to delete this brand?";
+modalConfig.modalHeader  = "Remove Brand";
+modalConfig.modalOpName = "Remove";
+modalConfig.operation = async(id)=>{
+  await APIService.deleteBrand(id);
+}
 
 $(document).ready(async function () {
   await goBackToLoginIfNotAdmin();
   await sleep(50);
   $("#spinner").removeClass("show");
 
-  deleteDocumentOnClick("Brand", deleteBrand);
+  documentOperation("brand deleted", "something went wrong");
   $("#brandSubmit").click(async function (e) {
     e.preventDefault();
     const input = validateBrandNameInput();
@@ -201,6 +207,19 @@ pageConfig.renderTableRow = (item) => {
 </tr>
 `;
 };
+
+pageConfig.bindRowAction = () => {
+  $(".manage-btn-delete").click(function (e) {
+    e.preventDefault();
+    const id = $(this).data("id");
+
+    $("#documentOperation").data("id", id);
+
+    // call func here
+    $("#page-modal").modal("show");
+  });
+};
+
 
 pageConfig.tableName= "Brands";
 

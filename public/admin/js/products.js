@@ -2,7 +2,14 @@ import APIService from "../../utils/api_service.js";
 import { goBackToLoginIfNotAdmin, sleep } from "../../utils/common.js";
 import { pageConfig } from "../js/data_table.js";
 import displayAlert from '../js/alert.js';
-import deleteDocumentOnClick from '../js/modal.js';
+import {modalConfig, documentOperation} from '../js/modal.js';
+
+modalConfig.modalBody = "Do you wish to delete this produdct?";
+modalConfig.modalHeader  = "Remove Product";
+modalConfig.modalOpName = "Remove";
+modalConfig.operation = async(id)=>{
+  await APIService.deleteProduct(id);
+}
 
 let productsImages = [];
 let currentCarousel;
@@ -108,7 +115,7 @@ $(document).ready(async function () {
   });
 
   bindCarousel();
-  deleteDocumentOnClick("Product", deleteProduct);
+  documentOperation("Product deleted", "Something went wrong");
 });
 
 function triggerReloadBtn() {
@@ -500,7 +507,7 @@ pageConfig.bindRowAction = () => {
     e.preventDefault();
     const id = $(this).data("id");
 
-    $("#documentDelete").data("id", id);
+    $("#documentOperation").data("id", id);
 
     // call func here
     $("#page-modal").modal("show");

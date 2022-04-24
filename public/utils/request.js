@@ -104,6 +104,16 @@ const Request = {
   } = {}) => {
     return await request(url, params, body, headers, "delete", useToken, token);
   },
+  patch: async ({
+    url,
+    params = {},
+    body = {},
+    headers = {},
+    useToken = false,
+    token = null,
+  } = {}) => {
+    return await request(url, params, body, headers, "patch", useToken, token);
+  },
 };
 
 export default Request;

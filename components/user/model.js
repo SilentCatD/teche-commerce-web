@@ -10,7 +10,10 @@ const userSchema = new mongoose.Schema({
    hash: String,
    salt: String,
    role: String, // 'user', 'admin'
-   avatar: imageSchema,
+   avatar: {
+      type: imageSchema,
+      default: null,
+   },
    active: {
       type: Boolean,
       default: false,

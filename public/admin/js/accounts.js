@@ -2,6 +2,14 @@ import APIService from "../../utils/api_service.js";
 import { goBackToLoginIfNotAdmin, sleep } from "../../utils/common.js";
 import {pageConfig} from "../js/data_table.js";
 import displayAlert from "../js/alert.js";
+import {modalConfig, documentOperation} from '../js/modal.js';
+
+modalConfig.modalBody = "Do you wish to toggle Active/Unactive this account?";
+modalConfig.modalHeader  = "Toggle Active";
+modalConfig.modalOpName = "Toggle Active/Unactive";
+modalConfig.operation = async(id)=>{
+  await APIService.toggleActiveAccount(id);
+}
 
 pageConfig.query = "";
 pageConfig.role = "user";
@@ -28,12 +36,13 @@ pageConfig.tableHead = `<tr>
     `;
 
 pageConfig.renderTableRow = (item) => {
+  const active = item.status == 'active';
   return `<tr>
   <td class="align-middle">${item.id}</td>
   <td class="align-middle">${item.name}</td>
   <td class="align-middle">${item.email}</td>
   <td class="align-middle">${item.role}</td>
-  <td class="align-middle">${item.status}</td>
+  <td class="align-middle ${active? 'text-success' : 'text-danger'}">${item.status}</td>
   <td class="align-middle">${item.createdAt}</td>
 
   <td class="align-middle">
@@ -42,20 +51,29 @@ pageConfig.renderTableRow = (item) => {
         Manage
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-        <li><a href="/admin/edit-product/${
+        <li><a class="acc-detail dropdown-item btn" data-id='${
           item.id
-        }" class="manage-btn-edit dropdown-item btn"  data-id='${
-    item.id
-  }'>Edit</a></li>
+        }'>Details</a></li>
         <li class="dropdown-divider"></li>
-        <li><a class="manage-btn-delete dropdown-item text-danger btn" data-id='${
-          item.id
-        }'>Remove</a></li>
+        <li><a class="manage-btn-delete dropdown-item btn text-danger"  data-id='${
+    item.id
+  }'>${!active ? 'Active' : 'Unactive'}</a></li>
       </ul>
     </div>
 </td>
 </tr>
 `;
+};
+pageConfig.bindRowAction = () => {
+  $(".acc-status-toggle").click(function (e) {
+    e.preventDefault();
+    const id = $(this).data("id");
+
+    $("#documentDelete").data("id", id);
+
+    // call func here
+    $("#page-modal").modal("show");
+  });
 };
 
 $(document).ready(async function () {
@@ -134,6 +152,7 @@ $(document).ready(async function () {
       displayAlert(false, "Something went wrong");
     }
   });
+  documentOperation("Account avaibility toggled", "Something went wrong");
 });
 
 function toggleFormInput(valid) {
@@ -228,3 +247,15 @@ function validateName() {
 function triggerReloadBtn() {
   $(".table-load-trigger").trigger("click");
 }
+
+pageConfig.bindRowAction = () => {
+  $(".manage-btn-delete").click(function (e) {
+    e.preventDefault();
+    const id = $(this).data("id");
+
+    $("#documentOperation").data("id", id);
+
+    // call func here
+    $("#page-modal").modal("show");
+  });
+};

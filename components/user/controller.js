@@ -128,6 +128,40 @@ const UserController = {
       }
     },
   ],
+  toggleAccountActive: [
+    AuthorizationController.isAdmin,
+    param('id').custom(async (id, {req, loc, path})=>{
+      const user = await User.findById(id);
+      if(!user){
+        throw new Error("user not exist")
+      }
+      const requestedId = req.user.id;
+      if(id==requestedId){
+        throw new Error("can't ban your own account");
+      }
+      return true;
+    }),
+    async(req, res)=>{
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res
+          .status(400)
+          .json({ success: false, msg: errors.array()[0].msg });
+      }
+      try{
+        const id = req.params.id;
+        const user = await User.findById(id);
+        if(user.active){
+          await UserService.suspendUserAccount(id);
+        }else{
+          await UserService.activeUserAccount(id);
+        }
+        res.status(200).json({success: true, msg: "toggle completed"});
+      }catch(e){
+        res.status(500).json({success: false, msg: "something went wrong"});
+      }
+    }
+  ]
 };
 
 export default UserController;
