@@ -77,10 +77,10 @@ const OrderService = {
       await session.endSession();
     }
   },
-  orderQueryAll: async (userId, limit, page, sortParams, state) => {
+  orderQueryAll: async (user, limit, page, sortParams, state) => {
     let queryParams = {
       ...(state && { state: state }),
-      ...{ userId: userId },
+      ... ((user.role != "admin") && {userId:user.id}),
     };
     const totalCount = await Order.countDocuments(queryParams);
     const orders = await Order.find(queryParams)
