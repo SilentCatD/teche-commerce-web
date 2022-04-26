@@ -79,6 +79,11 @@ $(function(){
 
   // add to cart
   addToCartBtn.click(async function() {
+    const userInfo = await getUserInfo();
+    if(!userInfo) {
+      alert("You must login first");
+      return;
+    }
     const amount = $("#amount").val();
     $('#notificate-add-to-cart').text("");
     $('#notificate-add-to-cart').show();
