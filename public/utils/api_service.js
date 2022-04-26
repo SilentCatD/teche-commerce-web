@@ -475,6 +475,12 @@ const APIService = {
     const body = {state};
     await Request.put({url, body ,useToken: true});
   },
+  getRevenue: async(startDate,endDate)=>{
+    const url = `/api/v1/order/statis/day`;
+    const body = {startDate,endDate};
+    const revenue =  await Request.put({url, body ,useToken: true});
+    return revenue.data;
+  },
 };
 
 export default APIService;

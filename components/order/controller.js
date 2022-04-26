@@ -3,6 +3,7 @@ import CommonMiddleWares from "../common/middleware.js";
 
 import OrderService from "./service.js";
 import Cart from "../cart/model.js";
+import Order from "./model.js";
 
 import { param,query, body, validationResult } from "express-validator";
 
@@ -198,7 +199,8 @@ const OrderController = {
           }
           return true;
         } catch (e) {
-          throw new Error("Order not existed");
+          console.log(e);
+          throw new Error("");
         }
       }),
     body("state")
@@ -243,12 +245,14 @@ const OrderController = {
     .exists()
     .bail()
     .isDate()
+    .withMessage("Field must be Date")
     .bail()
     .toDate(),
     body("endDate")
     .exists()
     .bail()
     .isDate()
+    .withMessage("Field must be Date")
     .bail()
     .toDate(),
     async (req, res) => {

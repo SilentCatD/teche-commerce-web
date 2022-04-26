@@ -11,7 +11,7 @@ orderRouter
 orderRouter.route("/:orderId")
   .put(OrderController.changeOrderState); // update order,
 
-orderRouter.route("/statis")
-  .post(OrderController.calculateRevenue);
+orderRouter.route("/statis/day")
+  .put(OrderController.calculateRevenue);
 
 export default orderRouter;
