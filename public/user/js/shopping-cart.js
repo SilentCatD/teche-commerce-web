@@ -119,6 +119,8 @@ $(document).ready(async function () {
                 $(".modal-body").text(e.msg);
             }
         });
+
+        $(".amount").trigger("change");
 })
 
 async function REInit() {

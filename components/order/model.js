@@ -60,6 +60,10 @@ const OrderSchema = new mongoose.Schema({
         type: DeliverySchema,
     },
     orderDetails: [orderDetailSchema],
+    totalPrice: {
+        default:0,
+        type:Number,
+    },
     state: {
         type: String,
         required: true,

@@ -220,8 +220,16 @@ const detailController = {
       $('.number-of-review').text(`(${product.rateCount} reviews)`);
       $('.product__details__price').text(`$${product.price}`);
       $('.product__details__desc').text(product.details);
-  
+      
       $("#product__details__avail").text(product.status);
+      if(product.status ==="sold-out") {
+        $("#product__details__avail").addClass("text-danger");
+        $("#add-to-cart").addClass("btn-danger");
+        $("#add-to-cart").prop("disabled",true);
+      } else {
+        $("#product__details__avail").addClass("text-success");
+      }
+
       if(product.brand) {
         $('#product__details__brand').text(product.brand.name);
       } else {
