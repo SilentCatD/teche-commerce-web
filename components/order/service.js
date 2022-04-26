@@ -9,11 +9,13 @@ const OrderService = {
     if (!order) return null;
     return {
       id: order.id,
+      user: order.userId,
       items: order.orderDetails,
       state: order.state,
       delivery: order.delivery,
       createdAt: order.createdAt.toLocaleString("en-US"),
       updatedAt: order.updatedAt.toLocaleString("en-US"),
+      totalPrice: (order.totalPrice) ? order.totalPrice:0,
     };
   },
   changeOrderState: async (orderId, newState) => {
@@ -62,34 +64,27 @@ const OrderService = {
       await session.endSession();
     }
   },
-  changeOrderState: async (orderId, newState) => {
-    const session = await Order.startSession();
-    session.startTransaction();
-    try {
-      const order = Order.findById(orderId);
-      order.state = newState;
-      await order.save();
-      await session.commitTransaction();
-    } catch (e) {
-      await session.abortTransaction();
-      throw e;
-    } finally {
-      await session.endSession();
-    }
-  },
   orderQueryAll: async (user, limit, page, sortParams, state) => {
     let queryParams = {
       ...(state && { state: state }),
       ... ((user.role != "admin") && {userId:user.id}),
     };
     const totalCount = await Order.countDocuments(queryParams);
-    const orders = await Order.find(queryParams)
-      .skip(limit * page - limit)
-      .limit(limit)
-      .sort(sortParams);
+    let orders = null;
+    if(user.role == "admin") { 
+        orders = await Order.find(queryParams)
+        .skip(limit * page - limit)
+        .limit(limit)
+        .sort(sortParams).populate("userId");
+    } else {
+        orders = await Order.find(queryParams)
+        .skip(limit * page - limit)
+        .limit(limit)
+        .sort(sortParams);
+    }
 
     const items = orders.map((order) => {
-      return OrderService.returnData(order);
+        return OrderService.returnData(order);
     });
     return CommomDatabaseServies.queryAllFormat(totalCount, limit, page, items);
   },
