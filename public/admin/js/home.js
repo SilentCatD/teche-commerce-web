@@ -7,13 +7,16 @@ $(document).ready(async function() {
         userInfo = await APIService.userInfo();
         const response = await APIService.fetchAllOrder({limit:5});
         const orders = response.items;
+        
         for(let i = 0 ; i < orders.length ; i++) {
             let order = orders[i];
+            let userIdOrEmail  = (order.user) ? order.user.email : order.user;
+
             $("#today-sales").append(
             `<tr>
                 <td>${order.createdAt}</td>
                 <td>${order.id}</td>
-                <td>${order.user.email}</td>
+                <td>${userIdOrEmail}</td>
                 <td>$${order.totalPrice}</td>
                 <td>${order.state}</td>
                 <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>

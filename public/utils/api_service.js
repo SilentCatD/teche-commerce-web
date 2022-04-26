@@ -486,10 +486,15 @@ const APIService = {
     if(state){
       searchParams.set('state', state);
     }
-    console.log(searchParams.toString());
     const url = "/api/v1/order/all";
     const res = await Request.get({ url: url, params: searchParams, useToken: true });
     return res.data.data;
+  },
+  getRevenue: async(startDate,endDate)=>{
+    const url = `/api/v1/order/statis/day`;
+    const body = {startDate,endDate};
+    const revenue =  await Request.put({url, body ,useToken: true});
+    return revenue.data;
   },
 };
 
