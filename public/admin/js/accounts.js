@@ -99,12 +99,14 @@ $(document).ready(async function () {
     e.preventDefault();
     const query = $('#tableSearch').val().trim();
     pageConfig.query = query;
+    pageConfig.page = 1;
     triggerReloadBtn();
   });
 
   $("input[name='accSwitch']").click(function() {
     var role = $(this).filter(':checked').val();
     pageConfig.role = role;
+    pageConfig.page = 1;
     triggerReloadBtn();
   });
 

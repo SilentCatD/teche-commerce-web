@@ -55,11 +55,11 @@ const OrderService = {
             await session.endSession();
         }
     },
-    orderQueryAll: async (user, limit, page, sortParams, state) =>  {
+    orderQueryAll: async (user, limit, page, sortParams, state, admin) =>  {
     
         let queryParams = {
             ...(state && {state: state}),
-            ... ((user.role != "admin") && {userId:user.id}),
+            ... (!admin && {userId:user.id}),
           };
         
         const totalCount = await Order.countDocuments(queryParams);

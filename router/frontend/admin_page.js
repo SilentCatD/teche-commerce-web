@@ -11,5 +11,6 @@ adminPageRouter.get('/categories',AdminPageController.categories);
 adminPageRouter.get('/accounts',AdminPageController.accounts);
 adminPageRouter.get('/edit-product/:id', AdminPageController.editProduct);
 adminPageRouter.get('/profile', AdminPageController.profile);
+adminPageRouter.get('/orders', AdminPageController.orders);
 adminPageRouter.get('/accounts/:id', AdminPageController.details)
 export default adminPageRouter;

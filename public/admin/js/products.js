@@ -144,6 +144,7 @@ $(document).ready(async function () {
     }else{
       pageConfig.brand = [val];
     }
+    pageConfig.page = 1;
     triggerReloadBtn();
   });
 
@@ -155,6 +156,7 @@ $(document).ready(async function () {
     }else{
       pageConfig.category = [val];
     }
+    pageConfig.page = 1;
     triggerReloadBtn();
   });
 

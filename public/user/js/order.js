@@ -35,7 +35,7 @@ let pageConfiguration = {
   });
 
   async function REInit() {
-    const response = await APIService.fetchAllOrder({
+    const response = await APIService.fetchAllOrderOfAUser({
         page:pageConfiguration.currentPage,
         limit:pageConfiguration.item_per_page,
         order_by: pageConfiguration.orderOption,

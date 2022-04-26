@@ -5,8 +5,9 @@ const orderRouter = express.Router();
 
 orderRouter
   .route("/")
-  .get(OrderController.fetchAllOrder)
+  .get(OrderController.fetchAllOrderOfAUser)
   .post(OrderController.createOrder) // create order,
+orderRouter.get('/all', OrderController.fetchAllOrder);
 
 orderRouter.route("/:orderId")
   .put(OrderController.changeOrderState); // update order,

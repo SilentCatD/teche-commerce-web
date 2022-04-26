@@ -454,7 +454,7 @@ const APIService = {
     await Request.patch({url: url, useToken: true});
   },
 
-  fetchAllOrder: async ({
+  fetchAllOrderOfAUser: async ({
     page,
     limit,
     sort = "createdAt",
@@ -474,6 +474,22 @@ const APIService = {
     const url = `/api/v1/order/${orderId}`;
     const body = {state};
     await Request.put({url, body ,useToken: true});
+  },
+  fetchAllOrder: async ({
+    page,
+    limit,
+    sort = "createdAt",
+    order_by = "desc",
+    state,
+  }={}) => {
+    const searchParams = queryAllParamsFormat(page, limit, sort, order_by, null, null, null, null);
+    if(state){
+      searchParams.set('state', state);
+    }
+    console.log(searchParams.toString());
+    const url = "/api/v1/order/all";
+    const res = await Request.get({ url: url, params: searchParams, useToken: true });
+    return res.data.data;
   },
 };
 

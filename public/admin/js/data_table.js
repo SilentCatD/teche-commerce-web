@@ -15,7 +15,7 @@ function renderTable() {
   $(".table-fields tbody").html("");
   for (let row = 0; row < pageConfig.items.length; row++) {
     const item = pageConfig.items[row];
-    $(".table-fields tbody:last-child").append(pageConfig.renderTableRow(item));
+    $(".table-fields tbody:last-child").append(pageConfig.renderTableRow(item, row));
   }
   if(pageConfig.bindRowAction){
     pageConfig.bindRowAction();

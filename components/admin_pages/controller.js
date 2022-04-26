@@ -8,6 +8,10 @@ const AdminPageController = {
     const param = { title: "Dashboard", active: ["dashboard"] };
     res.render("admin/index", param);
   },
+  orders: async (req, res) => {
+    const param = { title: "Orders", active: ["orders"] };
+    res.render("admin/orders", param);
+  },
   login: async (req, res) => {
     const param = { title: "Login" };
     res.render("admin/login", param);
