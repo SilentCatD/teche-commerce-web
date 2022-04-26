@@ -200,7 +200,12 @@ let pageConfiguration = {
         `
     },
     renderOrderDetailItem:(items) => {
-        let html = "";
+        let html =`
+        <div class="row">
+            <div class="col-8"> <b>Product name</b> </div>
+            <div class="col-2"> <b>Price</b> </div>
+            <div class="col-2"> <b>Total</b> </div>
+        </div>`;
         for(let i =0 ; i < items.length;i++) {
             let item = items[i];
             console.log(item);

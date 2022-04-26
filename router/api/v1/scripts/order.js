@@ -12,4 +12,7 @@ orderRouter.get('/all', OrderController.fetchAllOrder);
 orderRouter.route("/:orderId")
   .put(OrderController.changeOrderState); // update order,
 
+orderRouter.route("/statis/day")
+  .put(OrderController.calculateRevenue);
+
 export default orderRouter;

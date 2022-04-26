@@ -47,9 +47,12 @@ $(document).ready(async function () {
                     const request = await APIService.createOrder(delivery);
                     modalCheckoutSuccess(userInfo,totalPrice,itemsHTML);
                     $("#order-notificate").modal("show");
-
+                    $("#btn-handle-event").on("click",function (e) {
+                        e.preventDefault();
+                        window.location.href = "/order";
+                    });
                 } catch (error) {
-                    alert(e.message);
+                    alert(error.message);
                     window.location.href = "/cart";
                 }
             }

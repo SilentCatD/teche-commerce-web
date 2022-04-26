@@ -2,8 +2,8 @@ import AuthorizationController from "../authorization/controller.js";
 import CommonMiddleWares from "../common/middleware.js";
 
 import OrderService from "./service.js";
-import Order from "./model.js";
 import Cart from "../cart/model.js";
+import Order from "./model.js";
 
 import { param, query, body, validationResult } from "express-validator";
 
@@ -105,22 +105,17 @@ const OrderController = {
       }
       for (let i = 0; i < userCart.items.length; i++) {
         let item = userCart.items[i];
-        // status code for handle checkout
         if (!item) {
-          return res
-            .status(400)
-            .json({
-              success: false,
-              msg: "Some Product Have Been Delete, try to refresh Page",
-            });
+          return res.status(400).json({
+            success: false,
+            msg: "Some Product Have Been Delete, try to refresh Page",
+          });
         }
         if (item.amount > item.productId.inStock) {
-          return res
-            .status(400)
-            .json({
-              success: false,
-              msg: "Some Product amount in your cart be outdated",
-            });
+          return res.status(400).json({
+            success: false,
+            msg: "Some Product amount in your cart be outdated",
+          });
         }
       }
       req.cart = userCart.items;
@@ -169,16 +164,21 @@ const OrderController = {
       }
     },
   ],
-  fetchAllOrderOfAUser: [
-    AuthorizationController.isValidAccount,
+  fetchAllOrder: [
+    AuthorizationController.isAdmin,
     allOrdersValidatior,
+    query("state")
+      .if(query("state").exists())
+      .notEmpty()
+      .withMessage("field can't be empty")
+      .custom((state) => {
+        const options = ["new", "processing", "shipping", "completed"];
+        if (!options.includes(state)) {
+          throw new Error("invalid state");
+        }
+        return true;
+      }),
     async (req, res) => {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res
-          .status(400)
-          .json({ success: false, msg: errors.array()[0].msg });
-      }
       try {
         const { limit, page, sortParams, state } = req.query;
         const result = await OrderService.orderQueryAll(
@@ -187,7 +187,41 @@ const OrderController = {
           page,
           sortParams,
           state,
-          false
+          true,
+        );
+        res.status(200).json({ success: true, data: result });
+      } catch (e) {
+        console.log(e);
+        res
+          .status(500)
+          .json({ success: false, msg: `something went wrong ${e}` });
+      }
+    },
+  ],
+  fetchAllOrderOfAUser: [
+    AuthorizationController.isValidAccount,
+    allOrdersValidatior,
+    query("state")
+      .if(query("state").exists())
+      .notEmpty()
+      .withMessage("field can't be empty")
+      .custom((state) => {
+        const options = ["new", "processing", "shipping", "completed"];
+        if (!options.includes(state)) {
+          throw new Error("invalid state");
+        }
+        return true;
+      }),
+    async (req, res) => {
+      try {
+        const { limit, page, sortParams, state } = req.query;
+        const result = await OrderService.orderQueryAll(
+          req.user,
+          limit,
+          page,
+          sortParams,
+          state,
+          false,
         );
         res.status(200).json({ success: true, data: result });
       } catch (e) {
@@ -215,7 +249,8 @@ const OrderController = {
           }
           return true;
         } catch (e) {
-          throw new Error("Order not existed");
+          console.log(e);
+          throw new Error("");
         }
       }),
     body("state")
@@ -254,35 +289,41 @@ const OrderController = {
       }
     },
   ],
-  fetchAllOrder: [
+  calculateRevenue: [
     AuthorizationController.isAdmin,
-    allOrdersValidatior,
-    async(req, res)=>{
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res
-          .status(400)
-          .json({ success: false, msg: errors.array()[0].msg });
-      }
+    body("startDate")
+    .exists()
+    .bail()
+    .isDate()
+    .withMessage("Field must be Date")
+    .bail()
+    .toDate(),
+    body("endDate")
+    .exists()
+    .bail()
+    .isDate()
+    .withMessage("Field must be Date")
+    .bail()
+    .toDate(),
+    async (req, res) => {
       try {
-        const { limit, page, sortParams, state } = req.query;
-        const result = await OrderService.orderQueryAll(
-          req.user,
-          limit,
-          page,
-          sortParams,
-          state,
-          true,
-        );
-        res.status(200).json({ success: true, data: result });
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res
+            .status(400)
+            .json({ success: false, msg: errors.array()[0].msg });
+        }
+        const { startDate, endDate } = req.body;
+        const revenue = await OrderService.calculateRevenue(startDate, endDate);
+        res.status(200).json({ success: true, data: revenue });
       } catch (e) {
         console.log(e);
         res
           .status(500)
           .json({ success: false, msg: `something went wrong ${e}` });
       }
-    }
-  ]
+    },
+  ],
 };
 
 export default OrderController;

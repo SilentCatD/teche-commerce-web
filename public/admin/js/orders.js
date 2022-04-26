@@ -74,7 +74,7 @@ pageConfig.renderTableRow = (item, index) => {
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
         <li><button class="manage-btn manage-btn-edit dropdown-item btn"  data-index='${
           index
-        }'>Edit</button></li>
+        }'>Details</button></li>
       </ul>
     </div>
 </td>
@@ -115,6 +115,7 @@ pageConfig.bindRowAction = () => {
       `)
     });
     $('#statusSelect').html(optionsEl.join('\n'));
+    $('#orderSaveChange').unbind();
     $('#orderSaveChange').click(async function (e) { 
       e.preventDefault();
       const stateVal = $('#statusSelect').val();
