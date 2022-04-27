@@ -57,10 +57,12 @@ const CategotyService = {
 
   deleteCategory: async (id) => {
     const products = await Product.find({category: id});
-    await Promise.all(products.map(async (product)=>{
-      product.category = null;
-      await product.save();
-    }));
+    if(products && products.length > 0){
+      await Promise.all(products.map(async (product)=>{
+        product.category = null;
+        await product.save();
+      }));
+    }
     await Category.deleteOne({_id: id});
   },
 

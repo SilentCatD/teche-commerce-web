@@ -8,8 +8,7 @@ modalConfig.modalBody = "Do you wish to delete this category?";
 modalConfig.modalHeader  = "Remove Category";
 modalConfig.modalOpName = "Remove";
 modalConfig.operation = async(id)=>{
-  console.log(id);
-  // await APIService.deleteCategory(id);
+  await APIService.deleteCategory(id);
 }
 
 $(document).ready(async function () {

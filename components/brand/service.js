@@ -67,11 +67,13 @@ const BrandService = {
       await ImageService.deleteImage(brand.image.firebasePath);
     }
     const products = Product.find({brand: id});
-    
-    await Promise.all(products.map(async (product)=>{
-      product.brand = null;
-      await product.save();
-    }));
+    if(products && products.length > 0){
+      await Promise.all(products.map(async (product)=>{
+        product.brand = null;
+        await product.save();
+      }));
+    }
+
 
     await brand.remove();
   },
