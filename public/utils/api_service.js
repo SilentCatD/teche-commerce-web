@@ -192,7 +192,7 @@ const APIService = {
     });
     const url = "/api/v1/product";
     const body = formData;
-    const headers = {  };
+    const headers = { "Content-Type": "multipart/form-data" };
     const res = await Request.post({
       url: url,
       body: body,
@@ -339,7 +339,7 @@ const APIService = {
     }
     const url = `/api/v1/product/${id}`;
     const body = formData;
-    const headers = {  };
+    const headers = { "Content-Type": "multipart/form-data" };
     await Request.put({ url, body, headers, useToken: true });
   },
 
@@ -364,7 +364,7 @@ const APIService = {
     formData.append("brandName", brandName);
     const url = "/api/v1/brand";
     const body = formData;
-    const headers = {  };
+    const headers = { "Content-Type": "multipart/form-data" };
     await Request.post({
       url: url,
       body,
