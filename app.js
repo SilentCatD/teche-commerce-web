@@ -20,8 +20,7 @@ app.use(express.json());
 app.use(express.static( __dirname  + '/public',  {index: false}));
 app.use(router);
 
-app.listen(process.env.PORT || 3000, 'localhost',async ()=> {
+app.listen(process.env.PORT || 3000, function(){
   await database.instance.connect();
-  console.log(`Server is running`);
+  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
 });
-
